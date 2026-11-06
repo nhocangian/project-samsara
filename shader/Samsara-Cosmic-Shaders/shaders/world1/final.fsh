@@ -4,6 +4,12 @@
 
 #include "/lib/eye_glow.glsl"
 
+// Iris đọc hằng số này trong mã shader (không phải shaders.properties). Đơn vị: tick.
+// wetness = rainStrength làm mượt; ở world1 mod dùng rainStrength làm tín hiệu "con mắt mở" (×45).
+// Thiên hà trong gbuffers_skybasic.fsh đổi wetness ngược ra số giây theo giá trị 80 này.
+const float wetnessHalflife = 80.0;
+const float drynessHalflife = 20.0;
+
 uniform sampler2D colortex0;
 uniform float frameTimeCounter;
 uniform float darknessFactor;

@@ -26,6 +26,8 @@ import java.util.UUID;
  */
 public class EndingServer {
     public static final Identifier ENDING_START = new Identifier("samsara", "ending_start");
+    /** Gói S2C (float): xem trước bóng phản chiếu ở cỡ cho trước, 0 = tắt (lệnh test mirror). */
+    public static final Identifier MIRROR_PREVIEW = new Identifier("samsara", "mirror_preview");
 
     /** Người chơi đang trong đoạn kết ở phiên server này (tránh kích hoạt lặp). */
     private static final Set<UUID> RUNNING = new HashSet<>();

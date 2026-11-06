@@ -59,6 +59,10 @@ Một số quyết định dưới đây **thay đổi so với tài liệu gố
 - `system/ending/`: `EndingServer` (kích hoạt kết), `EggAltarManager` (hồ trứng + con dấu 7 tia).
 - `entity/PrimordialEggEntity` + `entity/client/PrimordialEggRenderer`: trứng voxel 6 block, nhịp 60/phút, 7 mảnh vỏ.
 - `client/ending/`: `EndingSequenceClient` (dòng thời gian, camera, rung), `EndingDialogue` (kịch bản), `MirrorSelfRenderer` (bóng phản chiếu), `NoSignalScreen`.
+  - Bóng phản chiếu (hình dạng của `<System>`): 3 lớp vẽ: thân `RenderLayer.getEndPortal()` (trời sao), skin mờ `getEntityTranslucent`, viền `getEnergySwirl` (texture creeper_armor) phồng 6%. Đầu bắt chước hướng nhìn người chơi qua mặt gương (`getMirrorLook`, ghi lịch sử 32 tick), trễ `MIRROR_LAG` = 10 tick từ câu `<System>` đầu tiên, thôi bắt chước từ ×12. Nhảy cỡ = `GLITCH_TICKS` = 10 tick chớp giữa cỡ cũ/mới + rung ngang + tách màu + mất hình.
+  - Từ ×12 tới ×45, `getReflectionPos` trượt dần để mắt (cao `EYE_HEIGHT` 1.75 × cỡ) nằm trên đường từ mắt người chơi theo `GARGANTUA_DIR` = (0, 0.54, -0.84) (phải khớp `bhForward` của `shader/.../world1/gbuffers_skybasic.fsh`).
+  - **Tín hiệu cho shader:** khi mắt lộ ra ở The Womb, client đặt `world.setRainGradient` 0→1 trong ~2 s (Iris `rainStrength`; The Womb không có mưa). Về 0 khi `reset()`. Yêu cầu phía shader ghi ở `shader/GHI_CHU_CHO_AGENT_SHADER.md`.
+  - Lệnh `/samsara test mirror <1-45|off>`: xem trước bóng trước mặt (pha `PREVIEW`, không khoá di chuyển, trễ nửa nhịp sau 3 s).
 - `client/`: `StageAnomalyClient` (nhạc giật, nước xám), `WombTransitionClient`, `WombRouteClient` (dòng chảy, thuyền bóng ma, gửi trạng thái ngắm máy quay), `WombAmbienceClient`.
 - Mixin mới (trong `samsara.mixins.json`):
   - Server: `CropBlockMixin`.
@@ -69,7 +73,7 @@ Một số quyết định dưới đây **thay đổi so với tài liệu gố
 - Chu kỳ: `cycle`, `sleep_count <n>`, `phantom_wave [đêm]`, `camcorder_gift`, `anomaly sheep|music|lift [3|4]|reverse [phantom|cave]`, `nam_ghosts`.
 - Ký Ức Của Nam: `/samsara nam`, `nam_house`, `nam_field [r]` (trồng lại hoa cho chunk cũ), `womb_transition`.
 - The Womb: `/samsara womb`, `womb_route` (liệt kê chặng), `womb_route rebuild|dock|titans|spire|here|tp <0-4>`, `wanderer_chase [start|stop]`, `chapter_title <1-4>`.
-- Kết: `egg`, `ending` (cuối cùng sẽ lưu và thoát về menu).
+- Kết: `egg`, `ending` (cuối cùng sẽ lưu và thoát về menu), `mirror <1-45|off>` (xem trước bóng phản chiếu).
 
 ## Lưu ý / nợ kỹ thuật
 - **Dữ liệu Elysian còn giữ** để world cũ mở được: `data/samsara/dimension/elysian_highlands.json`, `dimension_type/elysian_highlands.json`, `worldgen/biome/elysian_meadows.json`. Không còn code nào dẫn tới đó; xoá được khi chuyển sang world mới. Code cũ nằm ở `_trash/elysian_mirror_removed/`.

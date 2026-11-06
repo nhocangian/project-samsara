@@ -140,7 +140,7 @@ vec3 renderCosmicReflection(vec3 rayWorld, float time) {
     vec3 camPos = vec3(0.0, 0.92, 21.0);
     vec3 camDir = normalize(vec3(0.0, -0.044, -1.0));
 
-    float theta = -36.0 * 0.01745329252;
+    float theta = -12.0 * 0.01745329252; // giống gbuffers_skybasic.fsh
     vec3 rawUp = vec3(-sin(theta), cos(theta), 0.0);
     vec3 camRight = normalize(cross(camDir, rawUp));
     vec3 camUp = normalize(cross(camRight, camDir));

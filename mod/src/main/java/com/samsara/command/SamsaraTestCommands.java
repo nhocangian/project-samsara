@@ -138,6 +138,13 @@ public class SamsaraTestCommands {
                                 .executes(ctx -> testNamHouse(ctx.getSource())))
 
                         // Test: Trồng lại hoa hướng dương quay đúng hướng (/samsara test nam_field [bán kính chunk])
+                        // Test: Xem trước bóng phản chiếu / <System> (/samsara test mirror <cỡ|off>)
+                        .then(CommandManager.literal("mirror")
+                                .executes(ctx -> testMirror(ctx.getSource(), 1.0f))
+                                .then(CommandManager.literal("off").executes(ctx -> testMirror(ctx.getSource(), 0.0f)))
+                                .then(CommandManager.argument("scale", IntegerArgumentType.integer(1, 45))
+                                        .executes(ctx -> testMirror(ctx.getSource(), IntegerArgumentType.getInteger(ctx, "scale")))))
+
                         // Test: Hoa hướng dương quay ngay về phía bạn (/samsara test sunflower_gaze)
                         .then(CommandManager.literal("sunflower_gaze")
                                 .executes(ctx -> testSunflowerGaze(ctx.getSource())))
@@ -274,6 +281,7 @@ public class SamsaraTestCommands {
         source.sendFeedback(() -> Text.literal("§b/samsara test chapter_title <1-4> §7- Hiện tiêu đề chương của tuyến hành hương"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test egg     §7- Dựng bệ + Quả Trứng Nguyên Thủy trước mặt"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test ending  §7- Chạy đoạn kết: cinematic, đối thoại <System>, NO SIGNAL (sẽ lưu, thoát và TẠO WORLD MỚI \"Chu Kỳ #N\"!)"), false);
+        source.sendFeedback(() -> Text.literal("§b/samsara test mirror <1-45|off> §7- Xem trước bóng phản chiếu (<System>) trước mặt, đổi cỡ để thấy cú nhảy"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test sunflower_gaze §7- Hoa hướng dương quanh bạn quay ngay về phía bạn (trong Ký Ức Của Nam)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test new_cycle <house|intro|cairn> §7- Nhà Nam của world chu kỳ mới (dựng 12 block phía bắc bạn) / tiêu đề lần đầu vào / Bia Mộ chu kỳ mới (3 block phía bắc)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test nam_ghosts §7- Vòng bóng ma Nam_1998 (chỉ thấy qua máy quay)"), false);
@@ -614,6 +622,18 @@ public class SamsaraTestCommands {
             }
             default -> { return 0; }
         }
+        return 1;
+    }
+
+    private static int testMirror(ServerCommandSource source, float scale) {
+        ServerPlayerEntity player = source.getPlayer();
+        if (player == null) return 0;
+        net.minecraft.network.PacketByteBuf buf = net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
+        buf.writeFloat(scale);
+        net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(player, com.samsara.system.ending.EndingServer.MIRROR_PREVIEW, buf);
+        source.sendFeedback(() -> Text.literal(scale <= 0 ? "§e[TEST] §aĐã tắt bóng phản chiếu."
+                : "§e[TEST] §aBóng phản chiếu cỡ §fx" + (int) scale + "§a. Gõ lại với cỡ khác để thấy cú nhảy (1, 2, 4, 12, 45); "
+                + "sau 3 giây nó bắt đầu trễ nửa nhịp. Ở x45 trong The Womb: mắt trùng Gargantua + tín hiệu shader."), false);
         return 1;
     }
 

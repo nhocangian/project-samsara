@@ -36,7 +36,16 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class EndingSequenceClient {
-    private enum Phase { NONE, CINEMATIC, DIALOGUE, CLOSING }
+    private enum Phase { NONE, CINEMATIC, DIALOGUE, CLOSING, PREVIEW }
+
+    /** Chiều cao con mắt của bóng phản chiếu so với chân, tính theo kích thước (block / 1x). */
+    public static final float EYE_HEIGHT = 1.75f;
+    /** Hướng Gargantua trên trời The Womb; phải khớp {@code bhForward} trong shader world1/gbuffers_skybasic. */
+    public static final Vec3d GARGANTUA_DIR = new Vec3d(0.0, 0.54, -0.84).normalize();
+    /** Số tick nhiễu VHS mỗi lần bóng phản chiếu nhảy kích thước. */
+    private static final int GLITCH_TICKS = 10;
+    /** Độ trễ (tick) khi bóng phản chiếu bắt đầu "chậm nửa nhịp" so với người chơi. */
+    private static final int MIRROR_LAG = 10;
 
     public static final int CINEMATIC_TICKS = 300;
 
@@ -65,6 +74,17 @@ public class EndingSequenceClient {
     private static float prevReflectionScale = 1.0f;
     private static float targetScale = 1.0f;
     private static boolean eyeRevealed = false;
+    // Nhảy kích thước kiểu băng VHS: vài tick chớp giữa cỡ cũ và cỡ mới rồi chốt
+    private static int glitchTicks = 0;
+    private static boolean glitchShowNew = false;
+    private static float jumpFrom = 1.0f;
+    // Bóng bắt chước hướng nhìn của người chơi (ghi lại mỗi tick để có thể trễ nửa nhịp)
+    private static final float[] LOOK_YAW = new float[32];
+    private static final float[] LOOK_PITCH = new float[32];
+    private static int lookHead = 0;
+    private static boolean mirrorLagging = false;
+    // Tín hiệu cho shader khi bóng đạt cỡ cực đại: rainStrength của Iris (The Womb không có mưa)
+    private static float maxSizeSignal = 0.0f;
 
     // Quả trứng nở
     private static float hatch = 0.0f;
@@ -89,6 +109,10 @@ public class EndingSequenceClient {
             Vec3d player = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
             client.execute(() -> start(egg, player));
         });
+        ClientPlayNetworking.registerGlobalReceiver(EndingServer.MIRROR_PREVIEW, (client, handler, buf, sender) -> {
+            float scale = buf.readFloat();
+            client.execute(() -> preview(scale));
+        });
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(EndingSequenceClient::reset));
         ClientTickEvents.END_CLIENT_TICK.register(EndingSequenceClient::tick);
         HudRenderCallback.EVENT.register(EndingSequenceClient::renderOverlay);
@@ -100,20 +124,51 @@ public class EndingSequenceClient {
     // ==========================================
 
     public static boolean isActive() { return phase != Phase.NONE; }
-    public static boolean isMovementLocked() { return phase != Phase.NONE; }
+    public static boolean isMovementLocked() { return phase != Phase.NONE && phase != Phase.PREVIEW; }
     public static boolean isCinematic() { return phase == Phase.CINEMATIC; }
 
     public static float getHatchProgress(float tickDelta) { return phase == Phase.NONE ? 0.0f : hatch; }
 
     public static float getReflectionScale(float tickDelta) {
+        if (glitchTicks > 0) return glitchShowNew ? targetScale : jumpFrom;
         return MathHelper.lerp(tickDelta, prevReflectionScale, reflectionScale);
+    }
+
+    /** Còn bao nhiêu tick nhiễu VHS của lần nhảy kích thước (0 = không nhiễu). */
+    public static int getGlitchTicks() { return glitchTicks; }
+
+    /** Mức tín hiệu "cỡ cực đại" gửi sang shader (0..1). */
+    public static float getMaxSizeSignal() { return maxSizeSignal; }
+
+    /**
+     * Hướng đầu của bóng phản chiếu (radian, hệ toạ độ model): {yaw, pitch}.
+     * Bóng là tấm gương của người chơi: hướng nhìn được phản xạ qua mặt phẳng giữa hai bên.
+     * Khi đoạn thoại bắt đầu nó trễ nửa nhịp; từ cỡ x12 trở lên nó thôi bắt chước và nhìn thẳng vào bạn.
+     */
+    public static float[] getMirrorLook(float tickDelta) {
+        float s = getReflectionScale(tickDelta);
+        float mimic = 1.0f - MathHelper.clamp((s - 12.0f) / 8.0f, 0.0f, 1.0f);
+        if (mimic <= 0.0f) return new float[]{0.0f, 0.0f};
+        int lag = mirrorLagging ? MIRROR_LAG : 0;
+        int i = Math.floorMod(lookHead - 1 - lag, LOOK_YAW.length);
+        float yaw = LOOK_YAW[i];
+        float pitch = LOOK_PITCH[i];
+
+        Vec3d n = forward;
+        double yr = Math.toRadians(yaw);
+        Vec3d d = new Vec3d(-Math.sin(yr), 0.0, Math.cos(yr));
+        Vec3d m = d.subtract(n.multiply(2.0 * d.dotProduct(n)));
+        float mirroredYaw = (float) (MathHelper.atan2(m.z, m.x) * (180.0 / Math.PI)) - 90.0f;
+        float rel = MathHelper.clamp(MathHelper.wrapDegrees(mirroredYaw - getReflectionYaw(tickDelta)), -75.0f, 75.0f);
+        return new float[]{(float) Math.toRadians(rel) * mimic, (float) Math.toRadians(MathHelper.clamp(pitch, -60f, 60f)) * mimic};
     }
 
     public static boolean isEyeRevealed() { return eyeRevealed; }
 
     /** Bóng phản chiếu có đang hiện không (từ lúc trồi lên trong cinematic tới hết đoạn kết). */
     public static boolean isReflectionVisible() {
-        return (phase == Phase.CINEMATIC && phaseTicks >= RISE_START) || phase == Phase.DIALOGUE || phase == Phase.CLOSING;
+        return (phase == Phase.CINEMATIC && phaseTicks >= RISE_START) || phase == Phase.DIALOGUE || phase == Phase.CLOSING
+                || phase == Phase.PREVIEW;
     }
 
     /** Độ trồi lên khỏi mặt nước (0 = chìm hẳn, 1 = đứng thẳng). */
@@ -148,13 +203,62 @@ public class EndingSequenceClient {
                 }
             }
         }
+
+        // Từ x12 tới x45: trượt dần tới chỗ mà con mắt của nó (cao EYE_HEIGHT x cỡ) nằm đúng trên đường
+        // từ mắt người chơi tới Gargantua trên trời. Ở x45, ngước lên là thấy Gargantua chính là con mắt nó.
+        if (s > 12.0f) {
+            float k = MathHelper.clamp((s - 12.0f) / (EndingDialogue.EYE_REVEAL_SCALE - 12.0f), 0.0f, 1.0f);
+            double eyeY = p.y + EYE_HEIGHT * s;
+            double rise = eyeY - (feet.y + 1.62);
+            Vec3d horiz = new Vec3d(GARGANTUA_DIR.x, 0.0, GARGANTUA_DIR.z).normalize();
+            double tan = GARGANTUA_DIR.y / Math.sqrt(GARGANTUA_DIR.x * GARGANTUA_DIR.x + GARGANTUA_DIR.z * GARGANTUA_DIR.z);
+            if (rise > 1.0) {
+                Vec3d aligned = feet.add(horiz.multiply(rise / tan));
+                p = new Vec3d(MathHelper.lerp(k, p.x, aligned.x), p.y, MathHelper.lerp(k, p.z, aligned.z));
+            }
+        }
         return p;
     }
 
-    /** Hướng bóng phản chiếu quay mặt (nhìn về người chơi). */
-    public static float getReflectionYaw() {
-        Vec3d back = forward.multiply(-1);
+    /** Hướng bóng phản chiếu quay mặt (luôn nhìn về chỗ người chơi đứng). */
+    public static float getReflectionYaw(float tickDelta) {
+        Vec3d p = getReflectionPos(tickDelta);
+        Vec3d back = new Vec3d(feet.x - p.x, 0.0, feet.z - p.z);
+        if (back.lengthSquared() < 1.0e-4) back = forward.multiply(-1);
         return (float) (MathHelper.atan2(back.z, back.x) * (180.0 / Math.PI)) - 90.0f;
+    }
+
+    // ==========================================
+    // XEM TRƯỚC (lệnh /samsara test mirror <cỡ>)
+    // ==========================================
+
+    /** Hiện bóng phản chiếu ngay trước mặt ở cỡ {@code scale} (0 = tắt). Không thoại, không khoá di chuyển. */
+    public static void preview(float scale) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null) return;
+        if (scale <= 0.0f) {
+            if (phase == Phase.PREVIEW) reset();
+            return;
+        }
+        if (phase != Phase.NONE && phase != Phase.PREVIEW) return;
+        if (phase == Phase.NONE) {
+            reset();
+            feet = client.player.getPos();
+            Vec3d look = client.player.getRotationVec(1.0f);
+            Vec3d f = new Vec3d(look.x, 0, look.z);
+            forward = f.lengthSquared() < 1.0E-4 ? new Vec3d(0, 0, -1) : f.normalize();
+            right = new Vec3d(-forward.z, 0, forward.x);
+            eggPos = feet.add(forward.multiply(6.0));
+            enter(Phase.PREVIEW);
+        }
+        startJump(scale);
+        eyeRevealed = scale >= EndingDialogue.EYE_REVEAL_SCALE;
+    }
+
+    private static void startJump(float scale) {
+        jumpFrom = getReflectionScale(1.0f);
+        targetScale = scale;
+        glitchTicks = GLITCH_TICKS;
     }
 
     // ==========================================
@@ -190,6 +294,11 @@ public class EndingSequenceClient {
         phaseTicks = 0;
         reflectionScale = prevReflectionScale = targetScale = 1.0f;
         eyeRevealed = false;
+        glitchTicks = 0;
+        jumpFrom = 1.0f;
+        mirrorLagging = false;
+        if (maxSizeSignal > 0.0f && client.world != null) client.world.setRainGradient(0.0f);
+        maxSizeSignal = 0.0f;
         hatch = hatchTarget = 0.0f;
         shakeTicks = 0;
         stepIndex = 0;
@@ -216,14 +325,37 @@ public class EndingSequenceClient {
         phaseTicks++;
         if (shakeTicks > 0) shakeTicks--;
 
-        prevReflectionScale = reflectionScale;
-        reflectionScale += (targetScale - reflectionScale) * 0.12f;
+        // Hướng nhìn của người chơi (để bóng phản chiếu bắt chước, có thể trễ)
+        LOOK_YAW[lookHead] = client.player.getHeadYaw();
+        LOOK_PITCH[lookHead] = client.player.getPitch();
+        lookHead = (lookHead + 1) % LOOK_YAW.length;
+        if (phase == Phase.PREVIEW && phaseTicks == 60) mirrorLagging = true;
+
+        // Nhảy kích thước: chớp giữa cỡ cũ và cỡ mới như băng bị nhảy track, rồi chốt hẳn cỡ mới
+        if (glitchTicks > 0) {
+            glitchTicks--;
+            glitchShowNew = glitchTicks < 3 || RANDOM.nextFloat() < 0.5f;
+            if (glitchTicks == 0) prevReflectionScale = reflectionScale = targetScale;
+        } else {
+            prevReflectionScale = reflectionScale;
+            reflectionScale += (targetScale - reflectionScale) * 0.12f;
+        }
+
+        // Tín hiệu cỡ cực đại cho shader: tăng dần trong ~2 giây sau khi con mắt lộ ra.
+        // Chỉ ở The Womb (mọi biome ở đó không có mưa, nên rainStrength chỉ là một kênh tín hiệu).
+        boolean inWomb = client.world.getRegistryKey() == com.samsara.registry.SamsaraDimensions.THE_WOMB_WORLD_KEY;
+        float want = eyeRevealed && glitchTicks == 0 && inWomb ? 1.0f : 0.0f;
+        float before = maxSizeSignal;
+        if (Math.abs(want - maxSizeSignal) <= 0.025f) maxSizeSignal = want;
+        else maxSizeSignal += Math.signum(want - maxSizeSignal) * 0.025f;
+        if (inWomb && (maxSizeSignal > 0.0f || before > 0.0f)) client.world.setRainGradient(maxSizeSignal);
         hatch += (hatchTarget - hatch) * 0.05f;
 
         switch (phase) {
             case CINEMATIC -> tickCinematic(client);
             case DIALOGUE -> tickDialogue(client);
             case CLOSING -> tickClosing(client);
+            case PREVIEW -> { }
             default -> { }
         }
     }
@@ -282,7 +414,7 @@ public class EndingSequenceClient {
             }
             case JUMP -> {
                 if (stepTicks == 1) {
-                    targetScale = step.value();
+                    startJump(step.value());
                     shakeTicks = 14;
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ENTITY_WARDEN_HEARTBEAT, 0.55f, 1.0f));
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), 0.5f, 0.6f));
@@ -293,6 +425,7 @@ public class EndingSequenceClient {
             case SYSTEM -> {
                 // <System> "suy nghĩ" một nhịp rồi trả lời; thời gian đọc tỉ lệ với độ dài câu
                 if (stepTicks == 30) {
+                    mirrorLagging = true;   // từ câu đầu tiên của <System>, bóng gương chậm hơn bạn nửa nhịp
                     client.inGameHud.getChatHud().addMessage(Text.literal("§e<System> " + step.text()));
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, 0.6f, 0.4f));
                 }

@@ -146,7 +146,10 @@ Kích hoạt khi bước vào trong 6 block quanh Quả Trứng.
 2. **Đoạn thoại** tự gõ trong ô chat, theo nguyên văn trong Video 9 của tài liệu kịch bản. `<System>` gọi Nam là **"cậu"**. Câu nhắc Elysian ở trong game đã sửa (xem mục 0), còn tài liệu kịch bản vẫn giữ chữ "Elysian Highlands".
    - Lời Nam hiện như chính người chơi đang gõ.
    - Tên Nam đổi dần: **Nam_1998**, rồi **bị nhiễu** (từ câu *"Sau khi trưởng thành..."*), rồi **username thật của người chơi** (từ câu *"Còn người đang ngồi trước màn hình..."*).
-   - Bóng phản chiếu **nhảy kích thước ×2, ×4, ×12, ×45**. Ở ×45 (câu *"Họ cũng chính là cậu."*), **Gargantua chính là con mắt của nó**.
+   - **Bóng phản chiếu = hình dạng của `<System>`:** dáng người chơi, **thân làm bằng trời sao chuyển động**, skin của chính người chơi phủ mờ bên ngoài, viền tím mờ.
+   - Lúc mới trồi lên, nó **nhìn theo hướng người chơi nhìn như một tấm gương**. Từ câu đầu tiên của `<System>`, nó **chậm hơn nửa nhịp**.
+   - Bóng **nhảy kích thước ×2, ×4, ×12, ×45**, mỗi lần nhảy có vài khung hình **nhiễu băng VHS** (rung ngang, tách màu, mất hình). Từ ×12 nó thôi bắt chước và nhìn thẳng vào người chơi.
+   - Ở ×45 (câu *"Họ cũng chính là cậu."*), con mắt của nó nằm **đúng chỗ Gargantua trên trời** (phía bắc): ngước lên là thấy **Gargantua chính là con mắt của nó**.
    - Quả Trứng nứt dần theo lời thoại.
    - Toàn bộ khoảng 3–4 phút.
 3. **Kết:** nhắm mắt, trứng nở, rồi màn **NO SIGNAL** ("OBS ■ REC STOPPED", "Nam_1998_LOG_09.mp4"). Câu kết hiện giữa màn hình:
