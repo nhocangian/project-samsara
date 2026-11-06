@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "samsara:block/memory_door_giant"
+    },
+    "facing=south": {
+      "model": "samsara:block/memory_door_giant"
+    },
+    "facing=east": {
+      "model": "samsara:block/memory_door_giant"
+    },
+    "facing=west": {
+      "model": "samsara:block/memory_door_giant"
+    }
+  }
+}

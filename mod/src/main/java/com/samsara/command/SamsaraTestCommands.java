@@ -162,6 +162,8 @@ public class SamsaraTestCommands {
                                         .executes(ctx -> testWombRouteRebuild(ctx.getSource())))
                                 .then(CommandManager.literal("titans")
                                         .executes(ctx -> testWombTitans(ctx.getSource())))
+                                .then(CommandManager.literal("doors")
+                                        .executes(ctx -> testWombDoors(ctx.getSource())))
                                 .then(CommandManager.literal("spire")
                                         .executes(ctx -> testWombSpire(ctx.getSource())))
                                 .then(CommandManager.literal("dock")
@@ -276,7 +278,7 @@ public class SamsaraTestCommands {
         source.sendFeedback(() -> Text.literal("§b/samsara test womb_transition §7- Bị hút đi sau giấc ngủ thứ 7 (tới Ký Ức Của Nam)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test nam_house §7- Dựng lại nhà Nam ở cánh đồng hướng dương"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test nam_field [r] §7- Trồng lại hoa hướng dương quay về đường mòn (bán kính r chunk)"), false);
-        source.sendFeedback(() -> Text.literal("§b/samsara test womb_route [here|rebuild|dock|titans|spire|tp <0-4>] §7- Tuyến hành hương The Womb: xem / dựng tại chỗ / dựng lại / chỉ bến đò / chỉ khổng thần / chỉ tháp / tới chặng"), false);
+        source.sendFeedback(() -> Text.literal("§b/samsara test womb_route [here|rebuild|dock|doors|titans|spire|tp <0-4>] §7- Tuyến hành hương The Womb: xem / dựng tại chỗ / dựng lại / chỉ bến đò / chỉ biển cửa (và tới đó) / chỉ khổng thần / chỉ tháp / tới chặng"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test screenshot_sun §7- Chụp màn hình như F2: ảnh thấy mặt trời hố đen (Stage 1+)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test ui <join|leave|say|archive|advancement|rename|reset|ending_menu_on|ending_menu_off> §7- Kinh dị tầng giao diện (archive = 3 dòng Video 3 của Chu Kỳ ≥2) (F3 lạ & tên cửa sổ & nút Rời giường từ Stage 1, menu nhiễu ở Stage 4)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test camcorder_model §7- Máy quay 3D: LCD lật, đèn REC, nắp băng khi thay pin (pin về 50%)"), false);
@@ -582,6 +584,23 @@ public class SamsaraTestCommands {
         if (origin == null || womb == null) return testWombRoute(source);
         com.samsara.system.womb.WombRouteManager.build(womb, origin);
         source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng lại tuyến hành hương."), true);
+        return 1;
+    }
+
+    /** Dựng lại biển cửa (chương II) và đưa người chơi tới đầu hành lang, nhìn về phía bắc. */
+    private static int testWombDoors(ServerCommandSource source) {
+        BlockPos origin = EggCycleState.get(source.getServer()).getRouteOrigin();
+        ServerWorld womb = source.getServer().getWorld(com.samsara.registry.SamsaraDimensions.THE_WOMB_WORLD_KEY);
+        if (origin == null || womb == null) return testWombRoute(source);
+        com.samsara.system.womb.chapters.SaveDoorChapter.build(womb, origin);
+        com.samsara.system.womb.chapters.DockChapter.build(womb, origin);
+        com.samsara.system.womb.chapters.TitanChapter.build(womb, origin);
+        com.samsara.system.womb.chapters.FloatingCrystals.build(womb, origin, com.samsara.system.womb.WombRoute.length(origin));
+        ServerPlayerEntity player = source.getPlayer();
+        if (player != null) {
+            player.teleport(womb, origin.getX() + 0.5, com.samsara.system.womb.WombRoute.SURFACE_Y, origin.getZ() - 10.5, 180.0f, 0.0f);
+        }
+        source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng lại căn phòng cửa và Bến Đò. Nhìn về phía bắc; ngắm máy quay vào cửa sát tuyến để thấy tên save; cánh cửa trắng ở tường bắc là lối ra."), true);
         return 1;
     }
 

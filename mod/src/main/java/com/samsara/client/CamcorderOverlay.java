@@ -238,6 +238,8 @@ public class CamcorderOverlay implements HudRenderCallback {
         // 4. KHUNG CHỮ THẬP [ + ] & 4 GÓC NGẮM (CAMCORDER BRACKETS)
         // =========================================================================
         drawContext.drawText(textRenderer, "+", cx - 3, cy - 4, 0x55FFFFFF, false);
+        // Nhãn save file khi ngắm vào cánh cửa có tên ở chương II của The Womb
+        com.samsara.client.womb.SaveDoorLabels.draw(drawContext, textRenderer, cx, cy);
 
         int bSize = 32;
         int bThick = 1;

@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "ajar=0,facing=south,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower"
+    },
+    "ajar=0,facing=west,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower",
+      "y": 90
+    },
+    "ajar=0,facing=north,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower",
+      "y": 180
+    },
+    "ajar=0,facing=east,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower",
+      "y": 270
+    },
+    "ajar=1,facing=south,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower_ajar"
+    },
+    "ajar=1,facing=west,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower_ajar",
+      "y": 90
+    },
+    "ajar=1,facing=north,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower_ajar",
+      "y": 180
+    },
+    "ajar=1,facing=east,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower_ajar",
+      "y": 270
+    },
+    "ajar=2,facing=south,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower_open"
+    },
+    "ajar=2,facing=west,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower_open",
+      "y": 90
+    },
+    "ajar=2,facing=north,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower_open",
+      "y": 180
+    },
+    "ajar=2,facing=east,half=lower": {
+      "model": "samsara:block/memory_door_blue_lower_open",
+      "y": 270
+    },
+    "ajar=0,facing=south,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper"
+    },
+    "ajar=0,facing=west,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper",
+      "y": 90
+    },
+    "ajar=0,facing=north,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper",
+      "y": 180
+    },
+    "ajar=0,facing=east,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper",
+      "y": 270
+    },
+    "ajar=1,facing=south,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper_ajar"
+    },
+    "ajar=1,facing=west,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper_ajar",
+      "y": 90
+    },
+    "ajar=1,facing=north,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper_ajar",
+      "y": 180
+    },
+    "ajar=1,facing=east,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper_ajar",
+      "y": 270
+    },
+    "ajar=2,facing=south,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper_open"
+    },
+    "ajar=2,facing=west,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper_open",
+      "y": 90
+    },
+    "ajar=2,facing=north,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper_open",
+      "y": 180
+    },
+    "ajar=2,facing=east,half=upper": {
+      "model": "samsara:block/memory_door_blue_upper_open",
+      "y": 270
+    }
+  }
+}

@@ -38,7 +38,32 @@ public class SamsaraBlocks {
             FabricBlockSettings.copyOf(Blocks.SUNFLOWER)
     );
 
+    // Cửa Ký Ức (chương II của The Womb): ba màu phấn như biển cửa trong tham chiếu, không item, không phá được
+    public static final Block MEMORY_DOOR_PINK = memoryDoor();
+    public static final Block MEMORY_DOOR_BLUE = memoryDoor();
+    public static final Block MEMORY_DOOR_WHITE = memoryDoor();
+
+    /** Cánh cửa trắng khổng lồ hé mở ở cuối hành lang cửa (vẽ bằng MemoryDoorGiantRenderer). */
+    public static final Block MEMORY_DOOR_GIANT = new com.samsara.block.MemoryDoorGiantBlock(
+            FabricBlockSettings.create().strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing()
+                    .luminance(state -> 15));
+
+    /** Vách Hư Không: tường và trần đen tuyền của căn phòng bao Bến Đò và biển cửa (chặn cả ánh trời). */
+    public static final Block WOMB_VEIL = new Block(FabricBlockSettings.copyOf(Blocks.BEDROCK)
+            .strength(-1.0f, 3600000.0f).dropsNothing().mapColor(net.minecraft.block.MapColor.BLACK));
+
+    private static Block memoryDoor() {
+        return new com.samsara.block.MemoryDoorBlock(FabricBlockSettings.create()
+                .strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()
+                .sounds(net.minecraft.sound.BlockSoundGroup.WOOD));
+    }
+
     public static void registerBlocks() {
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_pink"), MEMORY_DOOR_PINK);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_blue"), MEMORY_DOOR_BLUE);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_white"), MEMORY_DOOR_WHITE);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_giant"), MEMORY_DOOR_GIANT);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_veil"), WOMB_VEIL);
         Registry.register(Registries.BLOCK, MEMORY_SUNFLOWER_ID, MEMORY_SUNFLOWER);
         Registry.register(Registries.BLOCK, CRADLE_ID, CRADLE);
         Registry.register(Registries.BLOCK, PRIMORDIAL_EGG_ID, PRIMORDIAL_EGG);

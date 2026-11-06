@@ -122,17 +122,20 @@ Mỗi lần ngủ qua đêm tăng số giấc ngủ của cả thế giới.
 
 ## 4. The Womb – tuyến hành hương (thay cho Video 8)
 
+**Căn phòng không ai nhận ra:** Bến Đò và chương II nằm trong một căn phòng khổng lồ, tường và trần đen tuyền (Vách Hư Không), nên lúc mới tới người chơi chỉ thấy bóng tối và biển cửa, **không thấy bầu trời hay Gargantua**. Lối ra duy nhất là cánh cửa trắng khổng lồ ở cuối; bước qua nó mới thấy vũ trụ, con ngươi Gargantua và Steve 2009. Nhìn lại phía sau là một khối đen khổng lồ với cánh cửa trắng phát sáng.
+
 Biển đen dưới con ngươi Gargantua. Thuyền đi theo dòng chảy, dọc dải phao đèn về phía bắc, dài khoảng 400 block. Mỗi chương có tiêu đề riêng, âm nền riêng, và **nhịp tim của Quả Trứng to dần**.
 
 | Chương | Tiêu đề / phụ đề | Nội dung |
 | :--- | :--- | :--- |
 | I | **Bến Đò** – *nơi bạn thức dậy* | Bến gỗ mục, chiếc giường đỏ chìm dưới nước, mảnh đất Overworld lơ lửng, thuyền chờ sẵn. Qua máy quay thấy **thuyền bóng ma "chính bạn"** chèo song song. |
-| II | **Những Cánh Cửa** – *mỗi cánh cửa là một kiếp* | 16 cánh cửa save file có tên, xếp từ mới tới cũ (xem dưới), 12 cửa rừng xa, tinh thể tím lơ lửng. |
+| II | **Những Cánh Cửa** – *mỗi cánh cửa là một kiếp* | **Một biển cửa giống hệt nhau** (cách nhau 3 block, phủ kín cả căn phòng, kể cả quanh Bến Đò) đứng trơ trọi trên mặt nước nông, thẳng hàng tới tận chỗ tối hẳn: cửa panel màu phấn hồng, xám xanh, trắng, không bậc thang, không biển tên, cùng quay mặt về Bến Đò. Thỉnh thoảng một cánh hé mở, phía sau chẳng có gì. Gần tuyến sáng, ra xa tối dần. Cuối hành lang, trong tường phòng, là **một cánh cửa trắng khổng lồ hé mở**: sau khe cửa chỉ có ánh sáng trắng, ánh sáng tràn ra thành vệt trên mặt nước; thuyền đi xuyên qua khe cửa sang chương III. |
 | III | **Những Người Khổng Lồ** – *những lần bạn đã chết* | Ba khổng thần: **Steve 2009** quỳ gối; **hố nổ 2013** có mặt Creeper dưới đáy và mảnh vụn đóng băng giữa không trung; **kẻ đốt nhà** nâng căn nhà đang cháy. |
 | IV | **Tháp Ngược** – *lần cuối cùng* | Cầu thang xoắn nổi lên tới độ cao khoảng 100. Cánh cửa cuối ghi **"New World / Chơi lần cuối: / bây giờ / bạn"**. Hồ gương lơ lửng có Quả Trứng, tháp treo ngược từ trời. |
 
-**Tên các save trên cánh cửa** (mới → cũ), mỗi cửa ghi "Chơi lần cuối" và "Nam_1998":
-New World (14) 03/2021 · Survival - đừng ngủ 02/2021 · New World (13) 11/2020 · server với Tuấn 07/2020 · Hardcore 01/2020 · Nhà Nam 05/2018 · Sáng tạo-KHÔNG XÓA 08/2016 · Copy of New World 12/2015 · Survival 2014 06/2014 · hầm mỏ 09/2013 · Thế giới của em 04/2012 · New World 10/2011 · Beta 1.7.3 2011 · World2 2010 · Alpha 1.2.6 2010 · World1 2009 (sát Steve 2009).
+**Tên các save** (mới → cũ): **mắt thường không thấy tên.** Ngắm máy quay vào cánh cửa sát tuyến thì dưới tâm ngắm hiện nhãn kiểu băng VHS: *"▶ <tên>"* và *"Chơi lần cuối: <ngày>"*. Cửa có tên đứng sát tuyến, cứ 6 block một cửa, so le hai bên, bắt đầu ngay cạnh Bến Đò:
+New World (14) 03/2021 · Survival - đừng ngủ 02/2021 · New World (13) 11/2020 · server với Tuấn 07/2020 · Hardcore 01/2020 · Nhà Nam 05/2018 · Sáng tạo-KHÔNG XÓA 08/2016 · Copy of New World 12/2015 · Survival 2014 06/2014 · hầm mỏ 09/2013 · Thế giới của em 04/2012 · New World 10/2011 · Beta 1.7.3 2011 · World2 2010 · Alpha 1.2.6 2010.
+Cánh cửa trắng khổng lồ là **World1 2009**, thế giới đầu tiên: đi qua nó là gặp Steve 2009. Qua máy quay, vài cánh cửa có bóng Nam_1998 đứng chờ (không còn hiện tên trên đầu).
 
 **The Wanderer – "Lữ Khách Vô Danh"** (mod tự thêm, bám theo lời nhắn "đừng để nó rời khỏi ống kính"):
 - Hình dạng: kẻ khoác nhiều lớp áo choàng rách, lơ lửng không chân, cổ lệch, thỉnh thoảng giật đầu, chỉ thấy hai mắt sáng trong mũ trùm.

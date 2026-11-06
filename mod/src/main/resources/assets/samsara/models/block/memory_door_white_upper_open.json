@@ -1,0 +1,186 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "samsara:block/memory_door_white_frame",
+    "bottom": "samsara:block/memory_door_white_bottom",
+    "top": "samsara:block/memory_door_white_top",
+    "frame": "samsara:block/memory_door_white_frame",
+    "knob": "samsara:block/memory_door_knob"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#top",
+          "uv": [
+            16,
+            0,
+            0,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#top",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#top",
+          "uv": [
+            14,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#top",
+          "uv": [
+            0,
+            0,
+            2,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#top",
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#top",
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0,
+          8,
+          7
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        -2,
+        0,
+        6
+      ],
+      "to": [
+        0,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#frame"
+        },
+        "south": {
+          "texture": "#frame"
+        },
+        "east": {
+          "texture": "#frame"
+        },
+        "west": {
+          "texture": "#frame"
+        },
+        "up": {
+          "texture": "#frame"
+        },
+        "down": {
+          "texture": "#frame"
+        }
+      }
+    },
+    {
+      "from": [
+        16,
+        0,
+        6
+      ],
+      "to": [
+        18,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#frame"
+        },
+        "south": {
+          "texture": "#frame"
+        },
+        "east": {
+          "texture": "#frame"
+        },
+        "west": {
+          "texture": "#frame"
+        },
+        "up": {
+          "texture": "#frame"
+        },
+        "down": {
+          "texture": "#frame"
+        }
+      }
+    },
+    {
+      "from": [
+        -2,
+        16,
+        6
+      ],
+      "to": [
+        18,
+        18,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#frame"
+        },
+        "south": {
+          "texture": "#frame"
+        },
+        "east": {
+          "texture": "#frame"
+        },
+        "west": {
+          "texture": "#frame"
+        },
+        "up": {
+          "texture": "#frame"
+        },
+        "down": {
+          "texture": "#frame"
+        }
+      }
+    }
+  ]
+}

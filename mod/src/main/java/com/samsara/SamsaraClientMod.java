@@ -60,6 +60,9 @@ public class SamsaraClientMod implements ClientModInitializer {
         com.samsara.client.ui.UiHorrorClient.register();
         // Ảnh chụp F2 thấy mặt trời thật (hố đen theo stage)
         com.samsara.client.ScreenshotSunClient.register();
+        // Cánh cửa trắng khổng lồ cuối hành lang cửa (chương II của The Womb)
+        net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(
+                com.samsara.registry.SamsaraBlockEntities.MEMORY_DOOR_GIANT_BE, ctx -> new com.samsara.client.womb.MemoryDoorGiantRenderer());
 
         // Phantom qua ống kính máy quay: "Tàn Hồn Phantom" (mắt thường vẫn thấy Phantom vanilla)
         EntityRendererRegistry.register(net.minecraft.entity.EntityType.PHANTOM, com.samsara.entity.client.SoulPhantomRenderer::new);

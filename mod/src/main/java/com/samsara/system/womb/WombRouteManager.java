@@ -58,8 +58,9 @@ public final class WombRouteManager {
         placeBuoys(world, origin);
 
         // Kể chuyện bằng hình ảnh dọc tuyến
-        com.samsara.system.womb.chapters.DockChapter.build(world, origin);
+        // Căn phòng cửa trước (nó dọn sạch phòng), rồi mới tới Bến Đò bên trong
         com.samsara.system.womb.chapters.SaveDoorChapter.build(world, origin);
+        com.samsara.system.womb.chapters.DockChapter.build(world, origin);
         com.samsara.system.womb.chapters.TitanChapter.build(world, origin);
         com.samsara.system.womb.chapters.FloatingCrystals.build(world, origin, WombRoute.length(origin));
 
@@ -101,7 +102,11 @@ public final class WombRouteManager {
                     int x = px + dx;
                     int z = pz + dz;
                     for (int y = surface; y < surface + CLEAR_HEIGHT; y++) {
-                        if (!world.getBlockState(m.set(x, y, z)).isAir()) world.setBlockState(m, air, 2);
+                        BlockState st = world.getBlockState(m.set(x, y, z));
+                        // Giữ vách/trần căn phòng cửa, cánh cửa khổng lồ và ánh sáng khe cửa nằm ngay trên tuyến
+                        if (st.isAir() || st.isOf(com.samsara.registry.SamsaraBlocks.WOMB_VEIL)
+                                || st.isOf(com.samsara.registry.SamsaraBlocks.MEMORY_DOOR_GIANT) || st.isOf(Blocks.LIGHT)) continue;
+                        world.setBlockState(m, air, 2);
                     }
                     if (!world.getFluidState(m.set(x, surface - 1, z)).isStill()) world.setBlockState(m, water, 2);
                     if (world.getBlockState(m.set(x, surface - 2, z)).isAir()
@@ -159,6 +164,7 @@ public final class WombRouteManager {
     /** Có nằm quá gần tuyến (để WombRuinManager bỏ qua) không. */
     public static boolean isNearRoute(ServerWorld world, int x, int z) {
         BlockPos origin = EggCycleState.get(world.getServer()).getRouteOrigin();
-        return origin != null && WombRoute.distanceToRoute(origin, x, z) < RUIN_CLEARANCE;
+        return origin != null && (WombRoute.distanceToRoute(origin, x, z) < RUIN_CLEARANCE
+                || com.samsara.system.womb.chapters.SaveDoorLayout.insideRoom(origin, x, z, 30));
     }
 }

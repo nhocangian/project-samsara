@@ -17,7 +17,12 @@ public class SamsaraBlockEntities {
     public static BlockEntityType<CradleBlockEntity> CRADLE_BLOCK_ENTITY;
     public static BlockEntityType<com.samsara.block.entity.PrimordialEggBlockEntity> PRIMORDIAL_EGG_BE;
 
+    public static BlockEntityType<com.samsara.block.entity.MemoryDoorGiantBlockEntity> MEMORY_DOOR_GIANT_BE;
+
     public static void registerBlockEntities() {
+        MEMORY_DOOR_GIANT_BE = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("samsara", "memory_door_giant"),
+                FabricBlockEntityTypeBuilder.create(com.samsara.block.entity.MemoryDoorGiantBlockEntity::new, SamsaraBlocks.MEMORY_DOOR_GIANT).build());
+
         CRADLE_BLOCK_ENTITY = Registry.register(
                 Registries.BLOCK_ENTITY_TYPE,
                 CRADLE_BE_ID,
