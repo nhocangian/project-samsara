@@ -54,7 +54,7 @@ Mỗi lần ngủ qua đêm tăng số giấc ngủ của cả thế giới.
 | :--- | :--- | :--- |
 | 1 | 1–2 | Mặt trời nứt (chỉ thấy qua máy quay). Cừu đứng im nhìn về Bia Mộ. Nhạc nền bị giật. |
 | 2 | 3–4 | Nước xám bạc. Cây trồng chỉ lớn khi được nhìn qua máy quay bật hồng ngoại. Ban đêm có các bóng **Nam_1998** đứng vây quanh (chỉ thấy qua ống kính). |
-| 3 | 5–6 | Cát và sỏi bay ngược lên trời. La bàn quay loạn. |
+| 3 | 5–6 | Cát và sỏi bay ngược lên trời. La bàn quay loạn. Khi đứng yên, thỉnh thoảng **một âm quen thuộc phát ngược** ngay sau lưng (mở rương, cửa gỗ, bước chân trên cỏ, nhặt đồ), mọi âm khác vẫn bình thường. |
 | 4 | 7+ | Mọi block tự nhiên trên mặt đất bị hút lên trời. |
 
 - Mỗi lần ngủ, chat báo: *"[Chu kỳ ngủ #n] Bầu trời dường như bị bẻ cong..."*. Khi lên stage, chat báo *"[CHU KỲ LUÂN HỒI] ... Mặt Trời đang dần sụp đổ thành Hố Đen!"*.
@@ -62,6 +62,7 @@ Mỗi lần ngủ qua đêm tăng số giấc ngủ của cả thế giới.
 
 ### Bẫy Phantom
 - Không ngủ thì bầy Phantom đông dần theo số đêm thức. Ngủ dậy là bầy tan.
+- Tiếng Phantom vọng xuống từ trời là **tiếng Phantom phát ngược thật**, như băng tua ngược.
 - Lời thì thầm hiện ở thanh thông báo: *"...ngủ đi..."*, *"...nhắm mắt lại đi..."*, *"...chiếc giường vẫn còn ấm..."*, *"...cậu mệt rồi..."*.
 - **Qua ống kính, Phantom là "Tàn Hồn Phantom"**: một thân người gầy trơ sườn, tay dang làm xương cánh căng màng da rách, chân kéo lê, mắt phát sáng.
 

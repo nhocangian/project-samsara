@@ -66,7 +66,7 @@ Một số quyết định dưới đây **thay đổi so với tài liệu gố
 - Texture sinh bằng script trong `mod/tools/`: `generate_womb_stretch.py`, `generate_primordial_egg.py`, cùng các script mặt trời. Sửa script rồi chạy lại, không sửa PNG bằng tay.
 
 ## Lệnh test quan trọng
-- Chu kỳ: `cycle`, `sleep_count <n>`, `phantom_wave [đêm]`, `camcorder_gift`, `anomaly sheep|music|lift [3|4]`, `nam_ghosts`.
+- Chu kỳ: `cycle`, `sleep_count <n>`, `phantom_wave [đêm]`, `camcorder_gift`, `anomaly sheep|music|lift [3|4]|reverse [phantom|cave]`, `nam_ghosts`.
 - Ký Ức Của Nam: `/samsara nam`, `nam_house`, `nam_field [r]` (trồng lại hoa cho chunk cũ), `womb_transition`.
 - The Womb: `/samsara womb`, `womb_route` (liệt kê chặng), `womb_route rebuild|dock|titans|spire|here|tp <0-4>`, `wanderer_chase [start|stop]`, `chapter_title <1-4>`.
 - Kết: `egg`, `ending` (cuối cùng sẽ lưu và thoát về menu).
@@ -76,7 +76,7 @@ Một số quyết định dưới đây **thay đổi so với tài liệu gố
 - `LucidSlumberManager` đã bị xoá; `WombArchitectureGenerator.generateWombSanctuary` và block `primordial_egg` cũ giờ không còn dùng (block vẫn giữ để không hỏng save).
 - World đã sinh trước khi có tính năng mới cần dựng lại bằng lệnh (`womb_route rebuild`, `nam_field`...).
 - Chữ trong game nằm trong `assets/samsara/lang/vi_vn.json` (xem mục Tiếng Việt hoá bên dưới).
-- Âm thanh toàn bộ là âm vanilla đổi pitch; chưa có file `.ogg` riêng.
+- Âm thanh toàn bộ là âm vanilla đổi pitch; chưa có file `.ogg` riêng. **Âm tua ngược thật**: trong `sounds.json`, tên `samsara:reversed/<ns>/<đường_dẫn>` = file `<ns>:sounds/<đường_dẫn>.ogg` phát ngược, đảo PCM trong bộ nhớ lúc nạp (`client/sound/ReversedSounds`, `SoundLoaderReverseMixin`, `SoundManagerReverseMixin`; không dùng với `stream: true`). Đang dùng cho `entity.phantom_reversed`, `ambient.cave_reversed` và `ambient.reversed_familiar` (Stage 3+, `system/cycle/ReversedEchoSystem`: đứng yên ≥3 s ở Overworld, ~1/25 mỗi giây, nghỉ 150 s; chỉ người đó nghe, phát sau lưng 3–5 block). Lệnh `/samsara test anomaly reverse [phantom|cave]`.
 - Chưa kiểm tra đầy đủ: nước xám khi bật shader (phụ thuộc shader có dùng màu đỉnh hay không), độ trơn của cầu thang xoắn ở các góc, thời lượng đoạn thoại kết (khoảng 3–4 phút).
 - Thư mục dự án **chưa phải git repo**, nên không có lịch sử thay đổi.
 

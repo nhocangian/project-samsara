@@ -24,7 +24,12 @@ public class SamsaraSounds {
     public static final Identifier SYSTEM_STATIC_ID = new Identifier("samsara", "item.system_static");
     public static final SoundEvent SYSTEM_STATIC = SoundEvent.of(SYSTEM_STATIC_ID);
 
+    /** Stage 3: một âm quen thuộc (rương, cửa, bước chân...) phát ngược thật. */
+    public static final Identifier REVERSED_FAMILIAR_ID = new Identifier("samsara", "ambient.reversed_familiar");
+    public static final SoundEvent REVERSED_FAMILIAR = SoundEvent.of(REVERSED_FAMILIAR_ID);
+
     public static void registerSounds() {
+        Registry.register(Registries.SOUND_EVENT, REVERSED_FAMILIAR_ID, REVERSED_FAMILIAR);
         Registry.register(Registries.SOUND_EVENT, PHANTOM_REVERSED_ID, PHANTOM_REVERSED);
         Registry.register(Registries.SOUND_EVENT, SYSTEM_STATIC_ID, SYSTEM_STATIC);
         Registry.register(Registries.SOUND_EVENT, CAVE_REVERSED_ID, CAVE_REVERSED);

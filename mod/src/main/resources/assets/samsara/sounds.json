@@ -4,13 +4,13 @@
     "subtitle": "subtitles.samsara.cave_reversed",
     "sounds": [
       {
-        "name": "minecraft:ambient/cave/cave1",
-        "pitch": 0.5,
+        "name": "samsara:reversed/minecraft/ambient/cave/cave1",
+        "pitch": 0.8,
         "volume": 0.9
       },
       {
-        "name": "minecraft:ambient/cave/cave8",
-        "pitch": 0.6,
+        "name": "samsara:reversed/minecraft/ambient/cave/cave8",
+        "pitch": 0.85,
         "volume": 0.8
       }
     ]
@@ -44,20 +44,20 @@
     "subtitle": "subtitles.samsara.phantom_reversed",
     "sounds": [
       {
-        "name": "minecraft:mob/phantom/idle1",
-        "pitch": 0.5,
+        "name": "samsara:reversed/minecraft/mob/phantom/idle1",
+        "pitch": 0.85,
         "volume": 1.0,
         "attenuation_distance": 48
       },
       {
-        "name": "minecraft:mob/phantom/idle3",
-        "pitch": 0.45,
+        "name": "samsara:reversed/minecraft/mob/phantom/idle3",
+        "pitch": 0.8,
         "volume": 1.0,
         "attenuation_distance": 48
       },
       {
-        "name": "minecraft:mob/phantom/swoop2",
-        "pitch": 0.4,
+        "name": "samsara:reversed/minecraft/mob/phantom/swoop2",
+        "pitch": 0.75,
         "volume": 0.9,
         "attenuation_distance": 48
       }
@@ -72,6 +72,43 @@
         "type": "event",
         "pitch": 0.5,
         "volume": 0.8
+      }
+    ]
+  },
+  "ambient.reversed_familiar": {
+    "category": "ambient",
+    "sounds": [
+      {
+        "name": "samsara:reversed/minecraft/block/chest/open",
+        "volume": 0.9
+      },
+      {
+        "name": "samsara:reversed/minecraft/block/chest/close1",
+        "volume": 0.9
+      },
+      {
+        "name": "samsara:reversed/minecraft/block/wooden_door/open1",
+        "volume": 0.9
+      },
+      {
+        "name": "samsara:reversed/minecraft/block/wooden_door/close2",
+        "volume": 0.9
+      },
+      {
+        "name": "samsara:reversed/minecraft/random/pop",
+        "volume": 0.6
+      },
+      {
+        "name": "samsara:reversed/minecraft/dig/grass2",
+        "volume": 0.8
+      },
+      {
+        "name": "samsara:reversed/minecraft/step/grass3",
+        "volume": 0.7
+      },
+      {
+        "name": "samsara:reversed/minecraft/step/grass5",
+        "volume": 0.7
       }
     ]
   }

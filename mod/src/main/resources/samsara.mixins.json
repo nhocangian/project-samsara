@@ -27,7 +27,9 @@
     "WindowTitleMixin",
     "GhostPlayerListMixin",
     "PlayerListEntryInvoker",
-    "TitleScreenAccessor"
+    "TitleScreenAccessor",
+    "SoundLoaderReverseMixin",
+    "SoundManagerReverseMixin"
   ],
   "injectors": {
     "defaultRequire": 1

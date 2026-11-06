@@ -217,7 +217,7 @@ public class SamsaraTestCommands {
                         .then(CommandManager.literal("nam_ghosts")
                                 .executes(ctx -> testNamGhosts(ctx.getSource())))
 
-                        // Test: Dị tượng theo giai đoạn (/samsara test anomaly <sheep|music|lift>)
+                        // Test: Dị tượng theo giai đoạn (/samsara test anomaly <sheep|music|lift|reverse>)
                         .then(CommandManager.literal("anomaly")
                                 .then(CommandManager.literal("lift")
                                         .executes(ctx -> testAnomalyLift(ctx.getSource(), 4))
@@ -226,7 +226,13 @@ public class SamsaraTestCommands {
                                 .then(CommandManager.literal("sheep")
                                         .executes(ctx -> testAnomalySheep(ctx.getSource())))
                                 .then(CommandManager.literal("music")
-                                        .executes(ctx -> testAnomalyMusic(ctx.getSource()))))
+                                        .executes(ctx -> testAnomalyMusic(ctx.getSource())))
+                                .then(CommandManager.literal("reverse")
+                                        .executes(ctx -> testAnomalyReverse(ctx.getSource(), "familiar"))
+                                        .then(CommandManager.literal("phantom")
+                                                .executes(ctx -> testAnomalyReverse(ctx.getSource(), "phantom")))
+                                        .then(CommandManager.literal("cave")
+                                                .executes(ctx -> testAnomalyReverse(ctx.getSource(), "cave")))))
 
                         // Test: Cấp Túi Đồ Nghề Điều Tra ARG (Kit: Camcorder, Pin, Sách #0, La Bàn, Thuốc Nhìn Đêm)
                         .then(CommandManager.literal("kit")
@@ -254,6 +260,7 @@ public class SamsaraTestCommands {
         source.sendFeedback(() -> Text.literal("§b/samsara test phantom_wave [đêm] §7- Đặt số đêm thức & thả một đợt Phantom"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test camcorder_gift §7- <System> cài máy quay vào ô số 3"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test anomaly <sheep|music> §7- Cừu nhìn về Bia Mộ / Nhạc nền bị giật"), false);
+        source.sendFeedback(() -> Text.literal("§b/samsara test anomaly reverse [phantom|cave] §7- Âm tua ngược thật: âm quen sau lưng (Stage 3) / tiếng Phantom / tiếng hang"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test anomaly lift [3|4] §7- Block bị hút lên trời (3: cát/sỏi, 4: mọi block)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test womb_transition §7- Bị hút đi sau giấc ngủ thứ 7 (tới Ký Ức Của Nam)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test nam_house §7- Dựng lại nhà Nam ở cánh đồng hướng dương"), false);
@@ -807,6 +814,23 @@ public class SamsaraTestCommands {
         int stage = EggCycleState.get(source.getServer()).getStage();
         String warn = stage < 1 ? " §c(cần Giai đoạn 1+: /samsara test sleep_count 1)" : "";
         source.sendFeedback(() -> Text.literal("§e[TEST] §aBầy cừu trong bán kính 48 block đứng im nhìn về Bia Mộ trong 30 giây." + warn), true);
+        return 1;
+    }
+
+    private static int testAnomalyReverse(ServerCommandSource source, String which) {
+        ServerPlayerEntity player = source.getPlayer();
+        if (player == null) return 0;
+        switch (which) {
+            case "phantom" -> player.networkHandler.sendPacket(new net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket(
+                    net.minecraft.registry.Registries.SOUND_EVENT.getEntry(com.samsara.registry.SamsaraSounds.PHANTOM_REVERSED),
+                    net.minecraft.sound.SoundCategory.HOSTILE, player.getX(), player.getY() + 8, player.getZ(), 1.4f, 0.6f, player.getRandom().nextLong()));
+            case "cave" -> player.networkHandler.sendPacket(new net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket(
+                    net.minecraft.registry.Registries.SOUND_EVENT.getEntry(com.samsara.registry.SamsaraSounds.CAVE_REVERSED),
+                    net.minecraft.sound.SoundCategory.AMBIENT, player.getX(), player.getY(), player.getZ(), 1.0f, 0.9f, player.getRandom().nextLong()));
+            default -> com.samsara.system.cycle.ReversedEchoSystem.play(player);
+        }
+        source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã phát âm tua ngược: §f" + which
+                + ("familiar".equals(which) ? " §7(sau lưng bạn 3–5 block)" : "")), false);
         return 1;
     }
 
