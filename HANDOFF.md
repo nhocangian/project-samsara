@@ -145,4 +145,4 @@ Trạng thái (cuối phiên 06/11/2026):
 - Màn NO SIGNAL ghi `2021-03-14 03-29-51.mkv   00:03:42:09`.
 
 **Việc còn lại cho phiên sau:**
-1. **Cân chỉnh tổng** (nhóm 5): cần người dùng chơi trọn một lượt rồi báo lại (tốc độ dòng chảy, nhịp The Wanderer, thời lượng chương / đoạn thoại kết, độ hiếm dị tượng, độ mạnh `EYE_GLOW_STRENGTH`).
+1. **Cân chỉnh tổng** (nhóm 5): **TẠM HOÃN** (07/11/2026, người dùng: mod chưa xong nên chưa cân chỉnh; đừng đề xuất lại cho tới khi người dùng nói mod đã đủ nội dung). Khi làm: cần người dùng chơi trọn một lượt rồi báo lại (tốc độ dòng chảy, nhịp The Wanderer, thời lượng chương / đoạn thoại kết, độ hiếm dị tượng, độ mạnh `EYE_GLOW_STRENGTH`).
