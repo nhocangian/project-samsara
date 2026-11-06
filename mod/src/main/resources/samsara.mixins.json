@@ -1,0 +1,35 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.samsara.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "LivingEntityDamageMixin",
+    "CropBlockMixin",
+    "LevelPropertiesAccessor"
+  ],
+  "client": [
+    "ClientPlayerEntityMixin",
+    "PlayerEntityRendererMixin",
+    "AbstractClientPlayerEntityMixin",
+    "HeldItemRendererMixin",
+    "IrisHeldItemSupplierMixin",
+    "WorldRendererMixin",
+    "MusicTrackerAccessor",
+    "BiomeWaterColorMixin",
+    "GameRendererFovMixin",
+    "CompassSpinMixin",
+    "ChatScreenAccessor",
+    "CameraEndingMixin",
+    "KeyboardInputMixin",
+    "NightVisionCamcorderMixin",
+    "DebugHudMixin",
+    "WindowTitleMixin",
+    "GhostPlayerListMixin",
+    "PlayerListEntryInvoker",
+    "TitleScreenAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

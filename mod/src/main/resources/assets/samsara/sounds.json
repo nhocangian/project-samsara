@@ -1,0 +1,78 @@
+{
+  "ambient.cave_reversed": {
+    "category": "ambient",
+    "subtitle": "subtitles.samsara.cave_reversed",
+    "sounds": [
+      {
+        "name": "minecraft:ambient/cave/cave1",
+        "pitch": 0.5,
+        "volume": 0.9
+      },
+      {
+        "name": "minecraft:ambient/cave/cave8",
+        "pitch": 0.6,
+        "volume": 0.8
+      }
+    ]
+  },
+  "item.slate_whisper": {
+    "category": "player",
+    "subtitle": "subtitles.samsara.slate_whisper",
+    "sounds": [
+      {
+        "name": "block.respawn_anchor.deplete",
+        "type": "event",
+        "pitch": 0.7,
+        "volume": 0.75
+      }
+    ]
+  },
+  "block.cradle_hum": {
+    "category": "block",
+    "subtitle": "subtitles.samsara.cradle_hum",
+    "sounds": [
+      {
+        "name": "block.beacon.ambient",
+        "type": "event",
+        "pitch": 0.4,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.phantom_reversed": {
+    "category": "hostile",
+    "subtitle": "subtitles.samsara.phantom_reversed",
+    "sounds": [
+      {
+        "name": "minecraft:mob/phantom/idle1",
+        "pitch": 0.5,
+        "volume": 1.0,
+        "attenuation_distance": 48
+      },
+      {
+        "name": "minecraft:mob/phantom/idle3",
+        "pitch": 0.45,
+        "volume": 1.0,
+        "attenuation_distance": 48
+      },
+      {
+        "name": "minecraft:mob/phantom/swoop2",
+        "pitch": 0.4,
+        "volume": 0.9,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "item.system_static": {
+    "category": "player",
+    "subtitle": "subtitles.samsara.system_static",
+    "sounds": [
+      {
+        "name": "block.respawn_anchor.set_spawn",
+        "type": "event",
+        "pitch": 0.5,
+        "volume": 0.8
+      }
+    ]
+  }
+}

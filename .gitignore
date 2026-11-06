@@ -1,0 +1,24 @@
+# Build và chạy dev client (sinh lại được)
+mod/build/
+mod/run/
+mod/.gradle/
+.gradle/
+out/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Thư mục rác / chưa phân loại
+_trash/
+_unsorted/
+
+# Linh tinh trên máy
+*.lnk
+shaderpacks/
+data/
+.claude/settings.local.json
+Thumbs.db
+desktop.ini

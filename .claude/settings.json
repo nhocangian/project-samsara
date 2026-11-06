@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./_trash/**)",
+      "Read(./_unsorted/**)"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "credit": "Project Samsara Custom 3D Egg Monolith Modeler",
+  "texture_size": [32, 32],
+  "textures": {
+    "egg": "samsara:block/primordial_egg",
+    "particle": "samsara:block/primordial_egg"
+  },
+  "elements": [
+    {
+      "name": "base_seal",
+      "from": [3, 0, 3],
+      "to": [13, 2, 13],
+      "faces": {
+        "north": {"uv": [3, 14, 13, 16], "texture": "#egg"},
+        "east":  {"uv": [3, 14, 13, 16], "texture": "#egg"},
+        "south": {"uv": [3, 14, 13, 16], "texture": "#egg"},
+        "west":  {"uv": [3, 14, 13, 16], "texture": "#egg"},
+        "down":  {"uv": [3, 3, 13, 13],   "texture": "#egg"}
+      }
+    },
+    {
+      "name": "lower_egg_segment",
+      "from": [2, 2, 2],
+      "to": [14, 6, 14],
+      "faces": {
+        "north": {"uv": [2, 10, 14, 14], "texture": "#egg"},
+        "east":  {"uv": [2, 10, 14, 14], "texture": "#egg"},
+        "south": {"uv": [2, 10, 14, 14], "texture": "#egg"},
+        "west":  {"uv": [2, 10, 14, 14], "texture": "#egg"}
+      }
+    },
+    {
+      "name": "mid_egg_belly",
+      "from": [1.5, 6, 1.5],
+      "to": [14.5, 11, 14.5],
+      "faces": {
+        "north": {"uv": [1, 5, 15, 10], "texture": "#egg"},
+        "east":  {"uv": [1, 5, 15, 10], "texture": "#egg"},
+        "south": {"uv": [1, 5, 15, 10], "texture": "#egg"},
+        "west":  {"uv": [1, 5, 15, 10], "texture": "#egg"}
+      }
+    },
+    {
+      "name": "upper_egg_segment",
+      "from": [3, 11, 3],
+      "to": [13, 15, 13],
+      "faces": {
+        "north": {"uv": [3, 1, 13, 5], "texture": "#egg"},
+        "east":  {"uv": [3, 1, 13, 5], "texture": "#egg"},
+        "south": {"uv": [3, 1, 13, 5], "texture": "#egg"},
+        "west":  {"uv": [3, 1, 13, 5], "texture": "#egg"}
+      }
+    },
+    {
+      "name": "egg_crown",
+      "from": [5.5, 15, 5.5],
+      "to": [10.5, 16.5, 10.5],
+      "faces": {
+        "north": {"uv": [5, 0, 11, 1], "texture": "#egg"},
+        "east":  {"uv": [5, 0, 11, 1], "texture": "#egg"},
+        "south": {"uv": [5, 0, 11, 1], "texture": "#egg"},
+        "west":  {"uv": [5, 0, 11, 1], "texture": "#egg"},
+        "up":    {"uv": [5, 5, 11, 11], "texture": "#egg"}
+      }
+    }
+  ]
+}

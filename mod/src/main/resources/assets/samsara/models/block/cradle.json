@@ -1,0 +1,95 @@
+{
+  "credit": "Project Samsara Custom 3D Altar Modeler",
+  "texture_size": [32, 32],
+  "textures": {
+    "altar": "samsara:block/cradle_altar",
+    "particle": "samsara:block/cradle_altar"
+  },
+  "elements": [
+    {
+      "name": "base_pedestal",
+      "from": [0, 0, 0],
+      "to": [16, 4, 16],
+      "faces": {
+        "north": {"uv": [0, 12, 16, 16], "texture": "#altar"},
+        "east":  {"uv": [0, 12, 16, 16], "texture": "#altar"},
+        "south": {"uv": [0, 12, 16, 16], "texture": "#altar"},
+        "west":  {"uv": [0, 12, 16, 16], "texture": "#altar"},
+        "up":    {"uv": [0, 0, 16, 16],   "texture": "#altar"},
+        "down":  {"uv": [0, 0, 16, 16],   "texture": "#altar"}
+      }
+    },
+    {
+      "name": "mid_body",
+      "from": [2, 4, 2],
+      "to": [14, 10, 14],
+      "faces": {
+        "north": {"uv": [2, 6, 14, 12], "texture": "#altar"},
+        "east":  {"uv": [2, 6, 14, 12], "texture": "#altar"},
+        "south": {"uv": [2, 6, 14, 12], "texture": "#altar"},
+        "west":  {"uv": [2, 6, 14, 12], "texture": "#altar"},
+        "up":    {"uv": [2, 2, 14, 14], "texture": "#altar"}
+      }
+    },
+    {
+      "name": "pillar_nw",
+      "from": [1, 4, 1],
+      "to": [4, 15, 4],
+      "faces": {
+        "north": {"uv": [0, 0, 3, 11], "texture": "#altar"},
+        "east":  {"uv": [0, 0, 3, 11], "texture": "#altar"},
+        "south": {"uv": [0, 0, 3, 11], "texture": "#altar"},
+        "west":  {"uv": [0, 0, 3, 11], "texture": "#altar"},
+        "up":    {"uv": [0, 0, 3, 3],  "texture": "#altar"}
+      }
+    },
+    {
+      "name": "pillar_ne",
+      "from": [12, 4, 1],
+      "to": [15, 15, 4],
+      "faces": {
+        "north": {"uv": [13, 0, 16, 11], "texture": "#altar"},
+        "east":  {"uv": [13, 0, 16, 11], "texture": "#altar"},
+        "south": {"uv": [13, 0, 16, 11], "texture": "#altar"},
+        "west":  {"uv": [13, 0, 16, 11], "texture": "#altar"},
+        "up":    {"uv": [13, 0, 16, 3],  "texture": "#altar"}
+      }
+    },
+    {
+      "name": "pillar_sw",
+      "from": [1, 4, 12],
+      "to": [4, 15, 15],
+      "faces": {
+        "north": {"uv": [0, 0, 3, 11], "texture": "#altar"},
+        "east":  {"uv": [0, 0, 3, 11], "texture": "#altar"},
+        "south": {"uv": [0, 0, 3, 11], "texture": "#altar"},
+        "west":  {"uv": [0, 0, 3, 11], "texture": "#altar"},
+        "up":    {"uv": [0, 0, 3, 3],  "texture": "#altar"}
+      }
+    },
+    {
+      "name": "pillar_se",
+      "from": [12, 4, 12],
+      "to": [15, 15, 15],
+      "faces": {
+        "north": {"uv": [13, 0, 16, 11], "texture": "#altar"},
+        "east":  {"uv": [13, 0, 16, 11], "texture": "#altar"},
+        "south": {"uv": [13, 0, 16, 11], "texture": "#altar"},
+        "west":  {"uv": [13, 0, 16, 11], "texture": "#altar"},
+        "up":    {"uv": [13, 0, 16, 3],  "texture": "#altar"}
+      }
+    },
+    {
+      "name": "sacrificial_focus",
+      "from": [6, 10, 6],
+      "to": [10, 13, 10],
+      "faces": {
+        "north": {"uv": [6, 3, 10, 6], "texture": "#altar"},
+        "east":  {"uv": [6, 3, 10, 6], "texture": "#altar"},
+        "south": {"uv": [6, 3, 10, 6], "texture": "#altar"},
+        "west":  {"uv": [6, 3, 10, 6], "texture": "#altar"},
+        "up":    {"uv": [6, 6, 10, 10], "texture": "#altar"}
+      }
+    }
+  ]
+}

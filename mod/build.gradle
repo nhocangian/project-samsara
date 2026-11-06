@@ -1,0 +1,71 @@
+plugins {
+    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "Fabric"
+        url = "https://maven.fabricmc.net/"
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    // Fabric API
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+loom {
+    runs {
+        client {
+            // Môi trường dev của Loom dùng LWJGL 3.3.2-snapshot; Sodium 0.5.x (trong run/mods) đòi đúng 3.3.1
+            // và từ chối khởi động. Chỉ tắt bước kiểm tra này cho runClient (không ảnh hưởng bản phát hành).
+            vmArg "-Dsodium.checks.issue2561=false"
+        }
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    filteringCharset "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+
+    // Chữ trong game là tiếng Việt: vi_vn.json là bản gốc duy nhất, en_us.json được sinh ra giống hệt
+    // để người chơi để ngôn ngữ nào cũng thấy tiếng Việt. Đừng tạo en_us.json trong src.
+    from("src/main/resources/assets/samsara/lang/vi_vn.json") {
+        into "assets/samsara/lang"
+        rename { "en_us.json" }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 17
+    it.options.encoding = "UTF-8"
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
