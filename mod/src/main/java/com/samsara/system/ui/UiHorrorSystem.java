@@ -44,15 +44,11 @@ public class UiHorrorSystem {
     }
     public static final String GHOST_NAME = "Nam_1998";
 
-    private static final String[] GHOST_LINES = {
-            "samsara.ui_horror.ghost.dung_ngu",
-            "samsara.ui_horror.ghost.em_dang_o_dau",
-            "samsara.ui_horror.ghost.anh_van_o_day",
-            "samsara.ui_horror.ghost.no_o_ngay_sau",
-            "samsara.ui_horror.ghost.sao_em_lai_mo",
-            "...",
-            "samsara.ui_horror.ghost.ngu_di",
-    };
+    /**
+     * Câu duy nhất Nam_1998 gõ (kịch bản Video 3, cảnh 06). Kịch bản chỉ duyệt câu này:
+     * không thêm câu khác khi chưa có vị trí trong kịch bản.
+     */
+    public static final String GHOST_LINE = "samsara.ui_horror.ghost.em_dang_o_dau";
 
     private static int ghostLeaveTick = -1;
     private static int ghostNextLine = -1;
@@ -81,9 +77,10 @@ public class UiHorrorSystem {
         if (ghostLeaveTick >= 0) {
             if (now >= ghostLeaveTick) {
                 ghostLeave(server);
-            } else if (now >= ghostNextLine && EggCycleState.get(server).getStage() >= 3) {
-                ghostSay(server, GHOST_LINES[random.nextInt(GHOST_LINES.length)]);
-                ghostNextLine = now + 400 + random.nextInt(600);
+            } else if (ghostNextLine >= 0 && now >= ghostNextLine) {
+                // Mỗi lần "vào game" gõ đúng một câu (từ Stage 3); Stage 2 chỉ vào rồi im lặng rời đi
+                if (EggCycleState.get(server).getStage() >= 3) ghostSay(server, GHOST_LINE);
+                ghostNextLine = -1;
             }
             return;
         }

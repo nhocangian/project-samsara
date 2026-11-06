@@ -30,7 +30,7 @@ Một số quyết định dưới đây **thay đổi so với tài liệu gố
 2. **Giấc ngủ thứ 7**: hiệu ứng không gian kéo dãn (FOV giãn, vệt sao), rồi tỉnh dậy ở **Ký Ức Của Nam** (`samsara:nam_memory`).
    - Cánh đồng hướng dương phẳng, một con đường mòn duy nhất, nhà Nam "Tháng 5/2018" cùng cối xay gió.
    - Shader `world2` bẻ cong thế giới kiểu Inception (chỉ thấy khi bật shader).
-   - Hoa hướng dương là block riêng `memory_sunflower`, quay mặt về nơi người chơi xuất hiện.
+   - Hoa hướng dương là block riêng `memory_sunflower`. Lúc sinh, hoa quay về nơi người chơi xuất hiện; sau đó `system/memory/SunflowerGazeSystem` cứ 10 tick xoay các bông trong bán kính 48 về phía người chơi (mỗi bông 40% cơ hội mỗi lượt nên quay lệch nhịp). Lệnh `/samsara test sunflower_gaze`.
    - Dưới hầm nhà: rương có "Trang Xé Cuối Cùng" và vết rách sang The Womb.
 3. **The Womb**: tới **Bến Đò** (gốc tuyến). Tuyến hành hương dài 400 block về phía bắc:
    - I. Bến Đò: bến gỗ mục, giường đỏ chìm, mảnh đất Overworld lơ lửng, thuyền chờ. Dòng chảy đẩy thuyền; qua máy quay thấy thuyền bóng ma "chính bạn" chèo song song.
@@ -92,7 +92,7 @@ Trạng thái (cuối phiên 06/11/2026):
 
 **Đã xong (người dùng đã duyệt trong game):**
 - **Nhóm 1 – Kinh dị tầng giao diện** (`system/ui/UiHorrorSystem`, `client/ui/UiHorrorClient`, `FakeAdvancementToast`, `DebugHudMixin`, `WindowTitleMixin`, `GhostPlayerListMixin`, `TitleScreenAccessor`, `LevelPropertiesAccessor`):
-  - Nam_1998 "joined/left the game" + nhắn chat (Stage 2–3, ban đêm); có mặt trong bảng Tab và gợi ý tên lúc đó (cột sóng chập chờn).
+  - Nam_1998 "joined/left the game" (từ Stage 2, ban đêm); từ Stage 3 mỗi lần vào gõ đúng một câu "em đang ở đâu" (`UiHorrorSystem.GHOST_LINE`, theo kịch bản Video 3; các câu khác đã bỏ). Có mặt trong bảng Tab và gợi ý tên lúc đó (cột sóng chập chờn).
   - Thành tựu giả mỗi mốc một lần: Mắt Thứ Ba, 4 stage, Có Ai Đó Đứng Đó, Về Nhà, Đừng Rời Mắt.
   - Dòng F3 lạ (Stage 1+ / 2+ / 3+); tiêu đề cửa sổ "Minecraft 1.20.1-SAMSARA-REL" từ Stage 1; nút "Rời giường" chớp "ĐỪNG NGỦ" từ Stage 1.
   - Tên thế giới đổi khi thoát (Stage 3 "<tên> - Nam_1998", Stage 4 "Nam_1998", sau kết "đừng mở lại"; tên gốc lưu trong `EggCycleState`).
@@ -128,9 +128,9 @@ Trạng thái (cuối phiên 06/11/2026):
 
 **Nhóm 4 – World "Chu Kỳ #N"** (xong, người dùng đã thử và duyệt 06/11/2026):
 - `NoSignalScreen.exitToTitle` (chơi đơn): `NewCycleClient.capture` chép LevelInfo (chế độ, hardcore, độ khó, cheat) + DataConfiguration của world đang chơi và đọc `EggCycleState.cycle`; lưu & thoát xong thì `NewCycleClient.start` gọi `IntegratedServerLoader.createAndStart` tạo world "Chu Kỳ #N+1" (thư mục `Chu Ky N`, seed ngẫu nhiên, preset mặc định; dimension của mod tự gộp từ datapack). Lỗi thì về menu chính như cũ. World cũ chỉ được lưu, không bị sửa.
-- Số chu kỳ truyền sang server tích hợp qua `NewCycleSystem.pendingCycle` (cùng JVM). `SERVER_STARTED`: ghi `EggCycleState.cycle` (NBT `Cycle`, mặc định 1) và dựng nhà Nam 12 block về phía bắc điểm spawn, cửa quay về spawn (`NamHouseBuilder.buildForNewCycle`: đắp nền đất, dọn cao hơn, **không có vết rách**, rương hầm đựng nhật ký của Nam thay cho Trang Xé). Bia Mộ vẫn ở spawn + (3, 3).
+- Số chu kỳ truyền sang server tích hợp qua `NewCycleSystem.pendingCycle` (cùng JVM). `SERVER_STARTED`: ghi `EggCycleState.cycle` (NBT `Cycle`, mặc định 1) và dựng nhà Nam 12 block về phía bắc điểm spawn, cửa quay về spawn (`NamHouseBuilder.buildForNewCycle`: đắp nền đất, dọn cao hơn, **không có vết rách**, rương hầm để trống). Rương Bia Mộ ở chu kỳ ≥2 chỉ có nhật ký, không có hoa khô (`SpawnCairnGenerator` đọc `EggCycleState.cycle` lúc JOIN; `SERVER_STARTED` đã ghi số chu kỳ trước đó). Bia Mộ vẫn ở spawn + (3, 3).
 - Lần đầu vào world chu kỳ mới (sau 3 giây): tiêu đề "Chu Kỳ #N", phụ đề "quả trứng tiếp theo", một dòng <System>. Mọi cơ chế chu kỳ (ngủ, stage, máy quay...) bắt đầu lại từ đầu trong world mới.
-- Lệnh `/samsara test new_cycle house` (dựng nhà cách bạn 12 block về phía bắc) / `intro`. `/samsara test ending` giờ cũng tạo world mới khi kết thúc.
+- Lệnh `/samsara test new_cycle house` (dựng nhà cách bạn 12 block về phía bắc) / `intro` / `cairn` (Bia Mộ bản chu kỳ mới, 3 block phía bắc). `/samsara test ending` giờ cũng tạo world mới khi kết thúc.
 
 **Kịch bản:** người dùng làm kịch bản ở một project riêng chỉ chứa `scripts/`. File `scripts/hien_trang_trong_mod.md` mô tả (theo góc nhìn câu chuyện) những gì mod đã dựng, chỗ khác tài liệu gốc và hệ thống phụ. **Phiên mod nào thay đổi nội dung người chơi thấy thì cập nhật file đó.** Khi người dùng đưa kịch bản mới, đối chiếu với file đó để biết phải sửa gì trong game.
 

@@ -42,7 +42,9 @@ public class SpawnCairnGenerator extends PersistentState {
                 BlockPos spawnPos = overworld.getSpawnPos();
                 BlockPos surfacePos = overworld.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, spawnPos.add(3, 0, 3));
 
-                buildCairn(overworld, surfacePos);
+                // Chu Kỳ #2 trở đi: rương chỉ còn cuốn nhật ký, đóa hoa khô không còn nữa
+                boolean firstCycle = com.samsara.system.cycle.EggCycleState.get(server).getCycle() <= 1;
+                buildCairn(overworld, surfacePos, firstCycle);
                 state.generated = true;
                 state.cairnPos = surfacePos;
                 state.markDirty();
@@ -50,7 +52,7 @@ public class SpawnCairnGenerator extends PersistentState {
         });
     }
 
-    private static void buildCairn(ServerWorld world, BlockPos origin) {
+    public static void buildCairn(ServerWorld world, BlockPos origin, boolean withDriedFlower) {
         // Nền đá 3x3 rêu phong
         for (int x = -1; x <= 1; x++) {
             for (int z = -1; z <= 1; z++) {
@@ -82,7 +84,8 @@ public class SpawnCairnGenerator extends PersistentState {
             // Tàn thư Palimpsest
             chest.setStack(13, new ItemStack(SamsaraItems.PALIMPSEST_JOURNAL));
             // Máy quay KHÔNG nằm ở đây: <System> tự cài nó vào Hotbar (CamcorderGiftSystem)
-            // Đóa hoa tàn
+            // Đóa hoa tàn (chỉ ở chu kỳ đầu)
+            if (!withDriedFlower) return;
             ItemStack rose = new ItemStack(Items.WITHER_ROSE);
             rose.setCustomName(Text.translatable("samsara.spawn_cairn_generator.doa_hoa_kho_tu"));
             chest.setStack(14, rose);

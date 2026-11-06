@@ -86,7 +86,7 @@ Mỗi lần ngủ qua đêm tăng số giấc ngủ của cả thế giới.
 ### Kinh dị tầng giao diện (mod tự thêm)
 - **Nam_1998 "vào game"** (Stage 2–3, ban đêm, dù đang chơi một mình):
   - hiện dòng vàng *"Nam_1998 joined the game"*, có tên trong bảng Tab;
-  - nhắn chat: *"đừng ngủ"*, *"em đang ở đâu"*, *"anh vẫn ở đây mà"*, *"nó ở ngay sau lưng anh"*, *"sao em lại mở file này"*, *"ngủ đi"*;
+  - từ Stage 3, mỗi lần vào game hắn gõ đúng một câu: *"em đang ở đâu"* (câu duy nhất kịch bản Video 3 duyệt; Stage 2 thì vào rồi im lặng rời đi);
   - rồi *"left the game"*.
 - **Thành tựu giả**, mỗi mốc một lần:
   - **Mắt Thứ Ba** (nhận máy quay);
@@ -109,7 +109,7 @@ Mỗi lần ngủ qua đêm tăng số giấc ngủ của cả thế giới.
 
 ## 3. Ký Ức Của Nam (thay cho Elysian Highlands)
 
-- Cánh đồng hướng dương phẳng. **Mọi bông hoa quay mặt về chỗ người chơi xuất hiện.** Có một con đường mòn duy nhất.
+- Cánh đồng hướng dương phẳng. **Mọi bông hoa trong bán kính khoảng 48 block quay mặt về phía người chơi và quay theo khi người chơi đi**, lệch nhịp như gợn sóng chứ không đồng loạt. Có một con đường mòn duy nhất.
 - Khi bật shader, thế giới bị bẻ cong kiểu Inception.
 - **Nhà Nam:** nhà gỗ sồi, mái dốc, cối xay gió cánh buồm trắng. Bảng ghi **"Nơi ở của Nam / Tháng 5/2018 / / đừng bấm ngủ"**. Trong nhà có giường đỏ *"như vừa có người nằm"*.
 - **Dưới hầm:** rương đơn độc đựng **"Trang Xé Cuối Cùng"** và một đóa hoa ép.
@@ -156,7 +156,8 @@ Kích hoạt khi bước vào trong 6 block quanh Quả Trứng.
 
 - World mới, seed mới. Mọi thứ (số giấc ngủ, stage, máy quay...) bắt đầu lại từ đầu.
 - Cách chỗ xuất hiện 12 block là **nhà Nam "Tháng 5/2018"** y như cũ, cửa quay về phía người chơi. Bia Mộ "Cậu đến muộn rồi" vẫn ở cạnh.
-- Dưới hầm **không còn vết rách**. Rương chỉ còn **cuốn nhật ký của Nam** ("Nếu một ngày em mở file này ra, đừng bấm ngủ.").
+- Dưới hầm **không còn vết rách**, rương hầm **để trống**.
+- Rương cạnh Bia Mộ **chỉ còn cuốn nhật ký**, đóa hoa khô không còn nữa.
 - Lần đầu vào: tiêu đề **"Chu Kỳ #2"**, phụ đề *"quả trứng tiếp theo"*, và `<System>`: *"Ngôi nhà vẫn ở đó. Cậu vẫn không nhớ mình đã xây nó."*
 - Chơi hết lần nữa thì ra Chu Kỳ #3, cứ thế tiếp.
 - Ở menu chính sau đoạn kết, câu chào đổi thành *"Quả trứng tiếp theo đã sẵn sàng."* và nút Chơi đơn chớp nháy.

@@ -143,9 +143,10 @@ public final class NamHouseBuilder {
         // Chiếc rương đơn độc
         BlockPos chestPos = pos(-3, G - 5, 3);
         world.setBlockState(chestPos, Blocks.CHEST.getDefaultState().with(ChestBlock.FACING, Direction.NORTH), FLAGS);
-        if (world.getBlockEntity(chestPos) instanceof ChestBlockEntity chest) {
-            // Chu kỳ mới: chỉ còn cuốn nhật ký ("Nếu một ngày em mở file này ra, đừng bấm ngủ.")
-            chest.setStack(13, cycleVariant ? PalimpsestJournalItem.createDecodedBook() : PalimpsestJournalItem.createLastPage());
+        // Chu kỳ mới: rương hầm để trống. Cuốn nhật ký chỉ còn ở rương cạnh Bia Mộ (kịch bản Chu Kỳ #2, cảnh 09):
+        // sự vắng mặt của đồ cũ quan trọng hơn một lời nhắn mới.
+        if (!cycleVariant && world.getBlockEntity(chestPos) instanceof ChestBlockEntity chest) {
+            chest.setStack(13, PalimpsestJournalItem.createLastPage());
             ItemStack rose = new ItemStack(Items.WITHER_ROSE);
             rose.setCustomName(Text.translatable("samsara.nam_house_builder.doa_hoa_ep_trong"));
             chest.setStack(22, rose);

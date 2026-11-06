@@ -104,6 +104,7 @@ public class SamsaraMod implements ModInitializer {
         com.samsara.system.cycle.WombTransitionSystem.register();
         com.samsara.system.cycle.CollapseAnomalySystem.register();
         com.samsara.system.cycle.NamGhostSystem.register();
+        com.samsara.system.memory.SunflowerGazeSystem.register();
 
         // Đoạn kết: Quả Trứng Nguyên Thủy & đối thoại với <System>
         com.samsara.system.ending.EndingServer.register();

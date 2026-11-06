@@ -138,6 +138,9 @@ public class SamsaraTestCommands {
                                 .executes(ctx -> testNamHouse(ctx.getSource())))
 
                         // Test: Trồng lại hoa hướng dương quay đúng hướng (/samsara test nam_field [bán kính chunk])
+                        // Test: Hoa hướng dương quay ngay về phía bạn (/samsara test sunflower_gaze)
+                        .then(CommandManager.literal("sunflower_gaze")
+                                .executes(ctx -> testSunflowerGaze(ctx.getSource())))
                         .then(CommandManager.literal("nam_field")
                                 .executes(ctx -> testNamField(ctx.getSource(), 8))
                                 .then(CommandManager.argument("radius", IntegerArgumentType.integer(1, 16))
@@ -204,10 +207,11 @@ public class SamsaraTestCommands {
                         .then(CommandManager.literal("ending")
                                 .executes(ctx -> testEnding(ctx.getSource())))
 
-                        // Test: World "Chu Kỳ #N" (/samsara test new_cycle <house|intro>)
+                        // Test: World "Chu Kỳ #N" (/samsara test new_cycle <house|intro|cairn>)
                         .then(CommandManager.literal("new_cycle")
                                 .then(CommandManager.literal("house").executes(ctx -> testNewCycle(ctx.getSource(), "house")))
-                                .then(CommandManager.literal("intro").executes(ctx -> testNewCycle(ctx.getSource(), "intro"))))
+                                .then(CommandManager.literal("intro").executes(ctx -> testNewCycle(ctx.getSource(), "intro")))
+                                .then(CommandManager.literal("cairn").executes(ctx -> testNewCycle(ctx.getSource(), "cairn"))))
 
                         // Test: Vòng bóng ma Nam_1998 quanh người chơi (/samsara test nam_ghosts)
                         .then(CommandManager.literal("nam_ghosts")
@@ -263,7 +267,8 @@ public class SamsaraTestCommands {
         source.sendFeedback(() -> Text.literal("§b/samsara test chapter_title <1-4> §7- Hiện tiêu đề chương của tuyến hành hương"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test egg     §7- Dựng bệ + Quả Trứng Nguyên Thủy trước mặt"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test ending  §7- Chạy đoạn kết: cinematic, đối thoại <System>, NO SIGNAL (sẽ lưu, thoát và TẠO WORLD MỚI \"Chu Kỳ #N\"!)"), false);
-        source.sendFeedback(() -> Text.literal("§b/samsara test new_cycle <house|intro> §7- Nhà Nam của world chu kỳ mới (dựng 12 block phía bắc bạn) / tiêu đề lần đầu vào"), false);
+        source.sendFeedback(() -> Text.literal("§b/samsara test sunflower_gaze §7- Hoa hướng dương quanh bạn quay ngay về phía bạn (trong Ký Ức Của Nam)"), false);
+        source.sendFeedback(() -> Text.literal("§b/samsara test new_cycle <house|intro|cairn> §7- Nhà Nam của world chu kỳ mới (dựng 12 block phía bắc bạn) / tiêu đề lần đầu vào / Bia Mộ chu kỳ mới (3 block phía bắc)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test nam_ghosts §7- Vòng bóng ma Nam_1998 (chỉ thấy qua máy quay)"), false);
         source.sendFeedback(() -> Text.literal("§d/samsara nam            §7- Dịch chuyển tới Ký Ức Của Nam (cánh đồng hướng dương)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test cleanup  §7- Dọn sạch toàn bộ cổng và nhãn chữ dư thừa xung quanh"), false);
@@ -575,7 +580,7 @@ public class SamsaraTestCommands {
         switch (what) {
             case "join" -> com.samsara.system.ui.UiHorrorSystem.ghostJoin(server, 20 * 60);
             case "leave" -> com.samsara.system.ui.UiHorrorSystem.ghostLeave(server);
-            case "say" -> com.samsara.system.ui.UiHorrorSystem.ghostSay(server, "đừng ngủ");
+            case "say" -> com.samsara.system.ui.UiHorrorSystem.ghostSay(server, com.samsara.system.ui.UiHorrorSystem.GHOST_LINE);
             case "advancement" -> {
                 if (player == null) return 0;
                 com.samsara.system.ui.UiHorrorSystem.advancement(player, "test", "Đừng Rời Mắt", Items.ENDER_EYE, true);
@@ -605,13 +610,30 @@ public class SamsaraTestCommands {
         return 1;
     }
 
+    private static int testSunflowerGaze(ServerCommandSource source) {
+        ServerPlayerEntity player = source.getPlayer();
+        if (player == null) return 0;
+        if (player.getServerWorld().getRegistryKey() != com.samsara.registry.SamsaraDimensions.NAM_MEMORY_WORLD_KEY) {
+            source.sendFeedback(() -> Text.literal("§e[TEST] §cPhải đứng trong Ký Ức Của Nam (/samsara nam)."), false);
+            return 0;
+        }
+        int n = com.samsara.system.memory.SunflowerGazeSystem.turnToward(player.getServerWorld(), player.getX(), player.getZ(), 48, 1.0f);
+        source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã quay §f" + n + "§a bông hoa về phía bạn. Đi lại để thấy hoa quay theo."), false);
+        return 1;
+    }
+
     private static int testNewCycle(ServerCommandSource source, String what) {
         ServerPlayerEntity player = source.getPlayer();
         if (player == null) return 0;
         if (what.equals("house")) {
             BlockPos ground = com.samsara.system.cycle.NewCycleSystem.buildHouseFacing(player.getServerWorld(), player.getBlockPos());
             source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng nhà Nam (bản chu kỳ mới, không có vết rách) ở §f"
-                    + ground.toShortString() + "§a, cửa quay về phía bạn."), false);
+                    + ground.toShortString() + "§a, cửa quay về phía bạn. Rương hầm để trống."), false);
+        } else if (what.equals("cairn")) {
+            BlockPos at = player.getBlockPos().north(3);
+            com.samsara.worldgen.SpawnCairnGenerator.buildCairn(player.getServerWorld(), at, false);
+            source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng Bia Mộ bản chu kỳ mới (rương chỉ có nhật ký, không có hoa khô) ở §f"
+                    + at.toShortString()), false);
         } else {
             int cycle = Math.max(2, EggCycleState.get(source.getServer()).getCycle());
             com.samsara.system.cycle.NewCycleSystem.showIntro(player, cycle);

@@ -20,7 +20,7 @@ import net.minecraft.world.gen.feature.util.FeatureContext;
  * trừ con đường mòn (dirt path) và khoảng sân quanh nhà.
  * Placed feature không có placement modifier -> chạy đúng 1 lần mỗi chunk, origin = góc chunk.
  *
- * Hoa dùng MemorySunflowerBlock và luôn QUAY MẶT VỀ PHÍA NƠI NGƯỜI CHƠI TỈNH DẬY:
+ * Hoa dùng MemorySunflowerBlock; lúc sinh QUAY MẶT VỀ PHÍA NƠI NGƯỜI CHƠI TỈNH DẬY (sau đó SunflowerGazeSystem xoay theo người chơi):
  * phía trước điểm xuất hiện (về phía nhà) hoa nhìn về nam, phía sau nhìn về bắc.
  * Đứng trên con đường mòn nhìn về nhà, cả màn hình là cánh hoa vàng đang nhìn bạn.
  */
