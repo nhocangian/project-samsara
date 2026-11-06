@@ -15,3 +15,13 @@ Các thay đổi đã được người dùng duyệt, cần dựng trong game. 
 - **Chữ nguyên văn:** mục "Nguyên văn đoạn thoại" trong Video 9 của `master_production_document_project_samsara_revision.md`.
 - **Lưu ý mốc ×45:** câu mốc *"Họ cũng chính là bạn."* giờ là **"Họ cũng chính là cậu."** Nếu code dò mốc theo nội dung câu thì sửa cả chỗ dò.
 - **Thứ cần thay trong `hien_trang_trong_mod.md`:** mục 5, dòng nhắc mốc *"Họ cũng chính là bạn."*
+
+---
+
+## 2–5. Bốn việc từ `de_xuat/2026-11-06_cai_thien_master.md` mục D
+
+- **Trạng thái:** ĐÃ LÀM (07/11/2026). Người dùng duyệt cả 4 ngày 07/11/2026.
+- **2. Trang nhật ký [ĐÊM ĐẦU TIÊN]** viết lại: *"Mắt anh nhìn thì mặt trời vẫn bình thường. Nhưng ảnh chụp màn hình thì có một chấm đen ở chính giữa."*
+- **3. Ảnh chụp F2** từ Stage 1 ghi được mặt trời hố đen; mắt vẫn thấy vanilla. Lệnh `/samsara test screenshot_sun`.
+- **4. Chu Kỳ ≥2:** lần đầu Nam_1998 vào game gõ 3 dòng Video 3 (`em` / đường dẫn OBS / `xem từ tệp đầu tiên. đừng tua`) rồi rời đi. Lệnh `/samsara test ui archive`.
+- **5. Màn NO SIGNAL:** `2021-03-14 03-29-51.mkv   00:03:42:09` thay cho `Nam_1998_LOG_09.mp4`.

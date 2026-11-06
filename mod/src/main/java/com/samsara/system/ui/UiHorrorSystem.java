@@ -50,8 +50,23 @@ public class UiHorrorSystem {
      */
     public static final String GHOST_LINE = "samsara.ui_horror.ghost.em_dang_o_dau";
 
+    /**
+     * Ba dòng Nam_1998 gõ ở lần "vào game" đầu tiên của world Chu Kỳ ≥2 (kịch bản Video 3: gửi đường dẫn OBS cho em).
+     * Chỉ một lần mỗi world (cờ {@link #ARCHIVE_FLAG}); những lần sau quay về {@link #GHOST_LINE}.
+     */
+    public static final String[] ARCHIVE_LINES = {
+            "samsara.ui_horror.ghost.em",
+            "samsara.ui_horror.ghost.archive_path",
+            "samsara.ui_horror.ghost.xem_tu_tep_dau_tien"
+    };
+    private static final String ARCHIVE_FLAG = "archive_lines";
+    /** Khoảng cách giữa các dòng và từ dòng cuối tới lúc rời game (tick). */
+    private static final int LINE_GAP = 80, LEAVE_AFTER_LAST = 120;
+
     private static int ghostLeaveTick = -1;
     private static int ghostNextLine = -1;
+    private static String[] ghostLines = new String[0];
+    private static int ghostLineIndex = 0;
 
     public static void register() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
@@ -78,9 +93,8 @@ public class UiHorrorSystem {
             if (now >= ghostLeaveTick) {
                 ghostLeave(server);
             } else if (ghostNextLine >= 0 && now >= ghostNextLine) {
-                // Mỗi lần "vào game" gõ đúng một câu (từ Stage 3); Stage 2 chỉ vào rồi im lặng rời đi
-                if (EggCycleState.get(server).getStage() >= 3) ghostSay(server, GHOST_LINE);
-                ghostNextLine = -1;
+                if (ghostLineIndex < ghostLines.length) ghostSay(server, ghostLines[ghostLineIndex++]);
+                ghostNextLine = ghostLineIndex < ghostLines.length ? now + LINE_GAP : -1;
             }
             return;
         }
@@ -89,10 +103,27 @@ public class UiHorrorSystem {
         if (random.nextFloat() < 1.0f / 8.0f) ghostJoin(server, 600 + random.nextInt(1200));
     }
 
+    /**
+     * Nam_1998 "vào game". Chu Kỳ ≥2, lần đầu: gõ {@link #ARCHIVE_LINES} rồi rời đi ngay sau dòng cuối.
+     * Còn lại: Stage 3+ gõ đúng một câu {@link #GHOST_LINE}; Stage 2 vào rồi im lặng rời đi.
+     */
     public static void ghostJoin(MinecraftServer server, int stayTicks) {
+        EggCycleState state = EggCycleState.get(server);
+        boolean archive = state.getCycle() >= 2 && state.markUiFlag(com.samsara.system.cycle.NamGhostSystem.NAM_UUID, ARCHIVE_FLAG);
+        ghostJoin(server, stayTicks, archive);
+    }
+
+    public static void ghostJoin(MinecraftServer server, int stayTicks, boolean archive) {
+        if (archive) ghostLines = ARCHIVE_LINES;
+        else if (EggCycleState.get(server).getStage() >= 3) ghostLines = new String[]{GHOST_LINE};
+        else ghostLines = new String[0];
+        ghostLineIndex = 0;
         broadcast(server, Text.translatable("multiplayer.player.joined", GHOST_NAME).formatted(Formatting.YELLOW));
-        ghostLeaveTick = server.getTicks() + stayTicks;
-        ghostNextLine = server.getTicks() + 200;
+        int firstLine = server.getTicks() + 200;
+        ghostNextLine = ghostLines.length > 0 ? firstLine : -1;
+        ghostLeaveTick = archive
+                ? firstLine + LINE_GAP * (ghostLines.length - 1) + LEAVE_AFTER_LAST
+                : server.getTicks() + stayTicks;
         for (ServerPlayerEntity p : server.getPlayerManager().getPlayerList()) sendPresence(p, true);
     }
 

@@ -35,7 +35,8 @@ public class WorldRendererMixin {
         if (original != null && original.getPath().contains("sun")) {
             // Theo Master Production Document: mắt thường chỉ thấy Mặt Trời Vanilla 16x16 tĩnh lặng.
             // Chỉ khi ngắm qua ống kính máy quay (đã đưa lên sát mắt) thì Hố Đen mới lộ ra.
-            if (!CamcorderClientManager.isFullyAimed()) {
+            // Ngoại lệ: khung hình đang được chụp bằng F2 (ảnh chụp thấy sự thật, xem ScreenshotSunClient)
+            if (!CamcorderClientManager.isFullyAimed() && !com.samsara.client.ScreenshotSunClient.isCapturing()) {
                 return original;
             }
             Identifier stageTexture = SolarFractureManager.getSunTexture();

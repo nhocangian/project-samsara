@@ -86,7 +86,7 @@ public class NoSignalScreen extends Screen {
             ctx.fill(bx, by, bx + bw, by + bh, 0xFF0B1FA8);
             ctx.drawCenteredTextWithShadow(textRenderer, Text.literal("NO SIGNAL"), width / 2, by + 13, 0xFFFFFFFF);
             ctx.drawTextWithShadow(textRenderer, Text.literal("OBS ■ REC STOPPED"), 12, 12, 0xFFFF3B3B);
-            ctx.drawTextWithShadow(textRenderer, Text.literal("Nam_1998_LOG_09.mp4   00:47:13:09"), 12, height - 20, 0xFFE0E0E0);
+            ctx.drawTextWithShadow(textRenderer, Text.literal("2021-03-14 03-29-51.mkv   00:03:42:09"), 12, height - 20, 0xFFE0E0E0);
             return;
         }
 

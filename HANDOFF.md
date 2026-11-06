@@ -1,6 +1,6 @@
 # Project Samsara – Tổng hợp trạng thái (bàn giao cho phiên tinh chỉnh)
 
-Cập nhật: 06/11/2026. Đọc kèm `CLAUDE.md` (cách build/chạy), `scripts/master_production_document_project_samsara_revision.md` (tài liệu kịch bản: triết lý, bảng stage, 9 video, thoại `<System>`, outro, Chu Kỳ #2; ~4000 dòng, tìm theo tiêu đề rồi đọc phần cần).
+Cập nhật: 07/11/2026. Đọc kèm `CLAUDE.md` (cách build/chạy), `scripts/master_production_document_project_samsara_revision.md` (tài liệu kịch bản: triết lý, bảng stage, 9 video, thoại `<System>`, outro, Chu Kỳ #2; ~4000 dòng, tìm theo tiêu đề rồi đọc phần cần).
 Một số quyết định dưới đây **thay đổi so với tài liệu gốc**; khi mâu thuẫn, theo file này.
 
 ## Cách chạy nhanh
@@ -82,7 +82,7 @@ Một số quyết định dưới đây **thay đổi so với tài liệu gố
 - Chữ trong game nằm trong `assets/samsara/lang/vi_vn.json` (xem mục Tiếng Việt hoá bên dưới).
 - Âm thanh toàn bộ là âm vanilla đổi pitch; chưa có file `.ogg` riêng. **Âm tua ngược thật**: trong `sounds.json`, tên `samsara:reversed/<ns>/<đường_dẫn>` = file `<ns>:sounds/<đường_dẫn>.ogg` phát ngược, đảo PCM trong bộ nhớ lúc nạp (`client/sound/ReversedSounds`, `SoundLoaderReverseMixin`, `SoundManagerReverseMixin`; không dùng với `stream: true`). Đang dùng cho `entity.phantom_reversed`, `ambient.cave_reversed` và `ambient.reversed_familiar` (Stage 3+, `system/cycle/ReversedEchoSystem`: đứng yên ≥3 s ở Overworld, ~1/25 mỗi giây, nghỉ 150 s; chỉ người đó nghe, phát sau lưng 3–5 block). Lệnh `/samsara test anomaly reverse [phantom|cave]`.
 - Chưa kiểm tra đầy đủ: nước xám khi bật shader (phụ thuộc shader có dùng màu đỉnh hay không), độ trơn của cầu thang xoắn ở các góc, thời lượng đoạn thoại kết (khoảng 3–4 phút).
-- Thư mục dự án **chưa phải git repo**, nên không có lịch sử thay đổi.
+- Dự án là git repo, remote `origin` = github.com/nhocangian/project-samsara (nhánh `main`).
 
 ## Giai đoạn 4 – đã chốt phạm vi (06/11/2026)
 Người dùng giữ 5 nhóm, **bỏ nhóm âm thanh riêng** (.ogg tự làm). Thứ tự đề xuất:
@@ -137,6 +137,12 @@ Trạng thái (cuối phiên 06/11/2026):
 - Lệnh `/samsara test new_cycle house` (dựng nhà cách bạn 12 block về phía bắc) / `intro` / `cairn` (Bia Mộ bản chu kỳ mới, 3 block phía bắc). `/samsara test ending` giờ cũng tạo world mới khi kết thúc.
 
 **Kịch bản:** người dùng làm kịch bản ở một project riêng chỉ chứa `scripts/`. File `scripts/hien_trang_trong_mod.md` mô tả (theo góc nhìn câu chuyện) những gì mod đã dựng, chỗ khác tài liệu gốc và hệ thống phụ. **Phiên mod nào thay đổi nội dung người chơi thấy thì cập nhật file đó.** Khi người dùng đưa kịch bản mới, đối chiếu với file đó để biết phải sửa gì trong game.
+
+**Đã dựng 07/11/2026 (4 việc từ đề xuất kịch bản, chưa thử trong game):**
+- Trang nhật ký [ĐÊM ĐẦU TIÊN] viết lại (mắt thấy bình thường, ảnh chụp có chấm đen).
+- **Ảnh F2 thấy mặt trời thật** (`client/ScreenshotSunClient`, `KeyboardScreenshotMixin`, `MinecraftClientScreenshotMixin`): bấm F2 ở Stage 1+ (không đang ngắm máy quay) thì chép khung đang hiện vào một framebuffer phụ, khung kế tiếp vẽ mặt trời hố đen (`WorldRendererMixin` đọc `isCapturing()`), chụp khung đó trước khi lên màn hình rồi đưa khung cũ lên thay. Lệnh `/samsara test screenshot_sun`.
+- Chu Kỳ ≥2: lần đầu Nam_1998 vào game gõ `UiHorrorSystem.ARCHIVE_LINES` (3 dòng Video 3) rồi rời đi; cờ thế giới `markUiFlag(NAM_UUID, "archive_lines")`. Lệnh `/samsara test ui archive`; `ui reset` xoá cả cờ này.
+- Màn NO SIGNAL ghi `2021-03-14 03-29-51.mkv   00:03:42:09`.
 
 **Việc còn lại cho phiên sau:**
 1. **Cân chỉnh tổng** (nhóm 5): cần người dùng chơi trọn một lượt rồi báo lại (tốc độ dòng chảy, nhịp The Wanderer, thời lượng chương / đoạn thoại kết, độ hiếm dị tượng, độ mạnh `EYE_GLOW_STRENGTH`).

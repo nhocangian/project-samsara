@@ -1,6 +1,6 @@
 # HIỆN TRẠNG TRONG MOD (đối chiếu với kịch bản)
 
-*Cập nhật: 06/11/2026. Bản chụp những gì đã có trong game, viết theo góc nhìn câu chuyện.*
+*Cập nhật: 07/11/2026. Bản chụp những gì đã có trong game, viết theo góc nhìn câu chuyện.*
 
 File này để người viết kịch bản biết **mod đã dựng những gì**, **chỗ nào đã khác** tài liệu kịch bản (`master_production_document_project_samsara_revision.md`) và **những thứ mod tự thêm**.
 
@@ -34,7 +34,7 @@ Cũng **đã bỏ**: băng ký ức ở các khổng thần, "ký ức của ri�
 - Mở sổ ra thì nó thành **"Nhật Ký của Nam"** (tác giả Nam_1998), gồm hai lớp mực.
   - **Lớp mới, nhật ký của Nam:**
     1. *"Nếu một ngày em mở file này ra, **đừng bấm ngủ.** — anh Nam"*
-    2. **[ĐÊM ĐẦU TIÊN]**: mặt trời có một chấm đen chính giữa; ảnh chụp màn hình thì vẫn bình thường.
+    2. **[ĐÊM ĐẦU TIÊN]**: *"Mắt anh nhìn thì mặt trời vẫn bình thường. Nhưng ảnh chụp màn hình thì có một chấm đen ở chính giữa."*
     3. **[BẦY CỪU]**: cả bầy đứng im nhìn về đài đá; tấm biển ghi "vừa có người nằm".
     4. **[ĐÊM THỨ BA KHÔNG NGỦ]**: Phantom kêu như băng tua ngược; ô số 3 tự có máy quay; qua ống kính thấy người đứng quanh nhà, trên đầu là tên anh.
     5. **[LẦN NGỦ THỨ 6]**: mặt trời là một cái lỗ, nước màu bạc, lúa chỉ lớn khi nhìn qua máy quay. *"Nếu ngủ lần nữa, anh nghĩ anh sẽ **về nhà**."* Căn nhà giữa cánh đồng hướng dương, tháng 5/2018.
@@ -58,7 +58,7 @@ Mỗi lần ngủ qua đêm tăng số giấc ngủ của cả thế giới.
 | 4 | 7+ | Mọi block tự nhiên trên mặt đất bị hút lên trời. |
 
 - Mỗi lần ngủ, chat báo: *"[Chu kỳ ngủ #n] Bầu trời dường như bị bẻ cong..."*. Khi lên stage, chat báo *"[CHU KỲ LUÂN HỒI] ... Mặt Trời đang dần sụp đổ thành Hố Đen!"*.
-- **Mắt thường luôn thấy mặt trời vanilla.** Hố đen chỉ hiện khi ngắm qua máy quay.
+- **Mắt thường luôn thấy mặt trời vanilla.** Hố đen chỉ hiện khi ngắm qua máy quay, hoặc **trong ảnh chụp màn hình (F2)** từ Stage 1: thứ ghi hình thấy sự thật. Lúc bấm F2, màn hình vẫn hiện mặt trời thường.
 
 ### Bẫy Phantom
 - Không ngủ thì bầy Phantom đông dần theo số đêm thức. Ngủ dậy là bầy tan.
@@ -87,7 +87,8 @@ Mỗi lần ngủ qua đêm tăng số giấc ngủ của cả thế giới.
 ### Kinh dị tầng giao diện (mod tự thêm)
 - **Nam_1998 "vào game"** (Stage 2–3, ban đêm, dù đang chơi một mình):
   - hiện dòng vàng *"Nam_1998 joined the game"*, có tên trong bảng Tab;
-  - từ Stage 3, mỗi lần vào game hắn gõ đúng một câu: *"em đang ở đâu"* (câu duy nhất kịch bản Video 3 duyệt; Stage 2 thì vào rồi im lặng rời đi);
+  - từ Stage 3, mỗi lần vào game hắn gõ đúng một câu: *"em đang ở đâu"* (Stage 2 thì vào rồi im lặng rời đi);
+  - **ở Chu Kỳ #2 trở đi, lần đầu tiên hắn vào** (Stage 2+, ban đêm), hắn gõ 3 dòng cách nhau vài giây rồi rời đi ngay: *"em"*, *"C:/Users/Nam/Videos/OBS/Samsara_Archive/"*, *"xem từ tệp đầu tiên. đừng tua"* (Video 3). Mỗi world chỉ một lần;
   - rồi *"left the game"*.
 - **Thành tựu giả**, mỗi mốc một lần:
   - **Mắt Thứ Ba** (nhận máy quay);
@@ -152,7 +153,7 @@ Kích hoạt khi bước vào trong 6 block quanh Quả Trứng.
    - Ở ×45 (câu *"Họ cũng chính là cậu."*), con mắt của nó nằm **đúng chỗ Gargantua trên trời** (phía bắc): ngước lên là thấy **Gargantua chính là con mắt của nó**.
    - Quả Trứng nứt dần theo lời thoại.
    - Toàn bộ khoảng 3–4 phút.
-3. **Kết:** nhắm mắt, trứng nở, rồi màn **NO SIGNAL** ("OBS ■ REC STOPPED", "Nam_1998_LOG_09.mp4"). Câu kết hiện giữa màn hình:
+3. **Kết:** nhắm mắt, trứng nở, rồi màn **NO SIGNAL** ("OBS ■ REC STOPPED", tên file kiểu OBS "2021-03-14 03-29-51.mkv   00:03:42:09"). Câu kết hiện giữa màn hình:
    > *"Đằng sau nút 'Lưu & Thoát khỏi thế giới'... luôn luôn là nút 'Tạo thế giới mới'."*
 4. Game **lưu và thoát world cũ**, rồi **tự tạo ngay world mới "Chu Kỳ #2"**.
 

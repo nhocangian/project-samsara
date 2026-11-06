@@ -58,6 +58,8 @@ public class SamsaraClientMod implements ClientModInitializer {
 
         // Kinh dị tầng giao diện: toast thành tựu giả, menu tạm dừng bị nhiễu
         com.samsara.client.ui.UiHorrorClient.register();
+        // Ảnh chụp F2 thấy mặt trời thật (hố đen theo stage)
+        com.samsara.client.ScreenshotSunClient.register();
 
         // Phantom qua ống kính máy quay: "Tàn Hồn Phantom" (mắt thường vẫn thấy Phantom vanilla)
         EntityRendererRegistry.register(net.minecraft.entity.EntityType.PHANTOM, com.samsara.entity.client.SoulPhantomRenderer::new);

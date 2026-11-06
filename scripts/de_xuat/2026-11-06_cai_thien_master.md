@@ -187,7 +187,7 @@ Chỉ đề xuất thêm hai nhịp **hành động, không có lời**. Bạn c
 
 ---
 
-## D. VIỆC CẦN DỰNG TRONG MOD (chưa chuyển, chờ duyệt)
+## D. VIỆC CẦN DỰNG TRONG MOD (đã duyệt cả 4 ngày 07/11/2026, đã dựng; xem `yeu_cau_cho_mod.md`)
 
 | Ưu tiên | Việc | Công |
 | :--- | :--- | :--- |

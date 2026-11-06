@@ -86,6 +86,9 @@ public class SolarFractureManager {
      * Trả về null ở giai đoạn 0 -> giữ nguyên Mặt Trời Vanilla.
      */
     @Nullable
+    /** Gói S2C (lệnh test screenshot_sun): client chụp màn hình như bấm F2. */
+    public static final Identifier SCREENSHOT_SUN_TEST = new Identifier("samsara", "screenshot_sun");
+
     public static Identifier getSunTexture() {
         switch (clientStage) {
             case 1: return SUN_STAGE_1;

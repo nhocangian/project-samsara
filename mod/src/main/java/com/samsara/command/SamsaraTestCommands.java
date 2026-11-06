@@ -170,11 +170,15 @@ public class SamsaraTestCommands {
                                         .then(CommandManager.argument("stop", IntegerArgumentType.integer(0, 4))
                                                 .executes(ctx -> testWombRouteTp(ctx.getSource(), IntegerArgumentType.getInteger(ctx, "stop"))))))
 
-                        // Test: Kinh dị tầng giao diện (/samsara test ui <join|leave|say|advancement|rename|reset>)
+                        // Test: Ảnh chụp F2 thấy mặt trời thật (/samsara test screenshot_sun)
+                        .then(CommandManager.literal("screenshot_sun").executes(ctx -> testScreenshotSun(ctx.getSource())))
+
+                        // Test: Kinh dị tầng giao diện (/samsara test ui <join|leave|say|archive|advancement|rename|reset>)
                         .then(CommandManager.literal("ui")
                                 .then(CommandManager.literal("join").executes(ctx -> testUi(ctx.getSource(), "join")))
                                 .then(CommandManager.literal("leave").executes(ctx -> testUi(ctx.getSource(), "leave")))
                                 .then(CommandManager.literal("say").executes(ctx -> testUi(ctx.getSource(), "say")))
+                                .then(CommandManager.literal("archive").executes(ctx -> testUi(ctx.getSource(), "archive")))
                                 .then(CommandManager.literal("advancement").executes(ctx -> testUi(ctx.getSource(), "advancement")))
                                 .then(CommandManager.literal("rename").executes(ctx -> testUi(ctx.getSource(), "rename")))
                                 .then(CommandManager.literal("reset").executes(ctx -> testUi(ctx.getSource(), "reset")))
@@ -273,7 +277,8 @@ public class SamsaraTestCommands {
         source.sendFeedback(() -> Text.literal("§b/samsara test nam_house §7- Dựng lại nhà Nam ở cánh đồng hướng dương"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test nam_field [r] §7- Trồng lại hoa hướng dương quay về đường mòn (bán kính r chunk)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test womb_route [here|rebuild|dock|titans|spire|tp <0-4>] §7- Tuyến hành hương The Womb: xem / dựng tại chỗ / dựng lại / chỉ bến đò / chỉ khổng thần / chỉ tháp / tới chặng"), false);
-        source.sendFeedback(() -> Text.literal("§b/samsara test ui <join|leave|say|advancement|rename|reset|ending_menu_on|ending_menu_off> §7- Kinh dị tầng giao diện (F3 lạ & tên cửa sổ & nút Rời giường từ Stage 1, menu nhiễu ở Stage 4)"), false);
+        source.sendFeedback(() -> Text.literal("§b/samsara test screenshot_sun §7- Chụp màn hình như F2: ảnh thấy mặt trời hố đen (Stage 1+)"), false);
+        source.sendFeedback(() -> Text.literal("§b/samsara test ui <join|leave|say|archive|advancement|rename|reset|ending_menu_on|ending_menu_off> §7- Kinh dị tầng giao diện (archive = 3 dòng Video 3 của Chu Kỳ ≥2) (F3 lạ & tên cửa sổ & nút Rời giường từ Stage 1, menu nhiễu ở Stage 4)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test camcorder_model §7- Máy quay 3D: LCD lật, đèn REC, nắp băng khi thay pin (pin về 50%)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test soul_phantom §7- Phantom đứng yên: qua máy quay là \"Tàn Hồn Phantom\""), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test wanderer §7- Dựng The Wanderer đứng yên trước mặt để ngắm model (qua máy quay)"), false);
@@ -589,6 +594,19 @@ public class SamsaraTestCommands {
         return 1;
     }
 
+    private static int testScreenshotSun(ServerCommandSource source) {
+        ServerPlayerEntity player = source.getPlayer();
+        if (player == null) return 0;
+        int stage = EggCycleState.get(source.getServer()).getStage();
+        net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(player,
+                com.samsara.system.celestial.SolarFractureManager.SCREENSHOT_SUN_TEST,
+                net.fabricmc.fabric.api.networking.v1.PacketByteBufs.empty());
+        source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã chụp màn hình (Stage " + stage + "). "
+                + (stage >= 1 ? "Nhìn về phía mặt trời rồi mở thư mục screenshots: ảnh có hố đen, mắt vẫn thấy mặt trời thường."
+                              : "§cStage 0: ảnh chụp như thường. Dùng §b/samsara test sleep_count 1§c trước.")), false);
+        return 1;
+    }
+
     private static int testUi(ServerCommandSource source, String what) {
         var server = source.getServer();
         ServerPlayerEntity player = source.getPlayer();
@@ -596,6 +614,7 @@ public class SamsaraTestCommands {
             case "join" -> com.samsara.system.ui.UiHorrorSystem.ghostJoin(server, 20 * 60);
             case "leave" -> com.samsara.system.ui.UiHorrorSystem.ghostLeave(server);
             case "say" -> com.samsara.system.ui.UiHorrorSystem.ghostSay(server, com.samsara.system.ui.UiHorrorSystem.GHOST_LINE);
+            case "archive" -> com.samsara.system.ui.UiHorrorSystem.ghostJoin(server, 0, true);
             case "advancement" -> {
                 if (player == null) return 0;
                 com.samsara.system.ui.UiHorrorSystem.advancement(player, "test", "Đừng Rời Mắt", Items.ENDER_EYE, true);
@@ -609,7 +628,8 @@ public class SamsaraTestCommands {
             }
             case "reset" -> {
                 if (player != null) EggCycleState.get(server).clearUiFlags(player.getUuid());
-                source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã xoá các mốc thành tựu giả đã hiện (sẽ hiện lại khi chạm mốc)."), false);
+                EggCycleState.get(server).clearUiFlags(com.samsara.system.cycle.NamGhostSystem.NAM_UUID);
+                source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã xoá các mốc thành tựu giả đã hiện và cờ 3 dòng Chu Kỳ #2 (sẽ hiện lại khi chạm mốc)."), false);
                 return 1;
             }
             case "ending_menu_on", "ending_menu_off" -> {

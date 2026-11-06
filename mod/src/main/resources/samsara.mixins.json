@@ -29,7 +29,9 @@
     "PlayerListEntryInvoker",
     "TitleScreenAccessor",
     "SoundLoaderReverseMixin",
-    "SoundManagerReverseMixin"
+    "SoundManagerReverseMixin",
+    "KeyboardScreenshotMixin",
+    "MinecraftClientScreenshotMixin"
   ],
   "injectors": {
     "defaultRequire": 1
