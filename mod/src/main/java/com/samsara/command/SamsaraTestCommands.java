@@ -177,6 +177,9 @@ public class SamsaraTestCommands {
                         // Test: Ảnh chụp F2 thấy mặt trời thật (/samsara test screenshot_sun)
                         .then(CommandManager.literal("screenshot_sun").executes(ctx -> testScreenshotSun(ctx.getSource())))
 
+                        // Test: Khối Mã (mã nhị phân rơi, các khối cạnh nhau nối liền) (/samsara test code_block)
+                        .then(CommandManager.literal("code_block").executes(ctx -> testCodeBlock(ctx.getSource())))
+
                         // Test: Kinh dị tầng giao diện (/samsara test ui <join|leave|say|archive|advancement|rename|reset>)
                         .then(CommandManager.literal("ui")
                                 .then(CommandManager.literal("join").executes(ctx -> testUi(ctx.getSource(), "join")))
@@ -280,6 +283,7 @@ public class SamsaraTestCommands {
         source.sendFeedback(() -> Text.literal("§b/samsara test womb_transition §7- Bị hút đi sau giấc ngủ thứ 7 (tới Ký Ức Của Nam)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test nam_house §7- Dựng lại nhà Nam ở cánh đồng hướng dương"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test nam_field [r] §7- Trồng lại hoa hướng dương quay về đường mòn (bán kính r chunk)"), false);
+        source.sendFeedback(() -> Text.literal("§b/samsara test code_block §7- Tường + sàn Khối Mã trước mặt"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test womb_route [here|rebuild|dock|doors|titans|spire|final_door|tp <0-4>] §7- Tuyến hành hương The Womb: xem / dựng tại chỗ / dựng lại / chỉ bến đò / chỉ biển cửa (và tới đó) / chỉ khổng thần / chỉ tháp / trước cánh cửa cuối / tới chặng"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test screenshot_sun §7- Chụp màn hình như F2: ảnh thấy mặt trời hố đen (Stage 1+)"), false);
         source.sendFeedback(() -> Text.literal("§b/samsara test ui <join|leave|say|archive|advancement|rename|reset|ending_menu_on|ending_menu_off> §7- Kinh dị tầng giao diện (archive = 3 dòng Video 3 của Chu Kỳ ≥2) (F3 lạ & tên cửa sổ & nút Rời giường từ Stage 1, menu nhiễu ở Stage 4)"), false);
@@ -820,6 +824,38 @@ public class SamsaraTestCommands {
         }
         player.teleport(womb, door.getX() + 0.5, door.getY(), door.getZ() + 2.5, 180.0f, 0.0f);
         source.sendFeedback(() -> Text.literal("§e[TEST] §aĐứng trước cánh cửa cuối (đã đóng lại). Nhấp chuột phải để mở; đưa máy quay lên mắt để đọc nhãn."), true);
+        return 1;
+    }
+
+    /** Dựng một bức tường 5x3 và một mảng sàn 3x3 bằng Khối Mã trước mặt người chơi để xem mã nối liền. */
+    private static int testCodeBlock(ServerCommandSource source) {
+        ServerPlayerEntity player = source.getPlayer();
+        if (player == null) return 0;
+        ServerWorld world = player.getServerWorld();
+        net.minecraft.util.math.Direction f = player.getHorizontalFacing();
+        net.minecraft.util.math.Direction side = f.rotateYClockwise();
+        BlockPos base = player.getBlockPos().offset(f, 4);
+        net.minecraft.block.BlockState code = com.samsara.registry.SamsaraBlocks.WOMB_CODE.getDefaultState();
+        for (int a = -2; a <= 2; a++) {
+            for (int y = 0; y < 3; y++) {
+                BlockPos p = base.offset(side, a).up(y);
+                world.setBlockState(p, com.samsara.block.WombCodeBlock.at(code, p), 3);
+            }
+        }
+        for (int a = -1; a <= 1; a++) {
+            for (int b = 1; b <= 3; b++) {
+                BlockPos p = player.getBlockPos().offset(side, a).offset(f, b).down();
+                world.setBlockState(p, com.samsara.block.WombCodeBlock.at(code, p), 3);
+            }
+        }
+        for (int a = -3; a <= 3; a++) {
+            for (int y = -1; y <= 3; y++) {
+                for (int b = 0; b <= 5; b++) {
+                    com.samsara.block.WombCodeBlock.refresh(world, player.getBlockPos().offset(side, a).offset(f, b).up(y));
+                }
+            }
+        }
+        source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng tường và sàn Khối Mã trước mặt."), false);
         return 1;
     }
 

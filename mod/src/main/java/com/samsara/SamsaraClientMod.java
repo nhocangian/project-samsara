@@ -21,6 +21,11 @@ public class SamsaraClientMod implements ClientModInitializer {
         // Dấu chân ướt ở Bến Đò: decal cắt alpha (lớp trong suốt bị shader world1 vẽ bằng chương trình mặt nước, ra đen)
         net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap.INSTANCE.putBlock(
                 com.samsara.registry.SamsaraBlocks.WET_FOOTPRINTS, net.minecraft.client.render.RenderLayer.getCutout());
+        net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap.INSTANCE.putBlock(
+                com.samsara.registry.SamsaraBlocks.WOMB_GLITCH, net.minecraft.client.render.RenderLayer.getCutout());
+        // Khối Mã: viền tan (đốm lởm chởm) cần cắt alpha
+        net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap.INSTANCE.putBlock(
+                com.samsara.registry.SamsaraBlocks.WOMB_CODE, net.minecraft.client.render.RenderLayer.getCutout());
 
         // Hoa hướng dương ký ức: cắt alpha như hoa vanilla
         net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap.INSTANCE.putBlock(

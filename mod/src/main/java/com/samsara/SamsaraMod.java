@@ -118,6 +118,7 @@ public class SamsaraMod implements ModInitializer {
 
         // Tuyến hành hương The Womb: dòng chảy, thuyền ở Bến Đò
         com.samsara.system.womb.WombCurrentSystem.register();
+        com.samsara.system.womb.chapters.DockDrift.register();
         com.samsara.system.womb.WanderChaseSystem.register();
         com.samsara.system.womb.WombPacingSystem.register();
 

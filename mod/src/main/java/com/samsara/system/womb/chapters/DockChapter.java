@@ -35,7 +35,7 @@ import net.minecraft.util.math.random.Random;
  *    đầu tiên. Cả tuyến khép lại bằng cánh cửa cuối tự tay mở ở chương IV.
  *  - Dấu chân ướt đi từ cạnh giường, qua cửa, dọc bến, tới chỗ thuyền.
  *  - Bến gỗ mục dài, cột đèn lồng ấm hai bên; thuyền gỗ sồi tối buộc ở đầu bến (WombCurrentSystem giữ luôn có thuyền).
- *  - Các mảng tường khác trôi lơ lửng về phía cánh cửa trắng khổng lồ.
+ *  - Các mảng tường khác và đồ đạc trong phòng trôi lơ lửng, xoay chậm về phía cánh cửa trắng (DockDrift, thực thể hiển thị).
  * Người chơi xuất hiện ở gốc tuyến (0, 0), ngay trong phòng, nhìn về bắc. Bến nằm trong khoảng trống quanh Bến Đò của
  * biển cửa (SaveDoorLayout: |dx| <= 8, along -12..12); cửa có tên gần nhất ở dx ±6 từ along 0 về bắc.
  */
@@ -63,7 +63,8 @@ public final class DockChapter {
         buildBedroomDoor(world, o);
         buildPier(world, o, random);
         buildFootprints(world, o);
-        buildFloatingWalls(world, o, random);
+        buildCodePatches(world, o);
+        DockDrift.build(world, origin);   // mảng tường + đồ đạc trôi lơ lửng (thực thể hiển thị)
         ensureBoat(world, origin);
     }
 
@@ -78,6 +79,20 @@ public final class DockChapter {
                 BlockState st = world.getBlockState(o.add(x, DECK_Y, z));
                 if (st.getBlock() instanceof BedBlock || st.isOf(Blocks.BARREL)) {
                     world.setBlockState(o.add(x, DECK_Y, z), Blocks.WATER.getDefaultState(), 2);
+                }
+            }
+        }
+        // Mảnh đất cỏ Overworld lơ lửng của bản đầu và mảng tường dựng bằng block của bản trước (giờ là thực thể
+        // hiển thị trong DockDrift): dọn cả vùng trời quanh bến
+        java.util.Set<net.minecraft.block.Block> old = java.util.Set.of(Blocks.GRASS_BLOCK, Blocks.DIRT, Blocks.STONE,
+                Blocks.POPPY, Blocks.DANDELION, Blocks.GRASS, Blocks.OAK_SAPLING, Blocks.TORCH, Blocks.CRAFTING_TABLE,
+                Blocks.GLASS_PANE, SamsaraBlocks.NAM_WALLPAPER);
+        for (int x = -40; x <= 40; x++) {
+            for (int z = -70; z <= 40; z++) {
+                for (int y = FLOOR + 4; y <= FLOOR + 30; y++) {
+                    if (old.contains(world.getBlockState(o.add(x, y, z)).getBlock())) {
+                        world.setBlockState(o.add(x, y, z), Blocks.AIR.getDefaultState(), 2);
+                    }
                 }
             }
         }
@@ -234,29 +249,31 @@ public final class DockChapter {
         }
     }
 
-    /** Những mảng tường khác của căn phòng trôi lơ lửng về phía cánh cửa trắng (bắc), cao dần. */
-    private static void buildFloatingWalls(ServerWorld world, BlockPos o, Random random) {
-        BlockState wall = SamsaraBlocks.NAM_WALLPAPER.getDefaultState();
-        Direction[] dirs = {Direction.SOUTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
-        for (int i = 0; i < 8; i++) {
-            int along = 4 + i * 6 + random.nextInt(4);
-            int lateral = (i % 2 == 0 ? 1 : -1) * (3 + random.nextInt(16));
-            int y = FLOOR + 5 + i + random.nextInt(4);
-            Direction face = dirs[random.nextInt(dirs.length)];
-            Direction across = face.rotateYClockwise();
-            int w = 2 + random.nextInt(2), h = 2 + random.nextInt(2);
-            BlockPos base = o.add(lateral, y, -along);
-            for (int a = 0; a < w; a++) {
-                for (int b = 0; b < h; b++) {
-                    if ((a == 0 || a == w - 1) && b == h - 1 && random.nextBoolean()) continue;   // mép vỡ
-                    BlockPos p = base.offset(across, a).up(b);
-                    boolean window = i == 3 && a == 1 && b == 1;
-                    world.setBlockState(p, window ? Blocks.GLASS_PANE.getDefaultState()
-                            : wall.with(NamWallpaperBlock.FACING, face).with(NamWallpaperBlock.VARIANT,
-                            i == 5 && a == 0 && b == 1 ? 1 : 0), 2);
-                }
-            }
+    /**
+     * Vài chỗ căn phòng đã rã thành mã (Khối Mã, các khối cạnh nhau tự nối liền): một mảng sàn ở mép vỡ phía đông nam,
+     * một khoảng tường nam, góc tường tây. Chỉ thay những block đang có (sàn mép vỡ, tường cao ngẫu nhiên).
+     */
+    private static void buildCodePatches(ServerWorld world, BlockPos o) {
+        BlockState code = SamsaraBlocks.WOMB_CODE.getDefaultState();
+        int[][] cells = {
+                // sàn (y = DECK_Y)
+                {3, DECK_Y, 5}, {4, DECK_Y, 5}, {2, DECK_Y, 6}, {3, DECK_Y, 6}, {2, DECK_Y, 7}, {1, DECK_Y, 7},
+                // tường nam (z 8): một khoảng tường đã thành mã
+                {0, FLOOR, 8}, {1, FLOOR, 8}, {2, FLOOR, 8}, {1, FLOOR + 1, 8}, {2, FLOOR + 1, 8}, {1, FLOOR + 2, 8},
+                // góc tường tây
+                {-5, FLOOR, 6}, {-5, FLOOR + 1, 6}, {-5, FLOOR, 5},
+        };
+        for (int[] c : cells) {
+            BlockPos p = o.add(c[0], c[1], c[2]);
+            BlockState st = world.getBlockState(p);
+            boolean wallTop = c[1] > FLOOR && world.getBlockState(p.down()).isOf(SamsaraBlocks.WOMB_CODE);
+            if (st.isAir() && !wallTop) continue;             // không treo mã giữa không trung
+            if (st.isOf(Blocks.WATER)) continue;
+            if (world.getBlockState(p.up()).isOf(Blocks.BROWN_CARPET)) continue;
+            world.setBlockState(p, com.samsara.block.WombCodeBlock.at(code, p), 2);
         }
+        // Viền mã tan vào block bên cạnh: tính sau khi cả mảng đã đặt
+        for (int[] c : cells) com.samsara.block.WombCodeBlock.refresh(world, o.add(c[0], c[1], c[2]));
     }
 
     /** Thuyền gỗ sồi tối buộc ở đầu bến; không tạo thêm nếu đã có thuyền gần đó. */

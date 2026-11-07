@@ -88,7 +88,7 @@ def computer_textures(rng):
     front.putpixel((26, 26), (0x5C, 0xE0, 0x6A, 255))
     for x in range(6, 12):
         front.putpixel((x, 26), shade(base, 0.7))
-    front.save(os.path.join(TEX, "nam_computer_front.png"))
+    screen_animation(front, (sx0, sy0, sx1, sy1), rng)
 
     # Bàn phím: nền be tối, phím ô vuông
     kb = Image.new("RGBA", (16, 16))
@@ -97,6 +97,68 @@ def computer_textures(rng):
             key = (x % 2 == 0) and (y % 2 == 0)
             kb.putpixel((x, y), (0xE4, 0xDE, 0xCC, 255) if key else (0x8C, 0x86, 0x74, 255))
     kb.save(os.path.join(TEX, "nam_computer_keyboard.png"))
+
+
+SCREEN_GLITCH = 6     # khung 1..6: màn hình giật (lát xô lệch, tách màu)
+SCREEN_CODE = 8       # khung 7..14: mã nhị phân xanh rơi (tham chiếu GIF code rain của người dùng)
+
+
+def screen_animation(front, box, rng):
+    """Dải khung động cho mặt trước máy tính: khung 0 là ảnh chụp bình thường; thỉnh thoảng giật, đôi khi chạy mã."""
+    sx0, sy0, sx1, sy1 = box
+    n = 1 + SCREEN_GLITCH + SCREEN_CODE
+    strip = Image.new("RGBA", (32, 32 * n))
+    strip.paste(front, (0, 0))
+    for i in range(1, SCREEN_GLITCH + 1):
+        f = front.copy()
+        for _ in range(rng.randint(2, 4)):
+            y0 = rng.randint(sy0, sy1 - 2)
+            h = rng.randint(1, 4)
+            dx = rng.choice((-7, -5, -3, 3, 5, 7))
+            swap = rng.random() < 0.35
+            for y in range(y0, min(sy1, y0 + h)):
+                for x in range(sx0, sx1):
+                    def px(xx):
+                        return front.getpixel((sx0 + (xx - sx0) % (sx1 - sx0), y))
+                    r = px(x - dx + 1)[0]
+                    g = px(x - dx)[1]
+                    b = px(x - dx - 1)[2]
+                    if swap:
+                        r, g, b = b, r, g
+                    k = 0.75 if y % 2 else 1.15
+                    f.putpixel((x, y), (min(255, int(r * k)), min(255, int(g * k)), min(255, int(b * k)), 255))
+        strip.paste(f, (0, 32 * i))
+    # Mã rơi: các cột 2 px, đầu sáng xanh trắng, đuôi xanh lam nhạt dần; mỗi khung rơi xuống 2 px
+    cols = [(x, rng.randint(0, 30), rng.randint(5, 12)) for x in range(sx0 + 1, sx1 - 1, 3)]
+    for j in range(SCREEN_CODE):
+        f = front.copy()
+        for y in range(sy0, sy1):
+            for x in range(sx0, sx1):
+                f.putpixel((x, y), (0x04, 0x06, 0x14, 255))
+        for (x, start, length) in cols:
+            head = sy0 + (start + j * 2) % 30 - 5
+            for t in range(length):
+                y = head - t
+                if sy0 <= y < sy1 and rng.random() < 0.85:
+                    if t == 0:
+                        c = (0xC8, 0xF4, 0xFF, 255)
+                    else:
+                        k = 1.0 - t / length
+                        c = (int(0x10 * k), int(0x50 + 0x60 * k), int(0x90 + 0x60 * k), 255)
+                    f.putpixel((x, y), c)
+                    if rng.random() < 0.4 and x + 1 < sx1:
+                        f.putpixel((x + 1, y), c)       # chữ "0" rộng 2 px, "1" rộng 1 px
+        strip.paste(f, (0, 32 * (1 + SCREEN_GLITCH + j)))
+    strip.save(os.path.join(TEX, "nam_computer_front.png"))
+    frames = []
+    for k in range(10):
+        frames.append({"index": 0, "time": rng.randint(50, 150)})
+        if k % 3 == 2:
+            for _ in range(2):
+                frames += [{"index": 1 + SCREEN_GLITCH + j, "time": 2} for j in range(SCREEN_CODE)]
+        else:
+            frames += [{"index": rng.randint(1, SCREEN_GLITCH), "time": rng.randint(1, 3)} for _ in range(rng.randint(2, 5))]
+    write_json(os.path.join(TEX, "nam_computer_front.png.mcmeta"), {"animation": {"interpolate": False, "frames": frames}})
 
 
 def computer_model():
@@ -250,6 +312,7 @@ def main():
              "nam_wallpaper_edge", "wet_footprints"]
     for i, n in enumerate(names):
         im = Image.open(os.path.join(TEX, n + ".png")).convert("RGBA")
+        im = im.crop((0, 0, im.width, im.width))      # khung đầu của texture động
         im = im.resize((64, 64) if im.width == 16 else (64, 64), Image.NEAREST)
         prev.alpha_composite(im, (i * 64, 32))
     prev.save(os.path.join(os.path.dirname(os.path.abspath(__file__)), "preview_dock_props.png"))

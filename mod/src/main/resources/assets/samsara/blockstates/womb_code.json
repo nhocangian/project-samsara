@@ -1,0 +1,695 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "tx": "0",
+        "ty": "0",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_0_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "0",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_0_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "0",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_0_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "0",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_0_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "1",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_1_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "1",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_1_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "1",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_1_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "1",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_1_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "2",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_2_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "2",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_2_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "2",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_2_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "2",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_2_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "3",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_3_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "3",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_3_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "3",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_3_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "0",
+        "ty": "3",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_0_3_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "0",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_0_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "0",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_0_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "0",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_0_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "0",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_0_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "1",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_1_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "1",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_1_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "1",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_1_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "1",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_1_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "2",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_2_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "2",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_2_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "2",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_2_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "2",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_2_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "3",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_3_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "3",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_3_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "3",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_3_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "1",
+        "ty": "3",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_1_3_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "0",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_0_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "0",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_0_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "0",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_0_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "0",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_0_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "1",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_1_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "1",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_1_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "1",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_1_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "1",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_1_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "2",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_2_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "2",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_2_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "2",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_2_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "2",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_2_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "3",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_3_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "3",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_3_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "3",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_3_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "2",
+        "ty": "3",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_2_3_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "0",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_0_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "0",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_0_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "0",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_0_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "0",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_0_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "1",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_1_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "1",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_1_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "1",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_1_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "1",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_1_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "2",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_2_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "2",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_2_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "2",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_2_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "2",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_2_3"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "3",
+        "tz": "0"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_3_0"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "3",
+        "tz": "1"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_3_1"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "3",
+        "tz": "2"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_3_2"
+      }
+    },
+    {
+      "when": {
+        "tx": "3",
+        "ty": "3",
+        "tz": "3"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_3_3_3"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_fringe_side"
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_fringe_side",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_fringe_side",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_fringe_side",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_fringe_up"
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "samsara:block/womb_code_fringe_down"
+      }
+    }
+  ]
+}

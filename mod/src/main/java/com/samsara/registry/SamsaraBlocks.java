@@ -63,6 +63,15 @@ public class SamsaraBlocks {
             .strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing(),
             net.minecraft.block.Block.createCuboidShape(0, 0, 0, 16, 0.25, 16));
 
+    /** Lớp vỏ glitch phủ lên vật thể ở Bến Đò (chỉ dùng trong block display). */
+    public static final Block WOMB_GLITCH = new com.samsara.block.WombGlitchBlock(FabricBlockSettings.create()
+            .strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing());
+
+    /** Khối Mã: block đen có mã nhị phân xanh rơi, các khối cạnh nhau nối liền (Bến Đò). */
+    public static final Block WOMB_CODE = new com.samsara.block.WombCodeBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN)
+            .strength(-1.0f, 3600000.0f).dropsNothing().luminance(state -> 5)
+            .mapColor(net.minecraft.block.MapColor.BLACK));
+
     /** Cánh cửa trắng khổng lồ hé mở ở cuối hành lang cửa (vẽ bằng MemoryDoorGiantRenderer). */
     public static final Block MEMORY_DOOR_GIANT = new com.samsara.block.MemoryDoorGiantBlock(
             FabricBlockSettings.create().strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing()
@@ -96,6 +105,8 @@ public class SamsaraBlocks {
         Registry.register(Registries.BLOCK, new Identifier("samsara", "nam_computer"), NAM_COMPUTER);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "nam_wallpaper"), NAM_WALLPAPER);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "wet_footprints"), WET_FOOTPRINTS);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_glitch"), WOMB_GLITCH);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_code"), WOMB_CODE);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_veil"), WOMB_VEIL);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_statue"), MEMORY_STATUE);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "titan_halo"), TITAN_HALO);

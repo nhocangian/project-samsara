@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "variant=0": {
+      "model": "samsara:block/womb_glitch_0"
+    },
+    "variant=1": {
+      "model": "samsara:block/womb_glitch_1"
+    },
+    "variant=2": {
+      "model": "samsara:block/womb_glitch_2"
+    },
+    "variant=3": {
+      "model": "samsara:block/womb_glitch_3"
+    },
+    "variant=4": {
+      "model": "samsara:block/womb_glitch_4"
+    },
+    "variant=5": {
+      "model": "samsara:block/womb_glitch_5"
+    },
+    "variant=6": {
+      "model": "samsara:block/womb_glitch_6"
+    },
+    "variant=7": {
+      "model": "samsara:block/womb_glitch_7"
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "samsara:block/womb_code",
+    "h": "samsara:block/womb_code_fringe_h",
+    "v": "samsara:block/womb_code_fringe_v"
+  },
+  "elements": [
+    {
+      "from": [
+        16,
+        16,
+        0
+      ],
+      "to": [
+        24,
+        16.25,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#h",
+          "uv": [
+            0,
+            0,
+            8,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        16,
+        0,
+        -0.25
+      ],
+      "to": [
+        24,
+        16,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#h",
+          "uv": [
+            8,
+            0,
+            0,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        16,
+        0,
+        16
+      ],
+      "to": [
+        24,
+        16,
+        16.25
+      ],
+      "faces": {
+        "south": {
+          "texture": "#h",
+          "uv": [
+            0,
+            0,
+            8,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}
