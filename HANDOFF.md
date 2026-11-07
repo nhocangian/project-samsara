@@ -153,7 +153,7 @@ Trạng thái (cuối phiên 06/11/2026):
 - `FloatingCrystals` bỏ trống trời trên biển cửa.
 - Lệnh `/samsara test womb_route doors` (dựng lại căn phòng cửa, Bến Đò, khổng thần, tinh thể rồi đưa tới phía nam Bến Đò, nhìn về bắc).
 
-**Đang thử (07/11/2026, chưa duyệt): làm lại chương III "Những Người Khổng Lồ"** cho cùng ngôn ngữ với căn phòng cửa.
+**Đã duyệt (07/11/2026): làm lại chương III "Những Người Khổng Lồ"** cho cùng ngôn ngữ với căn phòng cửa.
 - **Các chặng lùi 50 block** (`WombRoute.Stop`: Steve -160, Hố Nổ -250, Kẻ Đốt Nhà -340, Tháp -450); tuyến dài ~460. `WombRouteManager.clearBeyondRoom` (chạy đầu `build`) dọn dải ±42 block từ sau tường phòng tới cuối tuyến, cao 70, giữ phao đèn, lấp lòng Hố Nổ cũ (8, -200) và dọn cột Tháp cũ (0, -400) tới y 216: world đã dựng tuyến chỉ cần `/samsara test womb_route rebuild`.
 - `TitanBody.Skin.plaster()` (calcite / thạch anh / diorite, phong hoá thành diorite; `Skin` giờ có `weatherA/B`). Khổng thần quay về bắc (Gargantua). Cánh cửa trên khổng thần dùng `memory_door_giant` với thuộc tính mới `color` (white/pink/blue), `lit` (hé 70° + màn sáng), `flat` (nằm ngửa, không khung), `burning` (lửa linh hồn + khói ở mép, `randomDisplayTick`), `waterlogged`. Blockstate là multipart một model rỗng.
 - Tượng Quỳ: block `memory_statue` (FACING, POSE 0 ngửa mặt / 1 cúi đầu / 2 chắp tay; model + texture từ `mod/tools/generate_memory_statue.py`). Xếp thành **đoàn tín đồ** trước (nam) mỗi khổng thần: 7 hàng cong, bán kính 23 + 3/hàng, quạt ±55°, ghế cách 2.6, 12% ghế trống, hàng đầu 45% chắp tay; tuyến (±4.5) là lối đi giữa; thêm 30 tượng lẻ loi giữa các khổng thần; không đặt dính nhau. Mảnh vụn Hố Nổ: 30 cụm 2x2x2 trên một vành bán kính 17–19.5 + 6 cụm cao ở giữa.
