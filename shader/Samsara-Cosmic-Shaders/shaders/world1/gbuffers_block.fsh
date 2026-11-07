@@ -9,6 +9,8 @@ uniform float frameTimeCounter;
 uniform float far;
 uniform int isEyeInWater;
 
+#include "/lib/womb_atmosphere.glsl"
+
 varying vec2 texCoord;
 varying vec2 lmCoord;
 varying vec3 normal;
@@ -36,7 +38,7 @@ void main() {
 
     // 2. Hào quang tán xạ vũ trụ từ vòm trời (Cosmic Ambient):
     float zenithFactor = clamp(worldNormal.y * 0.5 + 0.5, 0.25, 1.0);
-    vec3 cosmicAmbient = vec3(0.38, 0.25, 0.18) * zenithFactor;
+    vec3 cosmicAmbient = vec3(0.40, 0.35, 0.31) * zenithFactor;   // xám ấm: mặt khuất của thạch cao ra xám ngà, không ra nâu
 
     // 3. Phản quang bề mặt khối (Fresnel & Specular Glint):
     vec3 viewDir = normalize(viewPos);
@@ -49,7 +51,7 @@ void main() {
 
     // 4. Ngọn lửa linh hồn tím/lam từ đuốc và đèn
     float torchFactor = pow(blockLight, 2.0);
-    vec3 soulTorch = mix(vec3(0.22, 0.88, 1.0), vec3(0.88, 0.35, 1.0), sin(frameTimeCounter * 2.0) * 0.25 + 0.5) * (torchFactor * 1.8);
+    vec3 soulTorch = WOMB_LAMP * (torchFactor * 1.6);   // ánh sáng block: trắng ngà, đứng yên (lib/womb_atmosphere.glsl)
 
     // 5. Ánh sáng hư vô thăm thẳm
     vec3 voidAmbient = vec3(0.06, 0.035, 0.05);

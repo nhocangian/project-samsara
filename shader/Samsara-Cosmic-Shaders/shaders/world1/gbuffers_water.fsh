@@ -5,10 +5,11 @@
 uniform sampler2D tex;
 uniform sampler2D lightmap;
 uniform mat4 gbufferModelViewInverse;
-uniform vec3 cameraPosition;
 uniform float frameTimeCounter;
 uniform float far;
 uniform int isEyeInWater;
+
+#include "/lib/womb_atmosphere.glsl"
 
 varying vec2 texCoord;
 varying vec2 lmCoord;
@@ -371,7 +372,7 @@ void main() {
     vec3 cosmicAmbient = vec3(0.25, 0.16, 0.10) * zenithFactor;
 
     float torchFactor = pow(blockLight, 2.0);
-    vec3 soulTorch = mix(vec3(0.22, 0.88, 1.0), vec3(0.88, 0.35, 1.0), sin(t * 2.0) * 0.25 + 0.5) * (torchFactor * 1.8);
+    vec3 soulTorch = WOMB_LAMP * (torchFactor * 1.6);   // ánh sáng block: trắng ngà, đứng yên (lib/womb_atmosphere.glsl)
     vec3 voidAmbient = vec3(0.06, 0.035, 0.05);
 
     vec3 totalLight = voidAmbient + cosmicAmbient + bhDirect + soulTorch;
