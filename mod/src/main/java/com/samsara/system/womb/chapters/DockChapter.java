@@ -1,11 +1,22 @@
 package com.samsara.system.womb.chapters;
 
+import com.samsara.block.DockPropBlock;
+import com.samsara.block.NamWallpaperBlock;
+import com.samsara.registry.SamsaraBlocks;
 import com.samsara.system.womb.WombRoute;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.CandleBlock;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.LanternBlock;
+import net.minecraft.block.PillarBlock;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.block.enums.BedPart;
+import net.minecraft.block.enums.DoorHinge;
+import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -15,19 +26,27 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
 /**
- * Chương 1 - Bến Đò, "thức dậy" (nơi người chơi bước vào The Womb).
- *  - Bến gỗ mục sát mặt nước, ván thiếu ván thừa, cột đèn linh hồn ở đầu bến.
- *  - Chiếc giường đỏ của Nam đang chìm dần cạnh bến: thứ cuối cùng còn lại của căn phòng.
- *  - Những mảnh đất cỏ Overworld vỡ vụn lơ lửng quanh bến (hoa, đuốc, cây non...): thế giới vừa rời bỏ.
- *  - Chiếc thuyền gỗ sồi tối buộc ở đầu bến, mũi hướng về phía Quả Trứng (WombCurrentSystem giữ cho luôn có thuyền).
+ * Chương I - Bến Đò, "nơi bạn thức dậy" (nơi người chơi bước vào The Womb, ngay sau giấc ngủ thứ 7).
+ * Bản 07/11/2026: phòng ngủ của Nam đang tan ra trên mặt nước, giữa biển cửa.
+ *  - Gốc bến là một mảnh sàn phòng ngủ mép vỡ, một góc đã chìm: chiếc giường đỏ như vừa có người nằm, tủ đầu giường có nến,
+ *    bàn học với máy tính của Nam (màn hình là ảnh chụp mặt trời có chấm đen), ghế, kệ sách, tấm thảm. Tường chỉ còn
+ *    vài mảng thấp (giấy dán tường, một mảng còn treo ảnh hai người, một mảng còn vết nắng của tấm poster đã gỡ).
+ *  - Giữa phòng và bến gỗ là cánh cửa phòng ngủ (cửa gỗ vân sam như nhà Nam) đứng trơ trọi trong khung, đã mở: cánh cửa
+ *    đầu tiên. Cả tuyến khép lại bằng cánh cửa cuối tự tay mở ở chương IV.
+ *  - Dấu chân ướt đi từ cạnh giường, qua cửa, dọc bến, tới chỗ thuyền.
+ *  - Bến gỗ mục dài, cột đèn lồng ấm hai bên; thuyền gỗ sồi tối buộc ở đầu bến (WombCurrentSystem giữ luôn có thuyền).
+ *  - Các mảng tường khác trôi lơ lửng về phía cánh cửa trắng khổng lồ.
+ * Người chơi xuất hiện ở gốc tuyến (0, 0), ngay trong phòng, nhìn về bắc. Bến nằm trong khoảng trống quanh Bến Đò của
+ * biển cửa (SaveDoorLayout: |dx| <= 8, along -12..12); cửa có tên gần nhất ở dx ±6 từ along 0 về bắc.
  */
 public final class DockChapter {
     private DockChapter() {}
 
-    /** Mặt sàn bến (đỉnh ván) = mặt nước, chân người chơi đứng ở y = DECK_Y + 1. */
+    /** Mặt sàn (đỉnh ván) = mặt nước, chân người chơi đứng ở y = DECK_Y + 1. */
     private static final int DECK_Y = WombRoute.SURFACE_Y - 1;
-    private static final int NORTH_END = -8;
-    private static final int SOUTH_END = 5;
+    private static final int FLOOR = DECK_Y + 1;          // tầng đặt đồ đạc
+    private static final int DOOR_Z = -2;                  // cánh cửa phòng ngủ
+    private static final int NORTH_END = -16;              // đầu bến (chỗ buộc thuyền)
 
     /** Chỗ buộc thuyền (đầu bắc của bến). */
     public static Vec3d mooring(BlockPos origin) {
@@ -36,79 +55,207 @@ public final class DockChapter {
 
     public static void build(ServerWorld world, BlockPos origin) {
         Random random = Random.create(origin.asLong() ^ 0xD0C4L);
-        buildPier(world, origin, random);
-        buildSinkingBed(world, origin);
-        buildFragments(world, origin, random);
+        BlockPos o = origin.withY(0);
+        clearAbove(world, o);
+        buildRoomFloor(world, o, random);
+        buildFurniture(world, o);
+        buildWallRemnants(world, o, random);
+        buildBedroomDoor(world, o);
+        buildPier(world, o, random);
+        buildFootprints(world, o);
+        buildFloatingWalls(world, o, random);
         ensureBoat(world, origin);
     }
+
+    // ==========================================
+    // PHÒNG NGỦ
+    // ==========================================
+
+    private static void clearAbove(ServerWorld world, BlockPos o) {
+        // Đồ của bản trước nằm ngang mặt nước (giường chìm, ván bến cũ ngoài mảnh sàn mới): trả lại nước
+        for (int x = -7; x <= 7; x++) {
+            for (int z = NORTH_END - 3; z <= 10; z++) {
+                BlockState st = world.getBlockState(o.add(x, DECK_Y, z));
+                if (st.getBlock() instanceof BedBlock || st.isOf(Blocks.BARREL)) {
+                    world.setBlockState(o.add(x, DECK_Y, z), Blocks.WATER.getDefaultState(), 2);
+                }
+            }
+        }
+        // Thuyền trống của bản trước có thể nằm kẹt trên mặt bến mới
+        world.getEntitiesByClass(BoatEntity.class, new Box(o.getX() - 4, DECK_Y - 1, o.getZ() + NORTH_END + 1,
+                o.getX() + 5, DECK_Y + 4, o.getZ() + 11), b -> !b.hasPassengers()).forEach(BoatEntity::discard);
+        // |x| <= 5: cửa có tên của biển cửa đứng ở dx ±6; giữ block ánh sáng của căn phòng
+        for (int x = -5; x <= 5; x++) {
+            for (int z = NORTH_END - 1; z <= 10; z++) {
+                for (int y = FLOOR; y <= FLOOR + 6; y++) {
+                    if (!world.getBlockState(o.add(x, y, z)).isOf(Blocks.LIGHT)) {
+                        world.setBlockState(o.add(x, y, z), Blocks.AIR.getDefaultState(), 2);
+                    }
+                }
+            }
+        }
+    }
+
+    /** Mảnh sàn ván sồi mép vỡ nham nhở; góc đông nam đã chìm một block dưới mặt nước. */
+    private static void buildRoomFloor(ServerWorld world, BlockPos o, Random random) {
+        BlockState plank = Blocks.OAK_PLANKS.getDefaultState();
+        for (int x = -6; x <= 6; x++) {
+            for (int z = -1; z <= 9; z++) {
+                double nx = x / 5.6, nz = (z - 4) / 5.2;
+                double d = nx * nx + nz * nz;
+                if (d > 1.0 - random.nextDouble() * 0.22) continue;
+                boolean sunk = x + (z - 4) > 5;
+                world.setBlockState(o.add(x, sunk ? DECK_Y - 1 : DECK_Y, z), plank, 2);
+                if (sunk) world.setBlockState(o.add(x, DECK_Y, z), Blocks.WATER.getDefaultState(), 2);
+            }
+        }
+        // Sàn luôn liền dưới đồ đạc và lối từ giường ra cửa
+        for (int z = -1; z <= 6; z++) {
+            for (int x = -4; x <= 4; x++) {
+                if (x + (z - 4) <= 5) world.setBlockState(o.add(x, DECK_Y, z), plank, 2);
+            }
+        }
+    }
+
+    private static void buildFurniture(ServerWorld world, BlockPos o) {
+        // Giường đỏ, đầu giường về bắc (như vừa có người nằm dậy đi ra cửa)
+        BlockState bed = Blocks.RED_BED.getDefaultState().with(BedBlock.FACING, Direction.NORTH);
+        world.setBlockState(o.add(-3, FLOOR, 2), bed.with(BedBlock.PART, BedPart.HEAD), 2);
+        world.setBlockState(o.add(-3, FLOOR, 3), bed.with(BedBlock.PART, BedPart.FOOT), 2);
+        // Tủ đầu giường + nến
+        world.setBlockState(o.add(-4, FLOOR, 2), Blocks.SPRUCE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP), 2);
+        world.setBlockState(o.add(-4, FLOOR + 1, 2), Blocks.WHITE_CANDLE.getDefaultState()
+                .with(CandleBlock.CANDLES, 1).with(CandleBlock.LIT, true), 2);
+        // Thảm nâu giữa phòng
+        for (int x = 0; x <= 2; x++) {
+            for (int z = 3; z <= 5; z++) world.setBlockState(o.add(x, FLOOR, z), Blocks.BROWN_CARPET.getDefaultState(), 2);
+        }
+        // Bàn học + máy tính quay vào phòng + ghế
+        BlockState desk = Blocks.SPRUCE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
+        world.setBlockState(o.add(3, FLOOR, 0), desk, 2);
+        world.setBlockState(o.add(3, FLOOR, 1), desk, 2);
+        world.setBlockState(o.add(3, FLOOR + 1, 0), SamsaraBlocks.NAM_COMPUTER.getDefaultState()
+                .with(DockPropBlock.FACING, Direction.WEST), 2);
+        world.setBlockState(o.add(2, FLOOR, 0), Blocks.SPRUCE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.WEST), 2);
+        // Kệ sách
+        world.setBlockState(o.add(4, FLOOR, 3), Blocks.BOOKSHELF.getDefaultState(), 2);
+        world.setBlockState(o.add(4, FLOOR + 1, 3), Blocks.BOOKSHELF.getDefaultState(), 2);
+        world.setBlockState(o.add(4, FLOOR, 4), Blocks.BOOKSHELF.getDefaultState(), 2);
+    }
+
+    /** Tường chỉ còn vài mảng thấp, mặt giấy dán tường quay vào trong phòng. */
+    private static void buildWallRemnants(ServerWorld world, BlockPos o, Random random) {
+        BlockState wall = SamsaraBlocks.NAM_WALLPAPER.getDefaultState();
+        // Tường nam (mặt trong quay về bắc), có vết poster
+        for (int x = -4; x <= 2; x++) {
+            int h = 1 + random.nextInt(3);
+            for (int y = 0; y < h; y++) {
+                int v = x == -1 && y == 1 ? 2 : 0;
+                world.setBlockState(o.add(x, FLOOR + y, 8), wall.with(NamWallpaperBlock.FACING, Direction.NORTH)
+                        .with(NamWallpaperBlock.VARIANT, v), 2);
+            }
+        }
+        // Tường tây (mặt trong quay về đông), có ảnh treo
+        for (int z = 1; z <= 6; z++) {
+            int h = z == 4 ? 3 : 1 + random.nextInt(2);
+            for (int y = 0; y < h; y++) {
+                int v = z == 4 && y == 1 ? 1 : 0;
+                world.setBlockState(o.add(-5, FLOOR + y, z), wall.with(NamWallpaperBlock.FACING, Direction.EAST)
+                        .with(NamWallpaperBlock.VARIANT, v), 2);
+            }
+        }
+        // Một mảng tường đông sau kệ sách (mặt trong quay về tây)
+        for (int z = 2; z <= 4; z++) {
+            world.setBlockState(o.add(5, DECK_Y, z), Blocks.OAK_PLANKS.getDefaultState(), 2);
+            world.setBlockState(o.add(5, FLOOR, z), wall.with(NamWallpaperBlock.FACING, Direction.WEST), 2);
+        }
+    }
+
+    /** Cánh cửa phòng ngủ đứng trơ trọi trong khung gỗ vân sam, đã mở ra phía bến. */
+    private static void buildBedroomDoor(ServerWorld world, BlockPos o) {
+        BlockState post = Blocks.STRIPPED_SPRUCE_LOG.getDefaultState().with(PillarBlock.AXIS, Direction.Axis.Y);
+        BlockState lintel = Blocks.STRIPPED_SPRUCE_LOG.getDefaultState().with(PillarBlock.AXIS, Direction.Axis.X);
+        for (int y = 0; y < 3; y++) {
+            world.setBlockState(o.add(-1, FLOOR + y, DOOR_Z), post, 2);
+            world.setBlockState(o.add(1, FLOOR + y, DOOR_Z), post, 2);
+        }
+        for (int x = -1; x <= 1; x++) world.setBlockState(o.add(x, FLOOR + 2, DOOR_Z), lintel, 2);
+        // Vài viên tường còn bám hai bên khung
+        BlockState wall = SamsaraBlocks.NAM_WALLPAPER.getDefaultState().with(NamWallpaperBlock.FACING, Direction.SOUTH);
+        world.setBlockState(o.add(-2, FLOOR, DOOR_Z), wall, 2);
+        world.setBlockState(o.add(2, FLOOR, DOOR_Z), wall, 2);
+        world.setBlockState(o.add(2, FLOOR + 1, DOOR_Z), wall, 2);
+
+        BlockState door = Blocks.SPRUCE_DOOR.getDefaultState().with(DoorBlock.FACING, Direction.NORTH)
+                .with(DoorBlock.OPEN, true).with(DoorBlock.HINGE, DoorHinge.LEFT);
+        world.setBlockState(o.add(0, FLOOR, DOOR_Z), door.with(DoorBlock.HALF, DoubleBlockHalf.LOWER), 2);
+        world.setBlockState(o.add(0, FLOOR + 1, DOOR_Z), door.with(DoorBlock.HALF, DoubleBlockHalf.UPPER), 2);
+        for (int x = -1; x <= 1; x++) world.setBlockState(o.add(x, DECK_Y, DOOR_Z), Blocks.SPRUCE_PLANKS.getDefaultState(), 2);
+    }
+
+    // ==========================================
+    // BẾN GỖ
+    // ==========================================
 
     private static void buildPier(ServerWorld world, BlockPos o, Random random) {
         BlockState[] boards = {Blocks.SPRUCE_PLANKS.getDefaultState(), Blocks.SPRUCE_PLANKS.getDefaultState(),
                 Blocks.OAK_PLANKS.getDefaultState(), Blocks.DARK_OAK_PLANKS.getDefaultState()};
+        BlockState rail = Blocks.STRIPPED_SPRUCE_LOG.getDefaultState().with(PillarBlock.AXIS, Direction.Axis.Z);
+        BlockState pile = Blocks.SPRUCE_LOG.getDefaultState().with(PillarBlock.AXIS, Direction.Axis.Y);
         BlockState post = Blocks.SPRUCE_FENCE.getDefaultState();
-        for (int x = -2; x <= 2; x++) {
-            for (int z = NORTH_END; z <= SOUTH_END; z++) {
+        BlockState lantern = Blocks.LANTERN.getDefaultState().with(LanternBlock.HANGING, false);
+        for (int z = DOOR_Z - 1; z >= NORTH_END; z--) {
+            for (int x = -2; x <= 2; x++) {
                 // Ván mục: thỉnh thoảng thiếu một tấm ở mép (không thiếu ở lối đi giữa)
-                if (Math.abs(x) == 2 && random.nextFloat() < 0.12f) continue;
-                BlockState b = Math.abs(x) == 2 ? Blocks.STRIPPED_SPRUCE_LOG.getDefaultState()
-                        .with(net.minecraft.block.PillarBlock.AXIS, Direction.Axis.Z) : boards[random.nextInt(boards.length)];
-                world.setBlockState(o.add(x, DECK_Y - o.getY(), z), b, 2);
-                for (int y = DECK_Y + 1; y <= DECK_Y + 6; y++) {
-                    world.setBlockState(o.add(x, y - o.getY(), z), Blocks.AIR.getDefaultState(), 2);
+                if (Math.abs(x) == 1 && random.nextFloat() < 0.08f) continue;
+                world.setBlockState(o.add(x, DECK_Y, z), Math.abs(x) == 2 ? rail : boards[random.nextInt(boards.length)], 2);
+            }
+            if ((z - NORTH_END) % 4 == 0) {
+                for (int x : new int[]{-2, 2}) {
+                    for (int y = DECK_Y - 2; y < DECK_Y; y++) world.setBlockState(o.add(x, y, z), pile, 2);
+                    world.setBlockState(o.add(x, FLOOR, z), post, 2);
+                    world.setBlockState(o.add(x, FLOOR + 1, z), post, 2);
+                    world.setBlockState(o.add(x, FLOOR + 2, z), lantern, 2);
                 }
             }
         }
-        // Cột đèn linh hồn ở đầu bến, cột buộc thuyền
-        for (int x : new int[]{-2, 2}) {
-            BlockPos p = new BlockPos(o.getX() + x, DECK_Y + 1, o.getZ() + NORTH_END);
-            world.setBlockState(p, post, 3);
-            world.setBlockState(p.up(), post, 3);
-            world.setBlockState(p.up(2), Blocks.SOUL_LANTERN.getDefaultState().with(LanternBlock.HANGING, false), 3);
+        // Cọc buộc thuyền ở đầu bến
+        world.setBlockState(o.add(0, FLOOR, NORTH_END), post, 2);
+    }
+
+    /** Dấu chân ướt từ cạnh giường, qua cửa, dọc bến, tới chỗ thuyền. */
+    private static void buildFootprints(ServerWorld world, BlockPos o) {
+        BlockState prints = SamsaraBlocks.WET_FOOTPRINTS.getDefaultState().with(DockPropBlock.FACING, Direction.NORTH);
+        int[][] steps = {{-2, 3}, {-2, 1}, {-1, 0}, {0, -1}};
+        for (int[] s : steps) world.setBlockState(o.add(s[0], FLOOR, s[1]), prints, 2);
+        for (int z = DOOR_Z - 1; z > NORTH_END; z -= 2) {
+            BlockPos p = o.add(0, FLOOR, z);
+            if (world.getBlockState(p.down()).isOpaque()) world.setBlockState(p, prints, 2);
         }
-        world.setBlockState(new BlockPos(o.getX(), DECK_Y + 1, o.getZ() + NORTH_END), post, 3);
-
-        // Vài thùng gỗ, chiếc rương cũ đã mở nắp trống rỗng
-        world.setBlockState(new BlockPos(o.getX() + 1, DECK_Y + 1, o.getZ() + SOUTH_END - 1), Blocks.BARREL.getDefaultState(), 2);
-        world.setBlockState(new BlockPos(o.getX() + 1, DECK_Y + 2, o.getZ() + SOUTH_END - 1), Blocks.BARREL.getDefaultState(), 2);
-        world.setBlockState(new BlockPos(o.getX() - 1, DECK_Y + 1, o.getZ() + SOUTH_END), Blocks.BARREL.getDefaultState(), 2);
     }
 
-    /** Giường đỏ chìm một nửa dưới làn nước cạnh bến, đầu giường hướng về Quả Trứng. */
-    private static void buildSinkingBed(ServerWorld world, BlockPos o) {
-        BlockState bed = Blocks.RED_BED.getDefaultState().with(BedBlock.FACING, Direction.NORTH);
-        BlockPos foot = new BlockPos(o.getX() + 5, DECK_Y, o.getZ() - 1);
-        world.setBlockState(foot.north(), bed.with(BedBlock.PART, BedPart.HEAD), 2);
-        world.setBlockState(foot, bed.with(BedBlock.PART, BedPart.FOOT), 2);
-    }
-
-    /** Mảnh đất Overworld lơ lửng: đỉnh cỏ, lõi đất thu nhỏ dần, chóp đá ở dưới. */
-    private static void buildFragments(ServerWorld world, BlockPos o, Random random) {
-        BlockState[] decor = {Blocks.POPPY.getDefaultState(), Blocks.DANDELION.getDefaultState(),
-                Blocks.GRASS.getDefaultState(), Blocks.OAK_SAPLING.getDefaultState(),
-                Blocks.TORCH.getDefaultState(), Blocks.CRAFTING_TABLE.getDefaultState()};
-        for (int i = 0; i < 7; i++) {
-            double a = i * (Math.PI * 2.0 / 7.0) + random.nextDouble() * 0.5;
-            double r = 11.0 + random.nextDouble() * 16.0;
-            int cx = o.getX() + (int) Math.round(Math.cos(a) * r);
-            int cz = o.getZ() + 6 + (int) Math.round(Math.sin(a) * r * 0.8);
-            int top = WombRoute.SURFACE_Y + 5 + random.nextInt(16);
-            int radius = 1 + random.nextInt(3);
-
-            for (int layer = 0; layer <= radius + 2; layer++) {
-                double lr = radius + 0.6 - layer * 0.75;
-                if (lr < 0.4) lr = 0.4;
-                int y = top - layer;
-                for (int dx = -radius - 1; dx <= radius + 1; dx++) {
-                    for (int dz = -radius - 1; dz <= radius + 1; dz++) {
-                        if (dx * dx + dz * dz > lr * lr + random.nextFloat() * 1.2f) continue;
-                        BlockState s = layer == 0 ? Blocks.GRASS_BLOCK.getDefaultState()
-                                : layer >= radius + 1 ? Blocks.STONE.getDefaultState() : Blocks.DIRT.getDefaultState();
-                        world.setBlockState(new BlockPos(cx + dx, y, cz + dz), s, 2);
-                    }
+    /** Những mảng tường khác của căn phòng trôi lơ lửng về phía cánh cửa trắng (bắc), cao dần. */
+    private static void buildFloatingWalls(ServerWorld world, BlockPos o, Random random) {
+        BlockState wall = SamsaraBlocks.NAM_WALLPAPER.getDefaultState();
+        Direction[] dirs = {Direction.SOUTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
+        for (int i = 0; i < 8; i++) {
+            int along = 4 + i * 6 + random.nextInt(4);
+            int lateral = (i % 2 == 0 ? 1 : -1) * (3 + random.nextInt(16));
+            int y = FLOOR + 5 + i + random.nextInt(4);
+            Direction face = dirs[random.nextInt(dirs.length)];
+            Direction across = face.rotateYClockwise();
+            int w = 2 + random.nextInt(2), h = 2 + random.nextInt(2);
+            BlockPos base = o.add(lateral, y, -along);
+            for (int a = 0; a < w; a++) {
+                for (int b = 0; b < h; b++) {
+                    if ((a == 0 || a == w - 1) && b == h - 1 && random.nextBoolean()) continue;   // mép vỡ
+                    BlockPos p = base.offset(across, a).up(b);
+                    boolean window = i == 3 && a == 1 && b == 1;
+                    world.setBlockState(p, window ? Blocks.GLASS_PANE.getDefaultState()
+                            : wall.with(NamWallpaperBlock.FACING, face).with(NamWallpaperBlock.VARIANT,
+                            i == 5 && a == 0 && b == 1 ? 1 : 0), 2);
                 }
             }
-            BlockState d = decor[random.nextInt(decor.length)];
-            world.setBlockState(new BlockPos(cx, top + 1, cz), d, 2);
         }
     }
 

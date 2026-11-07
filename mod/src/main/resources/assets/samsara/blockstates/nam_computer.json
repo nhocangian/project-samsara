@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=south": {
+      "model": "samsara:block/nam_computer"
+    },
+    "facing=west": {
+      "model": "samsara:block/nam_computer",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "samsara:block/nam_computer",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "samsara:block/nam_computer",
+      "y": 270
+    }
+  }
+}

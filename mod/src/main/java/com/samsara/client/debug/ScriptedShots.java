@@ -25,6 +25,7 @@ import java.util.List;
  *   shot ten_anh            lưu run/screenshots/ten_anh.png (có shader)
  *   quit                    thoát game
  * </pre>
+ * Màn cảnh báo "Worlds using Experimental Settings" được tự bấm "I know what I'm doing!".
  * Người chơi thường không bao giờ gặp: bản phát hành không phải môi trường dev.
  */
 public final class ScriptedShots {
@@ -52,6 +53,17 @@ public final class ScriptedShots {
         client.options.pauseOnLostFocus = false;
 
         if (client.player == null || client.world == null) {
+            // World dev dùng cài đặt thử nghiệm: tự bấm "I know what I'm doing!" (vào không tạo bản sao lưu)
+            if (client.currentScreen != null) {
+                for (net.minecraft.client.gui.Element e : client.currentScreen.children()) {
+                    if (e instanceof net.minecraft.client.gui.widget.ButtonWidget b
+                            && b.getMessage().getContent() instanceof net.minecraft.text.TranslatableTextContent t
+                            && t.getKey().equals("selectWorld.backupJoinSkipButton")) {
+                        b.onPress();
+                        return;
+                    }
+                }
+            }
             // Vào world ở dòng đầu khi đang ở màn hình chính
             if (!joining && client.currentScreen instanceof TitleScreen && lines.get(0).startsWith("world ")) {
                 joining = true;

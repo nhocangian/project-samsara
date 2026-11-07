@@ -48,6 +48,21 @@ public class SamsaraBlocks {
             .strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()
             .sounds(net.minecraft.sound.BlockSoundGroup.WOOD));
 
+    /** Bến Đò: máy tính của Nam (màn hình là ảnh chụp mặt trời có chấm đen), tự sáng nhẹ. */
+    public static final Block NAM_COMPUTER = new com.samsara.block.DockPropBlock(FabricBlockSettings.create()
+            .strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing().luminance(state -> 6)
+            .sounds(net.minecraft.sound.BlockSoundGroup.STONE),
+            net.minecraft.block.Block.createCuboidShape(2, 0, 3, 14, 12, 16));
+
+    /** Bến Đò: mảng tường phòng ngủ của Nam (giấy dán tường / ván sồi). */
+    public static final Block NAM_WALLPAPER = new com.samsara.block.NamWallpaperBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS)
+            .strength(-1.0f, 3600000.0f).dropsNothing());
+
+    /** Bến Đò: dấu chân ướt in trên sàn (decal, không va chạm). */
+    public static final Block WET_FOOTPRINTS = new com.samsara.block.DockPropBlock(FabricBlockSettings.create()
+            .strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing(),
+            net.minecraft.block.Block.createCuboidShape(0, 0, 0, 16, 0.25, 16));
+
     /** Cánh cửa trắng khổng lồ hé mở ở cuối hành lang cửa (vẽ bằng MemoryDoorGiantRenderer). */
     public static final Block MEMORY_DOOR_GIANT = new com.samsara.block.MemoryDoorGiantBlock(
             FabricBlockSettings.create().strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing()
@@ -78,6 +93,9 @@ public class SamsaraBlocks {
         Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_white"), MEMORY_DOOR_WHITE);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_giant"), MEMORY_DOOR_GIANT);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_final"), MEMORY_DOOR_FINAL);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "nam_computer"), NAM_COMPUTER);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "nam_wallpaper"), NAM_WALLPAPER);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "wet_footprints"), WET_FOOTPRINTS);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_veil"), WOMB_VEIL);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_statue"), MEMORY_STATUE);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "titan_halo"), TITAN_HALO);

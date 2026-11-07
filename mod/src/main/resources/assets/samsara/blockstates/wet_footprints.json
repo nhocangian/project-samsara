@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "samsara:block/wet_footprints"
+    },
+    "facing=east": {
+      "model": "samsara:block/wet_footprints",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "samsara:block/wet_footprints",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "samsara:block/wet_footprints",
+      "y": 270
+    }
+  }
+}
