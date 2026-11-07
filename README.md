@@ -33,6 +33,20 @@ Mỗi lần bạn ngủ, thế giới nứt thêm một chút.
 - **Shaderpack VHS riêng** (Iris): nhiễu băng, quầng sáng, thế giới bị bẻ cong.
 - Toàn bộ chữ trong game là **tiếng Việt**.
 
+## Hình ảnh
+
+<div align="center">
+<img src="docs/images/womb_gargantua.webp" width="860" alt="Đoàn tượng quỳ hướng về Gargantua trong làn sương">
+<br><sub>The Womb: những khổng thần thạch cao và đoàn tượng quỳ, tất cả hướng về con mắt Gargantua.</sub>
+<br><br>
+<table>
+<tr>
+<td align="center"><img src="docs/images/womb_door_sea.webp" width="420" alt="Biển cửa và cánh cửa trắng"><br><sub>Những Cánh Cửa: mỗi cánh cửa là một kiếp<br>(ảnh dựng thử, trước khi có tường căn phòng)</sub></td>
+<td align="center"><img src="docs/images/womb_titans_mist.webp" width="420" alt="Hố Nổ 2013 trong làn sương"><br><sub>Hố Nổ 2013: vụ nổ dừng lại giữa chừng</sub></td>
+</tr>
+</table>
+</div>
+
 <details>
 <summary><b>⚠️ Tiết lộ nội dung: mạch chơi đầy đủ</b></summary>
 
@@ -45,7 +59,13 @@ Mỗi lần bạn ngủ, thế giới nứt thêm một chút.
 | 3 | 5–6 | Cát và sỏi bay ngược lên trời, la bàn quay loạn |
 | 4 | 7+ | Mặt đất bị hút lên trời |
 
-Sau giấc ngủ thứ 7 là **Ký Ức Của Nam**, rồi tới **The Womb**: một tuyến hành hương bằng thuyền gồm bốn chương, kết thúc trước một Quả Trứng.
+Sau giấc ngủ thứ 7 là **Ký Ức Của Nam**: cánh đồng hướng dương và căn nhà tháng 5/2018. Dưới hầm nhà có một vết rách dẫn tới **The Womb**, một tuyến hành hương bằng thuyền gồm bốn chương:
+
+1. **Bến Đò** và 2. **Những Cánh Cửa**: một căn phòng tối mênh mông, đầy những cánh cửa giống hệt nhau. Lối ra duy nhất là một cánh cửa trắng hé mở.
+3. **Những Người Khổng Lồ**: bước qua cánh cửa là vũ trụ dưới con mắt Gargantua. Những khổng thần thạch cao là các lần bạn đã chết, trước mỗi khổng thần là một đoàn tượng quỳ.
+4. **Tháp Ngược**: hồ gương lơ lửng và một Quả Trứng ở cuối đường.
+
+Qua ống kính máy quay, mỗi cánh cửa có tên một thế giới cũ, mỗi bức tượng có một dòng thông báo chết.
 
 </details>
 
@@ -55,7 +75,8 @@ Sau giấc ngủ thứ 7 là **Ký Ức Của Nam**, rồi tới **The Womb**: m
 mod/                    Mod Fabric (mã nguồn, tài nguyên, script sinh texture)
   src/main/java/com/samsara/
   src/main/resources/assets/samsara/lang/vi_vn.json
-  tools/                Script Python sinh texture (mặt trời, trứng, máy quay...)
+  tools/                Script Python sinh texture và model (mặt trời, trứng, máy quay, cửa, tượng...)
+docs/images/            Ảnh chụp trong game dùng cho README
 shader/
   Samsara-Cosmic-Shaders/   Shaderpack Iris (kiểu máy quay VHS)
 scripts/                Tài liệu kịch bản và hiện trạng trong mod
