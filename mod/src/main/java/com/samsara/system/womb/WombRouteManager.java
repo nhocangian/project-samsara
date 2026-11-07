@@ -54,6 +54,7 @@ public final class WombRouteManager {
         // Lấy mẫu mỗi 3 block: hành lang rộng 7 nên các ô dọn vẫn liền nhau
         List<Vec3d> path = WombRoute.sample(origin, 3.0);
         loadChunksAlong(world, path);
+        clearBeyondRoom(world, origin);
         clearCorridor(world, path);
         placeBuoys(world, origin);
 
@@ -69,6 +70,77 @@ public final class WombRouteManager {
 
         // Client cần gốc tuyến cho dòng chảy & thuyền bóng ma
         WombCurrentSystem.syncAll(world.getServer());
+    }
+
+    /** Nửa bề ngang và chiều cao của dải dọn phía sau căn phòng cửa. */
+    private static final int BEYOND_HALF_WIDTH = 42;
+    private static final int BEYOND_HEIGHT = 70;
+    /** Vị trí cũ (trước 07/11/2026, các chặng lùi 50 block) của Hố Nổ và Tháp, tính theo gốc tuyến. */
+    private static final int LEGACY_CRATER_DX = 8, LEGACY_CRATER_DZ = -200, LEGACY_CRATER_RADIUS = 15;
+    private static final int LEGACY_SPIRE_DZ = -400, LEGACY_SPIRE_RADIUS = 40, LEGACY_SPIRE_TOP = 216;
+
+    /**
+     * Dọn sạch dải hai bên tuyến từ sau tường căn phòng cửa tới cuối tuyến (khổng thần, tinh thể, tháp của lần dựng
+     * trước, kể cả ở vị trí cũ trước khi các chặng bị lùi), vá mặt nước và đáy; lấp lại lòng Hố Nổ cũ và dọn cột
+     * Tháp cũ tới tận đỉnh. Giữ phao đèn. Mọi chương sau đó dựng lại lên vùng sạch.
+     */
+    private static void clearBeyondRoom(ServerWorld world, BlockPos origin) {
+        BlockState air = Blocks.AIR.getDefaultState();
+        BlockState water = Blocks.WATER.getDefaultState();
+        BlockState floor = Blocks.BLACKSTONE.getDefaultState();
+        BlockPos.Mutable m = new BlockPos.Mutable();
+        int surface = WombRoute.SURFACE_Y;
+        double length = WombRoute.length(origin);
+        java.util.Set<Long> done = new java.util.HashSet<>();
+        for (double along = com.samsara.system.womb.chapters.SaveDoorLayout.ROOM_NORTH + 1; along <= length; along += 1.0) {
+            Vec3d p = WombRoute.pointAlong(origin, along);
+            Vec3d t = WombRoute.tangentNear(origin, p);
+            Vec3d n = new Vec3d(-t.z, 0, t.x);
+            for (int lateral = -BEYOND_HALF_WIDTH; lateral <= BEYOND_HALF_WIDTH; lateral++) {
+                int x = (int) Math.floor(p.x + n.x * lateral);
+                int z = (int) Math.floor(p.z + n.z * lateral);
+                if (!done.add(((long) x << 32) ^ (z & 0xFFFFFFFFL))) continue;
+                world.getChunk(x >> 4, z >> 4);
+                sweepColumn(world, m, x, z, surface, surface + BEYOND_HEIGHT, air, water, floor);
+            }
+        }
+        // Lòng Hố Nổ cũ: lấp lại thành đáy biển
+        int cx = origin.getX() + LEGACY_CRATER_DX;
+        int cz = origin.getZ() + LEGACY_CRATER_DZ;
+        for (int dx = -LEGACY_CRATER_RADIUS; dx <= LEGACY_CRATER_RADIUS; dx++) {
+            for (int dz = -LEGACY_CRATER_RADIUS; dz <= LEGACY_CRATER_RADIUS; dz++) {
+                if (dx * dx + dz * dz > LEGACY_CRATER_RADIUS * LEGACY_CRATER_RADIUS) continue;
+                for (int y = surface - 11; y <= surface - 2; y++) world.setBlockState(m.set(cx + dx, y, cz + dz), floor, 2);
+            }
+        }
+        // Cột Tháp cũ: vòng đá bay và tháp ngược lên tới đỉnh
+        int sx = origin.getX();
+        int sz = origin.getZ() + LEGACY_SPIRE_DZ;
+        for (int dx = -LEGACY_SPIRE_RADIUS; dx <= LEGACY_SPIRE_RADIUS; dx++) {
+            for (int dz = -LEGACY_SPIRE_RADIUS; dz <= LEGACY_SPIRE_RADIUS; dz++) {
+                if (dx * dx + dz * dz > LEGACY_SPIRE_RADIUS * LEGACY_SPIRE_RADIUS) continue;
+                world.getChunk((sx + dx) >> 4, (sz + dz) >> 4);
+                sweepColumn(world, m, sx + dx, sz + dz, surface, LEGACY_SPIRE_TOP, air, water, floor);
+            }
+        }
+        removeEggs(world, new BlockPos(sx, com.samsara.system.womb.chapters.SpireChapter.POOL_Y, sz));
+    }
+
+    private static void sweepColumn(ServerWorld world, BlockPos.Mutable m, int x, int z, int fromY, int toY,
+                                    BlockState air, BlockState water, BlockState floor) {
+        for (int y = fromY; y <= toY; y++) {
+            BlockState st = world.getBlockState(m.set(x, y, z));
+            if (st.isAir() || isBuoy(st)) continue;
+            world.setBlockState(m, air, 2);
+        }
+        BlockState w = world.getBlockState(m.set(x, WombRoute.SURFACE_Y - 1, z));
+        if (!isBuoy(w) && !world.getFluidState(m).isStill()) world.setBlockState(m, water, 2);
+        BlockState f = world.getBlockState(m.set(x, WombRoute.SURFACE_Y - 2, z));
+        if (!f.isOf(Blocks.BLACKSTONE)) world.setBlockState(m, floor, 2);
+    }
+
+    private static boolean isBuoy(BlockState st) {
+        return st.isOf(Blocks.DARK_OAK_FENCE) || st.isOf(Blocks.SOUL_LANTERN);
     }
 
     private static void loadChunksAlong(ServerWorld world, List<Vec3d> path) {

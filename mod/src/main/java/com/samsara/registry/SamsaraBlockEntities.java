@@ -19,7 +19,11 @@ public class SamsaraBlockEntities {
 
     public static BlockEntityType<com.samsara.block.entity.MemoryDoorGiantBlockEntity> MEMORY_DOOR_GIANT_BE;
 
+    public static BlockEntityType<com.samsara.block.entity.TitanHaloBlockEntity> TITAN_HALO_BE;
+
     public static void registerBlockEntities() {
+        TITAN_HALO_BE = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("samsara", "titan_halo"),
+                FabricBlockEntityTypeBuilder.create(com.samsara.block.entity.TitanHaloBlockEntity::new, SamsaraBlocks.TITAN_HALO).build());
         MEMORY_DOOR_GIANT_BE = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("samsara", "memory_door_giant"),
                 FabricBlockEntityTypeBuilder.create(com.samsara.block.entity.MemoryDoorGiantBlockEntity::new, SamsaraBlocks.MEMORY_DOOR_GIANT).build());
 

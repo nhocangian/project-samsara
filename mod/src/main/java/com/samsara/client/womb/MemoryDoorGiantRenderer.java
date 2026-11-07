@@ -2,7 +2,10 @@ package com.samsara.client.womb;
 
 import com.samsara.block.MemoryDoorGiantBlock;
 import com.samsara.block.entity.MemoryDoorGiantBlockEntity;
-import net.minecraft.client.MinecraftClient;
+import com.samsara.registry.SamsaraBlocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -17,7 +20,8 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 /**
- * Cánh cửa trắng khổng lồ cuối hành lang cửa: cùng kiểu với Cửa Ký Ức (texture memory_door_white_*), phóng to
+ * Cánh cửa khổng lồ (cánh cửa trắng ở tường căn phòng cửa, các cánh cửa trên khổng thần): cùng kiểu với Cửa Ký Ức
+ * (texture memory_door_<màu>_*), phóng to
  * {@link #SCALE} lần. Cánh cửa hé 70° ra xa người nhìn (đủ khe cho thuyền đi giữa tuyến), đứng yên.
  * Sau đầu cánh cửa là một màn sáng tĩnh gần như đục (che vũ trụ bên ngoài căn phòng). Không dùng lớp cộng sáng /
  * nhịp thở: các lớp sáng chồng nhau gây chớp. Vệt sáng trên mặt nước là đèn biển dưới đáy (SaveDoorChapter).
@@ -26,49 +30,88 @@ import org.joml.Matrix4f;
 public class MemoryDoorGiantRenderer implements BlockEntityRenderer<MemoryDoorGiantBlockEntity> {
     public static final float SCALE = 6.0f;
 
-    private static final Identifier LEAF_BOTTOM = new Identifier("samsara", "textures/block/memory_door_white_bottom.png");
-    private static final Identifier LEAF_TOP = new Identifier("samsara", "textures/block/memory_door_white_top.png");
-    private static final Identifier FRAME = new Identifier("samsara", "textures/block/memory_door_white_frame.png");
     private static final Identifier KNOB = new Identifier("samsara", "textures/block/memory_door_knob.png");
     private static final Identifier CURTAIN = new Identifier("samsara", "textures/block/memory_door_curtain.png");
 
     private static final int FULL_BRIGHT = 0xF000F0;
     private static final float P = 1.0f / 16.0f;
 
+    /** Ánh sáng dùng cho lần vẽ hiện tại (vẽ trên render thread, lần lượt từng cánh cửa). */
+    private static int currentLight = FULL_BRIGHT;
+
+    private static Identifier tex(MemoryDoorGiantBlock.Color color, String part) {
+        return new Identifier("samsara", "textures/block/memory_door_" + color.asString() + "_" + part + ".png");
+    }
+
     @Override
     public void render(MemoryDoorGiantBlockEntity be, float tickDelta, MatrixStack matrices,
                        VertexConsumerProvider buffers, int light, int overlay) {
-        Direction facing = be.getCachedState().contains(MemoryDoorGiantBlock.FACING)
-                ? be.getCachedState().get(MemoryDoorGiantBlock.FACING) : Direction.SOUTH;
+        BlockState state = be.getCachedState();
+        if (!state.contains(MemoryDoorGiantBlock.FACING)) return;
+        Direction facing = state.get(MemoryDoorGiantBlock.FACING);
+        MemoryDoorGiantBlock.Color color = state.get(MemoryDoorGiantBlock.COLOR);
+        boolean lit = state.get(MemoryDoorGiantBlock.LIT);
+        boolean flat = state.get(MemoryDoorGiantBlock.FLAT);
+        // Cánh cửa nằm trong tường Vách Hư Không của căn phòng: tự phát sáng và có màn sáng che vũ trụ.
+        // Cửa ngoài trời (trên khổng thần): nhận ánh sáng thật của thế giới, không màn sáng.
+        boolean inWall = inRoomWall(be, facing);
+        boolean curtainOn = lit && inWall && state.get(MemoryDoorGiantBlock.CURTAIN);
+        currentLight = inWall || be.getWorld() == null ? FULL_BRIGHT
+                : WorldRenderer.getLightmapCoordinates(be.getWorld(), be.getPos().up(flat ? 1 : 6));
 
         matrices.push();
         matrices.translate(0.5, 0.0, 0.5);
         matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(facing.asRotation()));
         matrices.scale(SCALE, SCALE, SCALE);
 
+        if (flat) {
+            // Nằm ngửa, lệch một góc, không khung: cánh cửa bị thổi bay khỏi khung
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(17.0f));
+            matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90.0f));
+            matrices.translate(-0.5f, -1.0f, 0.0f);
+            leaf(matrices, buffers, color);
+            matrices.pop();
+            return;
+        }
+
         // Khung: hai thanh đứng + dầm trên (sâu 4 px, thò 2 px ngoài lòng cửa)
-        VertexConsumer frame = buffers.getBuffer(RenderLayer.getEntitySolid(FRAME));
+        VertexConsumer frame = buffers.getBuffer(RenderLayer.getEntitySolid(tex(color, "frame")));
         box(matrices, frame, -0.5f - 2 * P, 0, -2 * P, -0.5f, 2, 2 * P);
         box(matrices, frame, 0.5f, 0, -2 * P, 0.5f + 2 * P, 2, 2 * P);
         box(matrices, frame, -0.5f - 2 * P, 2, -2 * P, 0.5f + 2 * P, 2 + 2 * P, 2 * P);
 
-        // Cánh cửa: bản lề phía tây, mặt sau (bắc) lòng cửa; mở ra xa người nhìn
-        float angle = 70.0f;
+        // Cánh cửa: bản lề bên trái (nhìn từ mặt trước), mặt sau lòng cửa; cửa sáng thì hé 70° ra xa người nhìn
         matrices.push();
         matrices.translate(-0.5f, 0.0f, -P);
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(angle));
-        box(matrices, buffers.getBuffer(RenderLayer.getEntitySolid(LEAF_BOTTOM)), 0, 0, 0, 1, 1, 2 * P);
-        box(matrices, buffers.getBuffer(RenderLayer.getEntitySolid(LEAF_TOP)), 0, 1, 0, 1, 2, 2 * P);
+        if (lit) matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(70.0f));
+        leaf(matrices, buffers, color);
+        matrices.pop();
+
+        if (curtainOn) {
+            // Màn sáng gần như đục sau đầu cánh cửa: nhìn qua khe chỉ thấy ánh sáng
+            VertexConsumer curtain = buffers.getBuffer(RenderLayer.getEntityTranslucentEmissive(CURTAIN));
+            quadCurtain(matrices.peek().getPositionMatrix(), curtain, -1.6f, -0.1f, 1.6f, 2.6f, -1.1f);
+        }
+
+        matrices.pop();
+    }
+
+    /** Hai bên lòng cửa (cách tâm 5 block theo bề ngang cửa) có Vách Hư Không không. */
+    private static boolean inRoomWall(MemoryDoorGiantBlockEntity be, Direction facing) {
+        if (be.getWorld() == null) return false;
+        Direction across = facing.rotateYClockwise();
+        BlockPos p = be.getPos().up(2);
+        return be.getWorld().getBlockState(p.offset(across, 5)).isOf(SamsaraBlocks.WOMB_VEIL)
+                || be.getWorld().getBlockState(p.offset(across, -5)).isOf(SamsaraBlocks.WOMB_VEIL);
+    }
+
+    /** Cánh cửa 1 x 2 (gốc ở góc dưới-trái-sau), dày 2 px, tay nắm hai mặt. */
+    private static void leaf(MatrixStack matrices, VertexConsumerProvider buffers, MemoryDoorGiantBlock.Color color) {
+        box(matrices, buffers.getBuffer(RenderLayer.getEntitySolid(tex(color, "bottom"))), 0, 0, 0, 1, 1, 2 * P);
+        box(matrices, buffers.getBuffer(RenderLayer.getEntitySolid(tex(color, "top"))), 0, 1, 0, 1, 2, 2 * P);
         VertexConsumer knob = buffers.getBuffer(RenderLayer.getEntitySolid(KNOB));
         box(matrices, knob, 12.5f * P, 13 * P, 2 * P, 13.5f * P, 14 * P, 3 * P);
         box(matrices, knob, 12.5f * P, 13 * P, -P, 13.5f * P, 14 * P, 0);
-        matrices.pop();
-
-        // Màn sáng gần như đục sau đầu cánh cửa: từ trong phòng nhìn qua khe chỉ thấy ánh sáng, không thấy vũ trụ
-        VertexConsumer curtain = buffers.getBuffer(RenderLayer.getEntityTranslucentEmissive(CURTAIN));
-        quadCurtain(matrices.peek().getPositionMatrix(), curtain, -1.6f, -0.1f, 1.6f, 2.6f, -1.1f);
-
-        matrices.pop();
     }
 
     /** Hộp có đủ 6 mặt, UV phủ cả texture mỗi mặt (mặt trước/sau dùng đúng tỉ lệ của texture cánh cửa). */
@@ -100,7 +143,7 @@ public class MemoryDoorGiantRenderer implements BlockEntityRenderer<MemoryDoorGi
     private static void vertex(Matrix4f m, Matrix3f n, VertexConsumer vc, float x, float y, float z, float u, float v,
                                float nx, float ny, float nz) {
         vc.vertex(m, x, y, z).color(255, 255, 255, 255).texture(u, v).overlay(OverlayTexture.DEFAULT_UV)
-                .light(FULL_BRIGHT).normal(n, nx, ny, nz).next();
+                .light(currentLight).normal(n, nx, ny, nz).next();
     }
 
     /**

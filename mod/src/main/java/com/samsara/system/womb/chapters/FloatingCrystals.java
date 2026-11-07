@@ -21,9 +21,10 @@ public final class FloatingCrystals {
     public static void build(ServerWorld world, BlockPos origin, double routeLength) {
         Random random = Random.create(origin.asLong() ^ 0xC12A57A1L);
         int index = 0;
+        double titansEnd = com.samsara.system.womb.WombRoute.progressOf(origin, com.samsara.system.womb.WombRoute.Stop.TITAN_ARSONIST) + 30.0;
         for (double along = 12.0; along < routeLength - 30.0; along += SPACING * (0.7 + random.nextDouble() * 0.6)) {
-            // Căn phòng cửa (chương I-II) nằm trong Vách Hư Không: không có tinh thể
-            if (along < SaveDoorLayout.GIANT_ALONG + 8) continue;
+            // Chỉ còn ở chương IV: căn phòng cửa (I-II) và cánh đồng thạch cao (III) không có tinh thể
+            if (along < titansEnd) continue;
             Vec3d p = SaveDoorChapter.pointAlong(origin, along);
             Vec3d tangent = com.samsara.system.womb.WombRoute.tangentNear(origin, p);
             int side = index++ % 2 == 0 ? 1 : -1;

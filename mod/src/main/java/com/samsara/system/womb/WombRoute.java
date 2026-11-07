@@ -28,10 +28,11 @@ public final class WombRoute {
 
     public enum Stop {
         DOCK("Bến Đò", 0, 0, 0),
-        TITAN_STEVE("Khổng Thần: Steve 2009", 0, -110, 1),
-        TITAN_CREEPER("Khổng Thần: Hố Nổ 2013", 28, -200, -1),
-        TITAN_ARSONIST("Khổng Thần: Kẻ Đốt Nhà", -24, -290, 1),
-        SPIRE("Tháp Singularity", 0, -400, 0);
+        // 07/11/2026: lùi các chặng sau căn phòng cửa thêm 50 block (khổng thần cách cánh cửa trắng xa hơn)
+        TITAN_STEVE("Khổng Thần: Steve 2009", 0, -160, 1),
+        TITAN_CREEPER("Khổng Thần: Hố Nổ 2013", 28, -250, -1),
+        TITAN_ARSONIST("Khổng Thần: Kẻ Đốt Nhà", -24, -340, 1),
+        SPIRE("Tháp Singularity", 0, -450, 0);
 
         public final String title;
         public final int dx;
@@ -122,6 +123,22 @@ public final class WombRoute {
     public static double progressOf(BlockPos origin, Stop stop) {
         BlockPos p = stop.pos(origin);
         return progress(origin, p.getX() + 0.5, p.getZ() + 0.5);
+    }
+
+    /** Nửa độ dài đoạn "mặc niệm" quanh mỗi khổng thần (block dọc tuyến). */
+    public static final double TITAN_SILENCE = 14.0;
+
+    /**
+     * 0 = đang đi ngang đúng chỗ một khổng thần, 1 = ở xa; giảm êm trong khoảng {@link #TITAN_SILENCE} quanh mỗi
+     * khổng thần. Dòng chảy và ký tự đỏ dùng hệ số này để chậm / thưa lại (khoảnh khắc mặc niệm).
+     */
+    public static double titanSilence(BlockPos origin, double progress) {
+        double k = 1.0;
+        for (Stop stop : new Stop[]{Stop.TITAN_STEVE, Stop.TITAN_CREEPER, Stop.TITAN_ARSONIST}) {
+            double d = Math.abs(progress - progressOf(origin, stop));
+            if (d < TITAN_SILENCE) k = Math.min(k, MathHelper.clamp((d - TITAN_SILENCE * 0.4) / (TITAN_SILENCE * 0.6), 0.0, 1.0));
+        }
+        return k;
     }
 
     /** Lấy mẫu đều dọc tuyến, mỗi {@code step} block một điểm (kèm điểm đầu). */

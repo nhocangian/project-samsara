@@ -102,8 +102,12 @@ public class WombRouteClient {
         Vec3d normal = new Vec3d(-tangent.z, 0, tangent.x);
         // Khoảng lệch có dấu so với đường giữa: kéo thuyền về giữa dòng
         double offset = signedOffset(pos, tangent);
-        Vec3d push = tangent.multiply(CURRENT_PUSH).add(normal.multiply(-MathHelper.clamp(offset, -4.0, 4.0) * CENTER_PULL));
+        // Mặc niệm: đi ngang khổng thần thì dòng chảy gần như lặng, và nước còn hãm bớt đà thuyền
+        double silence = WombRoute.titanSilence(origin, WombRoute.progress(origin, pos.x, pos.z));
+        Vec3d push = tangent.multiply(CURRENT_PUSH * (0.15 + 0.85 * silence))
+                .add(normal.multiply(-MathHelper.clamp(offset, -4.0, 4.0) * CENTER_PULL));
         boat.addVelocity(push.x, 0.0, push.z);
+        if (silence < 0.5) boat.setVelocity(boat.getVelocity().multiply(0.985, 1.0, 0.985));
     }
 
     private static double signedOffset(Vec3d pos, Vec3d tangent) {

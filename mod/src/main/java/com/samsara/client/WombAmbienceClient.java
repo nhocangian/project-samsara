@@ -79,9 +79,7 @@ public class WombAmbienceClient {
             }
             case 2 -> {
                 nextLocal = 140 + RANDOM.nextInt(140);
-                Vec3d side = sideOfRoute(origin, pos, 20);
-                if (RANDOM.nextBoolean()) play(client, SoundEvents.BLOCK_GRINDSTONE_USE, side.add(0, 12, 0), 0.4f, 0.3f);
-                else play(client, SoundEvents.BLOCK_RESPAWN_ANCHOR_AMBIENT, side.add(0, 6, 0), 0.6f, 0.5f);
+                // Chương III: chuông và tiếng ngân nằm ở client/womb/TitanAmbienceClient
             }
             default -> {
                 nextLocal = 100 + RANDOM.nextInt(100);

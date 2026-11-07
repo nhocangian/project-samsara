@@ -48,6 +48,7 @@ public class SamsaraMod implements ModInitializer {
         SamsaraSounds.registerSounds();
         SamsaraBlocks.registerBlocks();
         SamsaraBlockEntities.registerBlockEntities();
+        com.samsara.registry.SamsaraParticles.register();
         SamsaraItems.registerItems();
         SamsaraEntities.registerEntities();
 

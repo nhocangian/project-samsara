@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "facing=south,pose=0": {
+      "model": "samsara:block/memory_statue_up"
+    },
+    "facing=west,pose=0": {
+      "model": "samsara:block/memory_statue_up",
+      "y": 90
+    },
+    "facing=north,pose=0": {
+      "model": "samsara:block/memory_statue_up",
+      "y": 180
+    },
+    "facing=east,pose=0": {
+      "model": "samsara:block/memory_statue_up",
+      "y": 270
+    },
+    "facing=south,pose=1": {
+      "model": "samsara:block/memory_statue_bowed"
+    },
+    "facing=west,pose=1": {
+      "model": "samsara:block/memory_statue_bowed",
+      "y": 90
+    },
+    "facing=north,pose=1": {
+      "model": "samsara:block/memory_statue_bowed",
+      "y": 180
+    },
+    "facing=east,pose=1": {
+      "model": "samsara:block/memory_statue_bowed",
+      "y": 270
+    },
+    "facing=south,pose=2": {
+      "model": "samsara:block/memory_statue_pray"
+    },
+    "facing=west,pose=2": {
+      "model": "samsara:block/memory_statue_pray",
+      "y": 90
+    },
+    "facing=north,pose=2": {
+      "model": "samsara:block/memory_statue_pray",
+      "y": 180
+    },
+    "facing=east,pose=2": {
+      "model": "samsara:block/memory_statue_pray",
+      "y": 270
+    }
+  }
+}

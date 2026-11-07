@@ -17,14 +17,32 @@ import net.minecraft.util.math.random.Random;
 public final class TitanBody {
     /** Bảng màu skin (block thay cho màu pixel). */
     public record Skin(BlockState skin, BlockState hair, BlockState eyeWhite, BlockState iris, BlockState nose,
-                       BlockState mouth, BlockState shirt, BlockState pants, BlockState shoes) {
+                       BlockState mouth, BlockState shirt, BlockState pants, BlockState shoes,
+                       BlockState weatherA, BlockState weatherB) {
         /** Steve cổ điển. */
         public static Skin steve() {
             return new Skin(Blocks.WHITE_TERRACOTTA.getDefaultState(), Blocks.BROWN_TERRACOTTA.getDefaultState(),
                     Blocks.WHITE_CONCRETE.getDefaultState(), Blocks.BLUE_CONCRETE.getDefaultState(),
                     Blocks.TERRACOTTA.getDefaultState(), Blocks.BROWN_CONCRETE.getDefaultState(),
                     Blocks.CYAN_CONCRETE.getDefaultState(), Blocks.BLUE_CONCRETE.getDefaultState(),
-                    Blocks.GRAY_CONCRETE.getDefaultState());
+                    Blocks.GRAY_CONCRETE.getDefaultState(),
+                    Blocks.MOSSY_COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState());
+        }
+
+        /**
+         * Tượng thạch cao trắng (chương III từ 07/11/2026): không màu skin, mắt để trống (hoặc {@code iris} nếu
+         * muốn một chi tiết riêng), phong hoá thành vệt đá diorite như vết rạn.
+         */
+        public static Skin plaster(BlockState iris) {
+            BlockState calcite = Blocks.CALCITE.getDefaultState();
+            return new Skin(calcite, Blocks.SMOOTH_QUARTZ.getDefaultState(), calcite, iris, calcite, calcite,
+                    Blocks.SMOOTH_QUARTZ.getDefaultState(), Blocks.POLISHED_DIORITE.getDefaultState(),
+                    Blocks.DIORITE.getDefaultState(),
+                    Blocks.DIORITE.getDefaultState(), Blocks.POLISHED_DIORITE.getDefaultState());
+        }
+
+        public static Skin plaster() {
+            return plaster(Blocks.CALCITE.getDefaultState());
         }
 
         /** Kẻ phá hoại: áo đen, quần xám, mắt đỏ. Vẫn là gương mặt ấy. */
@@ -33,7 +51,8 @@ public final class TitanBody {
                     Blocks.WHITE_CONCRETE.getDefaultState(), Blocks.RED_CONCRETE.getDefaultState(),
                     Blocks.TERRACOTTA.getDefaultState(), Blocks.BLACK_TERRACOTTA.getDefaultState(),
                     Blocks.BLACK_CONCRETE.getDefaultState(), Blocks.GRAY_CONCRETE.getDefaultState(),
-                    Blocks.BLACK_TERRACOTTA.getDefaultState());
+                    Blocks.BLACK_TERRACOTTA.getDefaultState(),
+                    Blocks.MOSSY_COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState());
         }
     }
 
@@ -159,9 +178,9 @@ public final class TitanBody {
     public void put(int x, int y, int z, BlockState state) {
         BlockPos pos = frame.at(x, y, z);
         float r = random.nextFloat();
-        if (r < weathering * 0.6f) state = Blocks.MOSSY_COBBLESTONE.getDefaultState();
-        else if (r < weathering) state = Blocks.COBBLESTONE.getDefaultState();
-        else if (r < weathering + 0.015f) state = Blocks.CRYING_OBSIDIAN.getDefaultState();
+        if (r < weathering * 0.6f) state = skin.weatherA();
+        else if (r < weathering) state = skin.weatherB();
+        else if (r < weathering + 0.015f && !skin.skin().isOf(Blocks.CALCITE)) state = Blocks.CRYING_OBSIDIAN.getDefaultState(); // thạch cao: không vệt tím
         world.setBlockState(pos, state, 2);
     }
 

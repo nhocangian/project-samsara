@@ -52,6 +52,15 @@ public class SamsaraBlocks {
     public static final Block WOMB_VEIL = new Block(FabricBlockSettings.copyOf(Blocks.BEDROCK)
             .strength(-1.0f, 3600000.0f).dropsNothing().mapColor(net.minecraft.block.MapColor.BLACK));
 
+    /** Tượng Quỳ (chương III của The Womb): thạch cao trắng, không item, không phá được. */
+    public static final Block MEMORY_STATUE = new com.samsara.block.MemoryStatueBlock(FabricBlockSettings.create()
+            .strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()
+            .sounds(net.minecraft.sound.BlockSoundGroup.CALCITE));
+
+    /** Vầng hào quang + tia sáng của khổng thần (vẽ bởi TitanHaloRenderer). */
+    public static final Block TITAN_HALO = new com.samsara.block.TitanHaloBlock(
+            FabricBlockSettings.create().strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing());
+
     private static Block memoryDoor() {
         return new com.samsara.block.MemoryDoorBlock(FabricBlockSettings.create()
                 .strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()
@@ -64,6 +73,8 @@ public class SamsaraBlocks {
         Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_white"), MEMORY_DOOR_WHITE);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_giant"), MEMORY_DOOR_GIANT);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_veil"), WOMB_VEIL);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_statue"), MEMORY_STATUE);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "titan_halo"), TITAN_HALO);
         Registry.register(Registries.BLOCK, MEMORY_SUNFLOWER_ID, MEMORY_SUNFLOWER);
         Registry.register(Registries.BLOCK, CRADLE_ID, CRADLE);
         Registry.register(Registries.BLOCK, PRIMORDIAL_EGG_ID, PRIMORDIAL_EGG);

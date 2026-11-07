@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "samsara:block/titan_halo"
+      }
+    }
+  ]
+}

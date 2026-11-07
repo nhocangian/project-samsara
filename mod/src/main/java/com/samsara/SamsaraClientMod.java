@@ -60,9 +60,18 @@ public class SamsaraClientMod implements ClientModInitializer {
         com.samsara.client.ui.UiHorrorClient.register();
         // Ảnh chụp F2 thấy mặt trời thật (hố đen theo stage)
         com.samsara.client.ScreenshotSunClient.register();
+        // Ký tự phù phép đỏ bay lên ở chương III của The Womb
+        net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry.getInstance().register(
+                com.samsara.registry.SamsaraParticles.RUNE, com.samsara.client.womb.RuneParticle.Factory::new);
+        net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry.getInstance().register(
+                com.samsara.registry.SamsaraParticles.MOTE, com.samsara.client.womb.MoteParticle.Factory::new);
+        com.samsara.client.womb.RuneAmbienceClient.register();
+        com.samsara.client.womb.TitanAmbienceClient.register();
         // Cánh cửa trắng khổng lồ cuối hành lang cửa (chương II của The Womb)
         net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(
                 com.samsara.registry.SamsaraBlockEntities.MEMORY_DOOR_GIANT_BE, ctx -> new com.samsara.client.womb.MemoryDoorGiantRenderer());
+        net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(
+                com.samsara.registry.SamsaraBlockEntities.TITAN_HALO_BE, ctx -> new com.samsara.client.womb.TitanHaloRenderer());
 
         // Phantom qua ống kính máy quay: "Tàn Hồn Phantom" (mắt thường vẫn thấy Phantom vanilla)
         EntityRendererRegistry.register(net.minecraft.entity.EntityType.PHANTOM, com.samsara.entity.client.SoulPhantomRenderer::new);
