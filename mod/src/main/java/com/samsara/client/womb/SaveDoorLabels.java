@@ -5,6 +5,7 @@ import com.samsara.registry.SamsaraBlocks;
 import com.samsara.registry.SamsaraDimensions;
 import com.samsara.system.womb.WombRoute;
 import com.samsara.system.womb.chapters.SaveDoorLayout;
+import com.samsara.system.womb.chapters.SpireChapter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -22,6 +23,7 @@ import net.minecraft.world.RaycastContext;
  *  - Chương II: ngắm vào cánh cửa có tên -> "▶ <tên save>" / "Chơi lần cuối: <ngày>".
  *  - Chương III: ngắm vào khổng thần -> dòng thông báo chết của Minecraft (bản tiếng Việt gốc) / tên save và năm;
  *    ngắm vào một Tượng Quỳ -> một dòng thông báo chết (cố định theo vị trí tượng) / "kiếp #n".
+ *  - Chương IV: ngắm vào cánh cửa cuối -> "▶ New World" / "Chơi lần cuối: bây giờ" / "bạn".
  * Gọi từ CamcorderOverlay khi đã đưa máy lên mắt. Vị trí tính lại từ gốc tuyến, không cần gói tin.
  */
 public final class SaveDoorLabels {
@@ -53,6 +55,7 @@ public final class SaveDoorLabels {
 
         String line1 = null;
         String line2 = null;
+        String line3 = null;
         double bestScore = 0.0;
 
         // Tượng Quỳ: tia ngắm trúng đúng block tượng
@@ -91,8 +94,18 @@ public final class SaveDoorLabels {
         BlockPos giant = SaveDoorLayout.giant(origin);
         double giantScore = aimScore(eye, look, Vec3d.ofBottomCenter(giant).add(0, 6.0, 0), 6.0, MAX_DISTANCE);
         if (giantScore > bestScore) {
+            bestScore = giantScore;
             line1 = "▶ " + SaveDoorLayout.GIANT_SAVE[0];
             line2 = lastPlayed(SaveDoorLayout.GIANT_SAVE[1]);
+        }
+
+        // Cánh cửa cuối (chương IV): save file của chính bây giờ
+        BlockPos last = SpireChapter.finalDoor(origin);
+        double lastScore = aimScore(eye, look, Vec3d.ofBottomCenter(last).add(0, 1.0, 0), 1.4, 90.0);
+        if (lastScore > bestScore) {
+            line1 = "▶ New World";
+            line2 = lastPlayed(Formatting.strip(I18n.translate("samsara.spire_chapter.bay_gio")));
+            line3 = Formatting.strip(I18n.translate("samsara.spire_chapter.ban"));
         }
 
         long time = client.world.getTime();
@@ -109,10 +122,12 @@ public final class SaveDoorLabels {
         if (lockedTicks < 8 && (time % 3) == 0) return;
         int alpha = (int) (60 + 195 * fade);
         int w = Math.max(tr.getWidth(line1), tr.getWidth(line2)) + 8;
+        if (line3 != null) w = Math.max(w, tr.getWidth(line3) + 8);
         int top = cy + 40;
-        ctx.fill(cx - w / 2, top - 3, cx + w / 2, top + 21, (alpha / 3) << 24);
+        ctx.fill(cx - w / 2, top - 3, cx + w / 2, top + (line3 != null ? 31 : 21), (alpha / 3) << 24);
         ctx.drawTextWithShadow(tr, line1, cx - tr.getWidth(line1) / 2, top, (alpha << 24) | 0xF0F0F0);
         ctx.drawTextWithShadow(tr, line2, cx - tr.getWidth(line2) / 2, top + 10, (alpha << 24) | 0x9AA6B8);
+        if (line3 != null) ctx.drawTextWithShadow(tr, line3, cx - tr.getWidth(line3) / 2, top + 20, (alpha << 24) | 0xC9B6B0);
     }
 
     private static String lastPlayed(String date) {

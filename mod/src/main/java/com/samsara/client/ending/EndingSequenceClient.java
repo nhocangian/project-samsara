@@ -316,6 +316,11 @@ public class EndingSequenceClient {
     // TICK
     // ==========================================
 
+    /** Tín hiệu cỡ cực đại cho shader (0..1); WombRainSignalMixin trả giá trị này làm độ mưa ở The Womb. */
+    public static float shaderSignal() {
+        return maxSizeSignal;
+    }
+
     private static void tick(MinecraftClient client) {
         if (phase == Phase.NONE) return;
         if (client.player == null || client.world == null) {

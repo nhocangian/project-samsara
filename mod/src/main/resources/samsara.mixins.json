@@ -31,7 +31,8 @@
     "SoundLoaderReverseMixin",
     "SoundManagerReverseMixin",
     "KeyboardScreenshotMixin",
-    "MinecraftClientScreenshotMixin"
+    "MinecraftClientScreenshotMixin",
+    "WombRainSignalMixin"
   ],
   "injectors": {
     "defaultRequire": 1

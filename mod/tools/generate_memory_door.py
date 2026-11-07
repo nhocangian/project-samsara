@@ -9,6 +9,8 @@ Sinh ra (chạy từ thư mục mod/:  python tools/generate_memory_door.py):
   textures/block/memory_door_knob.png           16x16  tay nắm đồng
   models/block/memory_door_<màu>_<lower|upper>[_ajar|_open].json
   blockstates/memory_door_<màu>.json
+  models/block/memory_door_white_<lower|upper>_wide.json + blockstates/memory_door_final.json
+                                                Cánh cửa cuối (chương IV): cửa trắng cỡ người, mở bằng tay, cánh mở hẳn 90°
   textures/block/memory_door_curtain.png        16x32  màn sáng gần như đục sau cánh cửa lớn (che vũ trụ bên ngoài)
   textures/block/womb_veil.png + model + blockstate   Vách Hư Không: tường và trần đen tuyền của căn phòng bao
                                                       Bến Đò và biển cửa (đen tuyền nên không lộ góc, không lộ ánh sáng)
@@ -177,6 +179,26 @@ def door_model(name, half, angle):
     }
 
 
+def door_model_wide(name, half):
+    """Cánh mở hẳn 90° (model chỉ xoay được tới 45° nên dựng thẳng): cánh nằm dọc theo trục z, từ bản lề phía tây
+    (x 0..2) lùi về phía bắc (z -9..7). Mặt trước cũ (nam) giờ quay về đông."""
+    tex = "#bottom" if half == "lower" else "#top"
+    elements = [box([0, 0, -9], [2, 16, 7], tex, uv={
+        "east": [0, 0, 16, 16], "west": [16, 0, 0, 16],
+        "north": [14, 0, 16, 16], "south": [0, 0, 2, 16],
+        "up": [0, 0, 2, 16], "down": [14, 0, 16, 16]})]
+    if half == "lower":
+        elements.append(box([2, 13, -6.5], [3, 14, -5.5], "#knob"))
+        elements.append(box([-1, 13, -6.5], [0, 14, -5.5], "#knob"))
+    elements.append(box([-2, 0, 6], [0, 16, 10], "#frame"))
+    elements.append(box([16, 0, 6], [18, 16, 10], "#frame"))
+    if half == "upper":
+        elements.append(box([-2, 16, 6], [18, 18, 10], "#frame"))
+    model = door_model(name, half, 0)
+    model["elements"] = elements
+    return model
+
+
 AJAR = {0: ("", 0), 1: ("_ajar", 22.5), 2: ("_open", 45)}
 FACING_Y = {"south": 0, "west": 90, "north": 180, "east": 270}
 
@@ -206,6 +228,19 @@ def main():
                         v["y"] = y
                     variants[f"ajar={ajar},facing={facing},half={half}"] = v
         write_json(os.path.join(STATES, f"memory_door_{name}.json"), {"variants": variants})
+
+    # Cánh cửa cuối: dùng texture cửa trắng; open=false đóng kín, open=true mở hẳn
+    variants = {}
+    for half in ("lower", "upper"):
+        wide = f"memory_door_white_{half}_wide"
+        write_json(os.path.join(MODELS, wide + ".json"), door_model_wide("white", half))
+        for open_, model_name in (("false", f"memory_door_white_{half}"), ("true", wide)):
+            for facing, y in FACING_Y.items():
+                v = {"model": f"samsara:block/{model_name}"}
+                if y:
+                    v["y"] = y
+                variants[f"facing={facing},half={half},open={open_}"] = v
+    write_json(os.path.join(STATES, "memory_door_final.json"), {"variants": variants})
     print("ok")
 
 

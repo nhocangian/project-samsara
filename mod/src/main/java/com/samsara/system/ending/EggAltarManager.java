@@ -11,8 +11,10 @@ import net.minecraft.util.math.Box;
 /**
  * Bệ Quả Trứng trong The Womb. Hiện đặt ở cuối tuyến hành hương (WombRouteManager, chặng SPIRE);
  * Giai đoạn 3b-4 sẽ thay bằng đỉnh Tháp Singularity.
- *  - Hồ nước nông với biểu tượng khảm dưới đáy (người chơi đứng trong nước), cột sáng hổ phách (beacon chìm + kính cam),
+ *  - Hồ nước nông với biểu tượng khảm dưới đáy (người chơi đứng trong nước),
  *    và một hàng đá đặt cách quãng dẫn từ nơi đến tới bệ.
+ *  - 07/11/2026: cùng ngôn ngữ thạch cao trắng với The Womb: đáy hồ vẫn đen để mặt nước soi rõ, con dấu và viền hồ
+ *    bằng thạch cao trắng (vòng và lõi là đèn biển, sáng lên dưới làn nước như phù văn), mặt dưới bệ (thấy khi đứng dưới nhìn lên) trắng.
  * Lệnh test: /samsara test egg (dựng bệ + trứng ngay trước mặt).
  */
 public final class EggAltarManager {
@@ -23,8 +25,8 @@ public final class EggAltarManager {
     private static final int RADIUS = 9;
 
     /**
-     * Biểu tượng khảm dưới đáy nước: lõi hắc diện thạch khóc, các vòng đồng tâm,
-     * và 7 tia thạch anh tím toả ra (7 giấc ngủ). Nhìn xuyên qua lớp nước nông như một con dấu.
+     * Biểu tượng khảm dưới đáy nước: nền hắc diện thạch đen, lõi và các vòng đồng tâm thạch anh trắng,
+     * 7 tia thạch cao toả ra (7 giấc ngủ). Nhìn xuyên qua lớp nước nông như một con dấu.
      */
     private static BlockState sigilAt(int dx, int dz, double d, BlockState obsidian, BlockState crying, BlockState amethyst) {
         if (d < 2.5) return crying;
@@ -45,8 +47,9 @@ public final class EggAltarManager {
         }
 
         BlockState obsidian = Blocks.OBSIDIAN.getDefaultState();
-        BlockState crying = Blocks.CRYING_OBSIDIAN.getDefaultState();
-        BlockState amethyst = Blocks.AMETHYST_BLOCK.getDefaultState();
+        BlockState crying = Blocks.SEA_LANTERN.getDefaultState();        // vòng & lõi con dấu phát sáng dưới nước
+        BlockState amethyst = Blocks.CALCITE.getDefaultState();          // 7 tia
+        BlockState underside = Blocks.SMOOTH_QUARTZ.getDefaultState();
         BlockState water = Blocks.WATER.getDefaultState();
         // center.y = mặt nước (chỗ chân người chơi). Nước nông 1 block ở y-1, biểu tượng khảm ở đáy y-2.
         // Không có gì nhô lên khỏi mặt nước: người chơi đứng TRONG nước, nên bóng phản chiếu trồi lên được ngay trước mặt.
@@ -56,7 +59,7 @@ public final class EggAltarManager {
             for (int dz = -RADIUS; dz <= RADIUS; dz++) {
                 double d = Math.sqrt(dx * dx + dz * dz);
                 if (d > RADIUS + 0.3) continue;
-                world.setBlockState(center.add(dx, -3, dz), obsidian, 2);
+                world.setBlockState(center.add(dx, -3, dz), underside, 2);
                 world.setBlockState(center.add(dx, -2, dz), sigilAt(dx, dz, d, obsidian, crying, amethyst), 2);
                 world.setBlockState(center.add(dx, -1, dz), water, 2);
                 for (int dy = 0; dy <= 12; dy++) {
@@ -70,21 +73,14 @@ public final class EggAltarManager {
             for (int dz = -RADIUS - 2; dz <= RADIUS + 2; dz++) {
                 double d = Math.sqrt(dx * dx + dz * dz);
                 if (d <= RADIUS + 0.3 || d > RADIUS + 1.6) continue;
-                world.setBlockState(center.add(dx, -3, dz), obsidian, 2);
-                world.setBlockState(center.add(dx, -2, dz), obsidian, 2);
-                world.setBlockState(center.add(dx, -1, dz), crying, 2);
+                world.setBlockState(center.add(dx, -3, dz), underside, 2);
+                world.setBlockState(center.add(dx, -2, dz), underside, 2);
+                world.setBlockState(center.add(dx, -1, dz), amethyst, 2);
             }
         }
 
-        // Cột sáng hổ phách phía sau trứng: beacon chìm dưới đáy (chùm sáng xuyên qua mặt nước)
-        BlockPos beacon = center.add(0, -2, -7);
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dz = -1; dz <= 1; dz++) {
-                world.setBlockState(beacon.add(dx, -1, dz), Blocks.IRON_BLOCK.getDefaultState(), 2);
-            }
-        }
-        world.setBlockState(beacon, Blocks.BEACON.getDefaultState(), 3);
-        world.setBlockState(beacon.up(), Blocks.ORANGE_STAINED_GLASS.getDefaultState(), 3);
+        // Không còn beacon (07/11/2026): chùm sáng vanilla không dừng được ở mũi tháp, nó xuyên lên tận trời và
+        // trông như bắn ra từ giữa Gargantua.
 
         // Hàng đá dẫn đường từ nơi đến tới bệ
         if (pathFrom != null) {

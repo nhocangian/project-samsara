@@ -43,6 +43,11 @@ public class SamsaraBlocks {
     public static final Block MEMORY_DOOR_BLUE = memoryDoor();
     public static final Block MEMORY_DOOR_WHITE = memoryDoor();
 
+    /** Cánh cửa cuối (chương IV): Cửa Ký Ức trắng cỡ người, mở bằng tay. */
+    public static final Block MEMORY_DOOR_FINAL = new com.samsara.block.MemoryDoorFinalBlock(FabricBlockSettings.create()
+            .strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()
+            .sounds(net.minecraft.sound.BlockSoundGroup.WOOD));
+
     /** Cánh cửa trắng khổng lồ hé mở ở cuối hành lang cửa (vẽ bằng MemoryDoorGiantRenderer). */
     public static final Block MEMORY_DOOR_GIANT = new com.samsara.block.MemoryDoorGiantBlock(
             FabricBlockSettings.create().strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing()
@@ -72,6 +77,7 @@ public class SamsaraBlocks {
         Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_blue"), MEMORY_DOOR_BLUE);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_white"), MEMORY_DOOR_WHITE);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_giant"), MEMORY_DOOR_GIANT);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_door_final"), MEMORY_DOOR_FINAL);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_veil"), WOMB_VEIL);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "memory_statue"), MEMORY_STATUE);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "titan_halo"), TITAN_HALO);

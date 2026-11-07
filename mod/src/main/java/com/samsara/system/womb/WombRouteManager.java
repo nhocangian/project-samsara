@@ -28,6 +28,8 @@ public final class WombRouteManager {
 
     /** Phế tích ngẫu nhiên không được sinh gần tuyến hơn khoảng này. */
     public static final double RUIN_CLEARANCE = 55.0;
+    /** Bán kính quanh Tháp không sinh phế tích (phế tích lớn như bộ xương sườn chìa rất xa khỏi tâm). */
+    public static final double SPIRE_RUIN_CLEARANCE = 150.0;
     private static final int CORRIDOR_HALF_WIDTH = 3;
     private static final int CLEAR_HEIGHT = 80;
     private static final double BUOY_SPACING = 24.0;
@@ -63,7 +65,6 @@ public final class WombRouteManager {
         com.samsara.system.womb.chapters.SaveDoorChapter.build(world, origin);
         com.samsara.system.womb.chapters.DockChapter.build(world, origin);
         com.samsara.system.womb.chapters.TitanChapter.build(world, origin);
-        com.samsara.system.womb.chapters.FloatingCrystals.build(world, origin, WombRoute.length(origin));
 
         // Cuối tuyến: cầu thang xoắn, cánh cửa cuối, hồ gương lơ lửng với Quả Trứng, tháp ngược
         com.samsara.system.womb.chapters.SpireChapter.build(world, origin);
@@ -234,7 +235,7 @@ public final class WombRouteManager {
         Vec3d spire = Vec3d.ofCenter(WombRoute.Stop.SPIRE.pos(origin));
         List<Vec3d> near = WombRoute.sample(origin, 3.0).stream()
                 .filter(p -> p.squaredDistanceTo(c) < radius * radius)
-                .filter(p -> p.squaredDistanceTo(dock) > 16.0 * 16.0 && p.squaredDistanceTo(spire) > 30.0 * 30.0)
+                .filter(p -> p.squaredDistanceTo(dock) > 16.0 * 16.0 && p.squaredDistanceTo(spire) > 80.0 * 80.0)
                 .toList();
         if (!near.isEmpty()) clearCorridor(world, near);
     }
@@ -242,7 +243,12 @@ public final class WombRouteManager {
     /** Có nằm quá gần tuyến (để WombRuinManager bỏ qua) không. */
     public static boolean isNearRoute(ServerWorld world, int x, int z) {
         BlockPos origin = EggCycleState.get(world.getServer()).getRouteOrigin();
-        return origin != null && (WombRoute.distanceToRoute(origin, x, z) < RUIN_CLEARANCE
+        if (origin == null) return false;
+        // Quanh Tháp (chương IV) không có phế tích nào chìa vào khung hình
+        BlockPos spire = WombRoute.Stop.SPIRE.pos(origin);
+        double sx = x - spire.getX(), sz = z - spire.getZ();
+        if (sx * sx + sz * sz < SPIRE_RUIN_CLEARANCE * SPIRE_RUIN_CLEARANCE) return true;
+        return (WombRoute.distanceToRoute(origin, x, z) < RUIN_CLEARANCE
                 || com.samsara.system.womb.chapters.SaveDoorLayout.insideRoom(origin, x, z, 30));
     }
 }

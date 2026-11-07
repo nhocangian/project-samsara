@@ -15,6 +15,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 public class SamsaraClientMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        // Chụp ảnh tự động cho phiên phát triển (chỉ khi có run/samsara_shots.txt, chỉ trong môi trường dev)
+        com.samsara.client.debug.ScriptedShots.register();
+
         // Hoa hướng dương ký ức: cắt alpha như hoa vanilla
         net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap.INSTANCE.putBlock(
                 com.samsara.registry.SamsaraBlocks.MEMORY_SUNFLOWER, net.minecraft.client.render.RenderLayer.getCutout());
