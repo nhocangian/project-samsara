@@ -137,9 +137,8 @@ def veil_block():
 def box(frm, to, tex, faces=("north", "south", "east", "west", "up", "down"), uv=None, rotation=None):
     e = {"from": frm, "to": to, "faces": {}}
     for f in faces:
-        face = {"texture": tex}
-        if uv and f in uv:
-            face["uv"] = uv[f]
+        # UV luôn khai báo rõ: khối thò ra ngoài block (khung cửa) mà để Minecraft tự suy UV thì đọc nhầm texture bên cạnh
+        face = {"texture": tex, "uv": uv[f] if uv and f in uv else [0, 0, 16, 16]}
         e["faces"][f] = face
     if rotation:
         e["rotation"] = rotation

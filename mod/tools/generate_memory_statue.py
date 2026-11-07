@@ -44,36 +44,43 @@ def texture():
 
 
 def box(frm, to, rotation=None):
+    # UV phải khai báo rõ: khối thò ra ngoài block (đầu cao tới y > 16) mà để Minecraft tự suy UV thì nó đọc
+    # nhầm sang texture bên cạnh trong atlas (tượng từng bị loang hồng đỏ vì thế).
     e = {"from": frm, "to": to,
-         "faces": {f: {"texture": "#all"} for f in ("north", "south", "east", "west", "up", "down")}}
+         "faces": {f: {"texture": "#all", "uv": [0, 0, 16, 16]}
+                   for f in ("north", "south", "east", "west", "up", "down")}}
     if rotation:
         e["rotation"] = rotation
     return e
 
 
 def statue(pose):
-    """Mặt trước = +z. Gối chạm đất ở phía trước (z ~ 9..12.5), cẳng chân nằm ra sau."""
+    """Mặt trước = +z. Gối chạm đất ở phía trước (z ~ 9..12.5), cẳng chân nằm ra sau.
+    Tỉ lệ quỳ: cẳng chân ~6 px, đùi ~6 px, thân 11 px, đầu 7 px (bản đầu chân dài gấp đôi, trông như người cá)."""
     bowed = pose == "bowed"
     pray = pose == "pray"
-    lean = {"origin": [8, 13, 10], "axis": "x", "angle": 22.5} if bowed else None
-    head_rot = ({"origin": [8, 24, 10], "axis": "x", "angle": 22.5} if (bowed or pray)
-                else {"origin": [8, 24, 10], "axis": "x", "angle": -22.5})
+    hip = 9.5          # đỉnh đùi = hông
+    neck = hip + 11    # đỉnh thân = cổ
+    lean = {"origin": [8, hip, 10], "axis": "x", "angle": 22.5} if bowed else None
+    head_rot = ({"origin": [8, neck, 10], "axis": "x", "angle": 22.5} if (bowed or pray)
+                else {"origin": [8, neck, 10], "axis": "x", "angle": -22.5})
     el = [
         # cẳng chân nằm ngang ra sau
-        box([4.5, 0, 1.5], [7.9, 3.4, 12.5]),
-        box([8.1, 0, 1.5], [11.5, 3.4, 12.5]),
+        box([4.5, 0, 6.5], [7.9, 3.4, 12.5]),
+        box([8.1, 0, 6.5], [11.5, 3.4, 12.5]),
         # đùi dựng đứng trên gối
-        box([4.5, 3.4, 9], [7.9, 13, 12.5]),
-        box([8.1, 3.4, 9], [11.5, 13, 12.5]),
+        box([4.5, 3.4, 9], [7.9, hip, 12.5]),
+        box([8.1, 3.4, 9], [11.5, hip, 12.5]),
         # thân
-        box([4.5, 13, 8.5], [11.5, 24, 12], lean),
+        box([4.5, hip, 8.5], [11.5, neck, 12], lean),
         # tay buông dọc thân; chắp tay: hai tay xoay 45° ra trước từ vai, khép vào giữa ngực
-        *([box([5, 14, 8.5], [8, 23.5, 12], {"origin": [8, 23, 10.25], "axis": "x", "angle": -45}),
-           box([8, 14, 8.5], [11, 23.5, 12], {"origin": [8, 23, 10.25], "axis": "x", "angle": -45})] if pray else
-          [box([1, 13, 8.5], [4.5, 23.5, 12], lean),
-           box([11.5, 13, 8.5], [15, 23.5, 12], lean)]),
+        *([box([5, hip + 1, 8.5], [8, neck - 0.5, 12], {"origin": [8, neck - 1, 10.25], "axis": "x", "angle": -45}),
+           box([8, hip + 1, 8.5], [11, neck - 0.5, 12], {"origin": [8, neck - 1, 10.25], "axis": "x", "angle": -45})] if pray else
+          [box([1, hip, 8.5], [4.5, neck - 0.5, 12], lean),
+           box([11.5, hip, 8.5], [15, neck - 0.5, 12], lean)]),
         # đầu
-        box([4.5, 24, 6.75] if not bowed else [4.5, 22.5, 8.5], [11.5, 31, 13.75] if not bowed else [11.5, 29.5, 15.5], head_rot),
+        box([4.5, neck, 6.75] if not bowed else [4.5, neck - 1.5, 8.5],
+            [11.5, neck + 7, 13.75] if not bowed else [11.5, neck + 5.5, 15.5], head_rot),
     ]
     return {
         "parent": "minecraft:block/block",

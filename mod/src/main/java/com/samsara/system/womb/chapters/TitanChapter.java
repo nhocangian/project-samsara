@@ -28,7 +28,8 @@ import java.util.List;
  *     lơ lửng như vụ nổ bị đóng băng; dưới đáy, qua làn nước, cánh cửa xanh "hầm mỏ" nằm bẹp, bị thổi bay khỏi khung.
  *  3. Kẻ Đốt Nhà: đứng, mắt đỏ; tay trái giơ cao đá lửa, tay phải chìa ra phía tuyến một cánh cửa hồng
  *     "server với Tuấn" đang cháy lửa linh hồn.
- * Giữa các khổng thần là cánh đồng ~280 Tượng Quỳ (MemoryStatueBlock) rải hai bên tuyến, cùng quay về Gargantua.
+ * Tượng Quỳ (MemoryStatueBlock) xếp thành đoàn tín đồ quỳ theo hàng cong trước mỗi khổng thần (tuyến là lối đi
+ * giữa), giữa các khổng thần chỉ lác đác vài tượng; tất cả quay về Gargantua.
  * Không khí thánh đường: mỗi khổng thần có vầng hào quang (TitanHalo) và ánh sáng thật rọi lên thân (bodyLight),
  * vòng đèn biển dưới nước quanh chân, tiếng chuông trầm và tiếng ngân (client/womb/TitanAmbienceClient); thuyền chậm
  * lại khi đi ngang mỗi khổng thần (WombRoute.titanSilence).
@@ -41,13 +42,19 @@ public final class TitanChapter {
     private static final int SEABED = WombRoute.SURFACE_Y - 2;   // đáy biển (y = 60)
     private static final int WATER = WombRoute.SURFACE_Y - 1;    // mặt nước (y = 61)
 
-    /** Số tượng quỳ mong muốn và vùng rải (quãng đường dọc tuyến, khoảng cách ngang tới tuyến). */
-    private static final int STATUE_TARGET = 280;
+    /** Đoàn tín đồ trước mỗi khổng thần: số hàng, bán kính hàng đầu, khoảng cách giữa hàng và giữa ghế, nửa góc quạt. */
+    private static final int CONGREGATION_ROWS = 7;
+    private static final double CONGREGATION_FIRST = 23.0;
+    private static final double CONGREGATION_ROW_GAP = 3.0;
+    private static final double CONGREGATION_SEAT_GAP = 2.6;
+    private static final double CONGREGATION_HALF_ANGLE = 55.0;
+    /** Tượng lẻ loi giữa các khổng thần và vùng rải của chúng. */
+    private static final int STRAGGLERS = 30;
     private static final double STATUE_FROM = 100.0;
     private static final double STATUE_TAIL = 30.0;     // rải quá Kẻ Đốt Nhà bao xa
     private static final int STATUE_INNER = 6;
     private static final int STATUE_OUTER = 46;
-    private static final double TITAN_CLEARANCE = 21.0;
+    private static final double TITAN_CLEARANCE = 20.5;
 
     public static void build(ServerWorld world, BlockPos origin) {
         Random random = Random.create(origin.asLong() ^ 0x717A_7155L);
@@ -167,19 +174,24 @@ public final class TitanChapter {
         bodyLight(world, c.add(0, 0, -11), 6, 16);   // đôi chân ở mép bắc
         bodyLight(world, c.add(0, 0, 8), 7, 6);      // nửa thân trên nằm ở mép nam
 
-        // Vụ nổ bị đóng băng: mảnh vụn lơ lửng theo vỏ bán cầu
-        // (thạch cao trắng và vài mảnh cửa xanh)
-        BlockState[] debris = {skin.shirt(), skin.pants(), skin.skin(), skin.skin(), skin.hair(),
-                Blocks.LIGHT_BLUE_TERRACOTTA.getDefaultState()};
-        for (int i = 0; i < 110; i++) {
+        // Vụ nổ bị đóng băng: một vòng sóng nổ rõ hình quanh miệng hố, ~30 mảnh lớn (cụm 2x2x2 sứt mẻ) lơ lửng
+        // ở cùng một vành, nhấp nhô nhẹ; vài mảnh văng cao hơn ở giữa (thạch cao trắng, vài mảnh cửa xanh)
+        BlockState[] debris = {skin.shirt(), skin.skin(), skin.skin(), skin.hair(), Blocks.LIGHT_BLUE_TERRACOTTA.getDefaultState()};
+        int fragments = 30;
+        for (int i = 0; i < fragments; i++) {
+            double yaw = i * (Math.PI * 2.0 / fragments) + (random.nextDouble() - 0.5) * 0.12;
+            double r = 17.0 + random.nextDouble() * 2.5;
+            int x = c.getX() + (int) Math.round(Math.cos(yaw) * r);
+            int z = c.getZ() + (int) Math.round(Math.sin(yaw) * r);
+            int y = WombRoute.SURFACE_Y + 4 + (int) Math.round(2.0 * Math.sin(yaw * 3.0) + random.nextDouble() * 1.5);
+            fragment(world, new BlockPos(x, y, z), debris[random.nextInt(debris.length)], random);
+        }
+        for (int i = 0; i < 6; i++) {
             double yaw = random.nextDouble() * Math.PI * 2.0;
-            double elev = Math.toRadians(8 + random.nextDouble() * 62);
-            double r = 7.0 + random.nextDouble() * 11.0;
-            int x = c.getX() + (int) Math.round(Math.cos(yaw) * Math.cos(elev) * r);
-            int z = c.getZ() + (int) Math.round(Math.sin(yaw) * Math.cos(elev) * r);
-            int y = WombRoute.SURFACE_Y + 2 + (int) Math.round(Math.sin(elev) * r);
-            BlockState s = debris[random.nextInt(debris.length)];
-            world.setBlockState(new BlockPos(x, y, z), s, 2);
+            double r = 4.0 + random.nextDouble() * 6.0;
+            BlockPos p = new BlockPos(c.getX() + (int) Math.round(Math.cos(yaw) * r),
+                    WombRoute.SURFACE_Y + 10 + random.nextInt(6), c.getZ() + (int) Math.round(Math.sin(yaw) * r));
+            fragment(world, p, debris[random.nextInt(debris.length)], random);
         }
     }
 
@@ -226,6 +238,18 @@ public final class TitanChapter {
         halo(world, body.frame().at(0, 34, 0), 6);
         waterRing(world, base, 17);
         bodyLight(world, base, 10, 36);
+    }
+
+    /** Một mảnh vụn: cụm 2x2x2 sứt mất vài góc. */
+    private static void fragment(ServerWorld world, BlockPos at, BlockState state, Random random) {
+        for (int dx = 0; dx < 2; dx++) {
+            for (int dy = 0; dy < 2; dy++) {
+                for (int dz = 0; dz < 2; dz++) {
+                    if (random.nextFloat() < 0.3f) continue;
+                    world.setBlockState(at.add(dx, dy, dz), state, 2);
+                }
+            }
+        }
     }
 
     // ==========================================
@@ -283,35 +307,57 @@ public final class TitanChapter {
     // ==========================================
 
     /**
-     * ~{@link #STATUE_TARGET} Tượng Quỳ trên mặt nước hai bên tuyến, từ sau cánh cửa trắng tới quá Kẻ Đốt Nhà,
-     * thành từng hàng lỏng (lưới 3 block có xê dịch), cùng quay về Gargantua. Chừa chỗ quanh các khổng thần.
+     * Tượng Quỳ xếp thành đoàn tín đồ: trước (phía nam) mỗi khổng thần là các hàng cong đồng tâm, như hàng ghế của một
+     * giáo đường không mái; tuyến đi xuyên qua như lối đi giữa. Hàng đầu nhiều người chắp tay. Khoảng biển giữa hai
+     * khổng thần chỉ lác đác vài tượng lẻ loi. Mọi tượng quay về phía bắc (khổng thần và Gargantua phía sau).
      */
     private static void buildStatueField(ServerWorld world, BlockPos origin, Random random) {
-        double end = WombRoute.progressOf(origin, WombRoute.Stop.TITAN_ARSONIST) + STATUE_TAIL;
-        List<BlockPos> candidates = new ArrayList<>();
-        for (double along = STATUE_FROM; along <= end; along += 3.0) {
-            Vec3d p = WombRoute.pointAlong(origin, along);
-            Vec3d t = WombRoute.tangentNear(origin, p);
-            Vec3d n = new Vec3d(-t.z, 0, t.x);
-            for (int lateral = STATUE_INNER; lateral <= STATUE_OUTER; lateral += 3) {
-                for (int side = -1; side <= 1; side += 2) {
-                    Vec3d q = p.add(n.multiply(side * lateral));
-                    BlockPos pos = BlockPos.ofFloored(q.x + random.nextInt(3) - 1, WombRoute.SURFACE_Y, q.z + random.nextInt(3) - 1);
-                    if (nearTitan(origin, pos)) continue;
-                    if (WombRoute.distanceToRoute(origin, pos.getX() + 0.5, pos.getZ() + 0.5) < STATUE_INNER - 1) continue;
-                    candidates.add(pos);
+        BlockState statue = SamsaraBlocks.MEMORY_STATUE.getDefaultState().with(MemoryStatueBlock.FACING, Direction.NORTH);
+        java.util.Set<BlockPos> used = new java.util.HashSet<>();
+
+        // Đoàn tín đồ trước mỗi khổng thần
+        for (WombRoute.Stop stop : titans()) {
+            BlockPos c = stop.landmark(origin);
+            for (int row = 0; row < CONGREGATION_ROWS; row++) {
+                double radius = CONGREGATION_FIRST + row * CONGREGATION_ROW_GAP;
+                double arc = Math.toRadians(CONGREGATION_HALF_ANGLE);
+                int seats = (int) Math.round(2 * arc * radius / CONGREGATION_SEAT_GAP);
+                for (int i = 0; i <= seats; i++) {
+                    double a = -arc + 2 * arc * i / Math.max(1, seats);
+                    // a = 0 là chính nam (+z)
+                    BlockPos pos = BlockPos.ofFloored(c.getX() + 0.5 + Math.sin(a) * radius, WombRoute.SURFACE_Y,
+                            c.getZ() + 0.5 + Math.cos(a) * radius);
+                    if (random.nextFloat() < 0.12f) continue;   // vài ghế trống
+                    float prayChance = row == 0 ? 0.45f : row == 1 ? 0.25f : 0.08f;
+                    place(world, origin, used, pos, statue, random, prayChance);
                 }
             }
         }
-        float chance = Math.min(1.0f, STATUE_TARGET / (float) Math.max(1, candidates.size()));
-        BlockState statue = SamsaraBlocks.MEMORY_STATUE.getDefaultState().with(MemoryStatueBlock.FACING, Direction.NORTH);
-        for (BlockPos pos : candidates) {
-            if (random.nextFloat() >= chance) continue;
-            if (!world.getBlockState(pos).isAir()) continue;
-            float r = random.nextFloat();
-            int pose = r < 0.15f ? 2 : r < 0.40f ? 1 : 0;   // chắp tay / cúi đầu / ngửa mặt nhìn lên
-            world.setBlockState(pos, statue.with(MemoryStatueBlock.POSE, pose), 2);
+
+        // Vài tượng lẻ loi giữa các khổng thần
+        double from = STATUE_FROM;
+        double to = WombRoute.progressOf(origin, WombRoute.Stop.TITAN_ARSONIST) + STATUE_TAIL;
+        for (int i = 0; i < STRAGGLERS; i++) {
+            double along = from + random.nextDouble() * (to - from);
+            Vec3d p = WombRoute.pointAlong(origin, along);
+            Vec3d t = WombRoute.tangentNear(origin, p);
+            Vec3d n = new Vec3d(-t.z, 0, t.x);
+            double lateral = (random.nextBoolean() ? 1 : -1) * (STATUE_INNER + random.nextDouble() * (STATUE_OUTER - STATUE_INNER));
+            Vec3d q = p.add(n.multiply(lateral));
+            place(world, origin, used, BlockPos.ofFloored(q.x, WombRoute.SURFACE_Y, q.z), statue, random, 0.1f);
         }
+    }
+
+    private static void place(ServerWorld world, BlockPos origin, java.util.Set<BlockPos> used, BlockPos pos,
+                              BlockState statue, Random random, float prayChance) {
+        if (WombRoute.distanceToRoute(origin, pos.getX() + 0.5, pos.getZ() + 0.5) < 4.5) return;   // lối đi giữa
+        if (nearTitan(origin, pos)) return;
+        if (!used.add(pos) || used.contains(pos.east()) || used.contains(pos.west())
+                || used.contains(pos.north()) || used.contains(pos.south())) return;   // không đứng dính nhau
+        if (!world.getBlockState(pos).isAir()) return;
+        float r = random.nextFloat();
+        int pose = r < prayChance ? 2 : r < prayChance + 0.25f ? 1 : 0;   // chắp tay / cúi đầu / ngửa mặt
+        world.setBlockState(pos, statue.with(MemoryStatueBlock.POSE, pose), 2);
     }
 
     private static boolean nearTitan(BlockPos origin, BlockPos pos) {

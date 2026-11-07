@@ -172,7 +172,7 @@ public final class SaveDoorChapter {
     private static void clearRoom(ServerWorld world, BlockPos origin) {
         BlockState air = Blocks.AIR.getDefaultState();
         BlockState water = Blocks.WATER.getDefaultState();
-        BlockState floor = Blocks.BLACKSTONE.getDefaultState();
+        BlockState floor = com.samsara.system.womb.WombRouteManager.FLOOR;
         BlockPos.Mutable m = new BlockPos.Mutable();
         int surface = WombRoute.SURFACE_Y;
         int hw = SaveDoorLayout.ROOM_HALF_WIDTH;
@@ -188,9 +188,7 @@ public final class SaveDoorChapter {
                     if (!world.getBlockState(m.set(x, y, z)).isAir()) world.setBlockState(m, air, 2);
                 }
                 if (!world.getFluidState(m.set(x, surface - 1, z)).isStill()) world.setBlockState(m, water, 2);
-                if (world.getBlockState(m.set(x, surface - 2, z)).isAir() || !world.getFluidState(m).isEmpty()) {
-                    world.setBlockState(m, floor, 2);
-                }
+                if (!world.getBlockState(m.set(x, surface - 2, z)).isOf(floor.getBlock())) world.setBlockState(m, floor, 2);
             }
         }
         // Hành lang tuyến trong phòng: chỉ dọn phần trên cao (WombRouteManager dọn tới 80 block; trần ở 40 nên đủ)

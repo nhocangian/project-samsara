@@ -74,6 +74,10 @@ public final class WombRouteManager {
 
     /** Nửa bề ngang và chiều cao của dải dọn phía sau căn phòng cửa. */
     private static final int BEYOND_HALF_WIDTH = 42;
+    /** Dải lát lại đáy (rộng hơn dải dọn, để phủ hết vùng nhìn thấy quanh khổng thần và tượng quỳ). */
+    private static final int FLOOR_HALF_WIDTH = 90;
+    /** Đáy biển The Womb: một loại đá duy nhất (khớp surface_rule trong worldgen/noise_settings/the_womb.json). */
+    public static final BlockState FLOOR = Blocks.POLISHED_BLACKSTONE.getDefaultState();
     private static final int BEYOND_HEIGHT = 70;
     /** Vị trí cũ (trước 07/11/2026, các chặng lùi 50 block) của Hố Nổ và Tháp, tính theo gốc tuyến. */
     private static final int LEGACY_CRATER_DX = 8, LEGACY_CRATER_DZ = -200, LEGACY_CRATER_RADIUS = 15;
@@ -87,7 +91,7 @@ public final class WombRouteManager {
     private static void clearBeyondRoom(ServerWorld world, BlockPos origin) {
         BlockState air = Blocks.AIR.getDefaultState();
         BlockState water = Blocks.WATER.getDefaultState();
-        BlockState floor = Blocks.BLACKSTONE.getDefaultState();
+        BlockState floor = FLOOR;
         BlockPos.Mutable m = new BlockPos.Mutable();
         int surface = WombRoute.SURFACE_Y;
         double length = WombRoute.length(origin);
@@ -96,12 +100,17 @@ public final class WombRouteManager {
             Vec3d p = WombRoute.pointAlong(origin, along);
             Vec3d t = WombRoute.tangentNear(origin, p);
             Vec3d n = new Vec3d(-t.z, 0, t.x);
-            for (int lateral = -BEYOND_HALF_WIDTH; lateral <= BEYOND_HALF_WIDTH; lateral++) {
+            for (int lateral = -FLOOR_HALF_WIDTH; lateral <= FLOOR_HALF_WIDTH; lateral++) {
                 int x = (int) Math.floor(p.x + n.x * lateral);
                 int z = (int) Math.floor(p.z + n.z * lateral);
                 if (!done.add(((long) x << 32) ^ (z & 0xFFFFFFFFL))) continue;
                 world.getChunk(x >> 4, z >> 4);
-                sweepColumn(world, m, x, z, surface, surface + BEYOND_HEIGHT, air, water, floor);
+                if (Math.abs(lateral) <= BEYOND_HALF_WIDTH) {
+                    sweepColumn(world, m, x, z, surface, surface + BEYOND_HEIGHT, air, water, floor);
+                } else if (!world.getBlockState(m.set(x, surface - 2, z)).isOf(FLOOR.getBlock())
+                        && world.getBlockState(m.set(x, surface - 1, z)).isOf(Blocks.WATER)) {
+                    world.setBlockState(m.set(x, surface - 2, z), floor, 2);   // chỉ lát đáy dưới nước
+                }
             }
         }
         // Lòng Hố Nổ cũ: lấp lại thành đáy biển
@@ -136,7 +145,7 @@ public final class WombRouteManager {
         BlockState w = world.getBlockState(m.set(x, WombRoute.SURFACE_Y - 1, z));
         if (!isBuoy(w) && !world.getFluidState(m).isStill()) world.setBlockState(m, water, 2);
         BlockState f = world.getBlockState(m.set(x, WombRoute.SURFACE_Y - 2, z));
-        if (!f.isOf(Blocks.BLACKSTONE)) world.setBlockState(m, floor, 2);
+        if (!f.isOf(FLOOR.getBlock())) world.setBlockState(m, floor, 2);
     }
 
     private static boolean isBuoy(BlockState st) {
@@ -163,7 +172,7 @@ public final class WombRouteManager {
     private static void clearCorridor(ServerWorld world, List<Vec3d> path) {
         BlockState air = Blocks.AIR.getDefaultState();
         BlockState water = Blocks.WATER.getDefaultState();
-        BlockState floor = Blocks.BLACKSTONE.getDefaultState();
+        BlockState floor = FLOOR;
         BlockPos.Mutable m = new BlockPos.Mutable();
         int surface = WombRoute.SURFACE_Y;
         for (Vec3d p : path) {
@@ -181,10 +190,7 @@ public final class WombRouteManager {
                         world.setBlockState(m, air, 2);
                     }
                     if (!world.getFluidState(m.set(x, surface - 1, z)).isStill()) world.setBlockState(m, water, 2);
-                    if (world.getBlockState(m.set(x, surface - 2, z)).isAir()
-                            || !world.getFluidState(m).isEmpty()) {
-                        world.setBlockState(m, floor, 2);
-                    }
+                    if (!world.getBlockState(m.set(x, surface - 2, z)).isOf(FLOOR.getBlock())) world.setBlockState(m, floor, 2);
                 }
             }
         }
