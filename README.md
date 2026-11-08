@@ -44,6 +44,17 @@ Mỗi lần bạn ngủ, thế giới nứt thêm một chút.
 <td align="center"><img src="docs/images/womb_door_sea.webp" width="420" alt="Biển cửa và cánh cửa trắng"><br><sub>Những Cánh Cửa: mỗi cánh cửa là một kiếp<br>(ảnh dựng thử, trước khi có tường căn phòng)</sub></td>
 <td align="center"><img src="docs/images/womb_titans_mist.webp" width="420" alt="Hố Nổ 2013 trong làn sương"><br><sub>Hố Nổ 2013: vụ nổ dừng lại giữa chừng</sub></td>
 </tr>
+<tr>
+<td align="center"><img src="docs/images/womb_dock_overview.webp" width="420" alt="Phòng ngủ của Nam tan ra giữa biển cửa"><br><sub>Bến Đò: căn phòng ngủ đang tan ra giữa biển cửa</sub></td>
+<td align="center"><img src="docs/images/womb_bedroom_code.webp" width="420" alt="Tường và sàn phòng ngủ rã thành mã nhị phân"><br><sub>Nơi bạn thức dậy: bên dưới lớp gỗ chỉ là dữ liệu</sub></td>
+</tr>
+<tr>
+<td align="center"><img src="docs/images/womb_grand_stairs.webp" width="420" alt="Đại cầu thang trắng dẫn lên trước Gargantua"><br><sub>Tháp Ngược: đại cầu thang đi thẳng vào con mắt</sub></td>
+<td align="center"><img src="docs/images/womb_egg_galaxies.webp" width="420" alt="Quả Trứng giữa thánh đường, thiên hà bắn ra từ Gargantua"><br><sub>Quả Trứng ở tâm của vạn vật</sub></td>
+</tr>
+<tr>
+<td align="center" colspan="2"><img src="docs/images/womb_ending_wide.webp" width="860" alt="Gargantua, bóng phản chiếu khổng lồ và thánh đường treo"><br><sub>Đoạn kết: cái bóng ×45, thánh đường và con mắt Gargantua</sub></td>
+</tr>
 </table>
 </div>
 
@@ -61,9 +72,9 @@ Mỗi lần bạn ngủ, thế giới nứt thêm một chút.
 
 Sau giấc ngủ thứ 7 là **Ký Ức Của Nam**: cánh đồng hướng dương và căn nhà tháng 5/2018. Dưới hầm nhà có một vết rách dẫn tới **The Womb**, một tuyến hành hương bằng thuyền gồm bốn chương:
 
-1. **Bến Đò** và 2. **Những Cánh Cửa**: một căn phòng tối mênh mông, đầy những cánh cửa giống hệt nhau. Lối ra duy nhất là một cánh cửa trắng hé mở.
+1. **Bến Đò** và 2. **Những Cánh Cửa**: bạn tỉnh dậy trong phòng ngủ của Nam đang tan ra thành dữ liệu, giữa một căn phòng tối mênh mông đầy những cánh cửa giống hệt nhau. Lối ra duy nhất là một cánh cửa trắng hé mở.
 3. **Những Người Khổng Lồ**: bước qua cánh cửa là vũ trụ dưới con mắt Gargantua. Những khổng thần thạch cao là các lần bạn đã chết, trước mỗi khổng thần là một đoàn tượng quỳ.
-4. **Tháp Ngược**: hồ gương lơ lửng và một Quả Trứng ở cuối đường.
+4. **Tháp Ngược**: đại cầu thang trắng, cánh cửa cuối cùng do chính bạn mở, và một Quả Trứng giữa thánh đường treo dưới con mắt Gargantua.
 
 Qua ống kính máy quay, mỗi cánh cửa có tên một thế giới cũ, mỗi bức tượng có một dòng thông báo chết.
 
