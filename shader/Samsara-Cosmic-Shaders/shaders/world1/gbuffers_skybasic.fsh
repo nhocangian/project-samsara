@@ -164,11 +164,13 @@ vec3 galaxyLayer(float th, float ph, float D, float presence, float seed,
             float phF = (j + 0.5 + jit) * cw - 3.14159265;
 
             // Thời điểm phóng: vài thiên hà đi trước, lẻ tẻ trong 5 giây đầu,
-            // rồi tất cả bung ra cùng lúc trong khoảng 2 giây
-            float t0 = (h.w < scoutFrac)
+            // rồi tất cả bung ra trong khoảng 5,5 -> 16 giây (dồn ở đầu, thưa dần)
+            bool scout = h.w < scoutFrac;
+            float t0 = scout
                 ? 0.6 + 4.2 * k.x
-                : 5.5 + 3.4 * pow(k.x, 1.3) + 0.6 * thF / 3.14159265; // bung ra từ ~5,5 tới ~9,5 giây
-            float s = clamp((secs - t0) / 3.2, 0.0, 1.0);
+                : 5.5 + 9.9 * pow(k.x, 1.2) + 0.6 * thF / 3.14159265; // bung ra từ ~5,5 tới ~16 giây
+            float flight = scout ? 4.0 : 3.2;  // thiên hà đi trước bay chậm hơn một chút
+            float s = clamp((secs - t0) / flight, 0.0, 1.0);
             if (s <= 0.0) continue;
 
             float e = 1.0 - pow(1.0 - s, 3.0);           // phóng nhanh, chậm dần khi tới nơi
@@ -365,6 +367,12 @@ void main() {
     bool trappedInHorizon = false;
     float minApproach = 999.0;
 
+    // Mô phỏng chỉ biết thành phần ngang/dọc (u, v) của hướng nhìn, không phân biệt trước/sau:
+    // nhìn ngược về phía sau lưng cũng bị coi như đang nhìn vào hố đen -> sinh ra một hố đen "ma"
+    // bẻ cong bầu trời phía nam. Hố đen + đĩa thật chỉ nằm trong w_screen > ~0.5, nên chỉ mô phỏng
+    // khi w_screen > 0.05 và làm mờ dần trong 0.05..0.30 (không có gì ở đó, không lộ đường nối).
+    float bhGate = smoothstep(0.05, 0.30, w_screen);
+    if (w_screen > 0.05)
     for (int step = 0; step < 80; step++) {
         float r = length(p);
         minApproach = min(minApproach, r);
@@ -527,6 +535,10 @@ void main() {
         v = vNext;
     }
 
+    radAccum *= bhGate;
+    transmittance = mix(vec3(1.0), transmittance, bhGate);
+    trappedInHorizon = trappedInHorizon && bhGate > 0.5;
+
     // =========================================================================
     // 5. VÒNG PHOTON RING SẮC NÉT & HÀO QUANG KHÍ QUYỂN / QUẦNG SÁNG VŨ TRỤ (POSTER LOOK)
     // =========================================================================
@@ -553,7 +565,7 @@ void main() {
         finalColor = radAccum;
     } else {
         // Hòa trộn thấu kính hấp dẫn mượt mà:
-        float blendLens = clamp((18.0 - minApproach) / 12.0, 0.0, 1.0);
+        float blendLens = clamp((18.0 - minApproach) / 12.0, 0.0, 1.0) * bhGate;
         // v nằm trong hệ toạ độ mô phỏng (camRight, camUp, camDir); đổi về hệ thế giới
         // (bhRight, bhUp, bhForward) rồi mới trộn, nếu không sẽ sinh ra một "tâm" giả phía trên hố đen
         vec3 vWorld = normalize(bhRight * dot(v, camRight) + bhUp * dot(v, camUp)

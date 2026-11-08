@@ -291,10 +291,13 @@ vec3 renderCosmicReflection(vec3 rayWorld, float time) {
     if (trappedInHorizon) {
         finalColor = radAccum;
     } else {
-        float blendLens = clamp((18.0 - minApproach) / 12.0, 0.0, 1.0);
-        vec3 vStar = normalize(mix(rayWorld, v, blendLens));
+        float blendLens = clamp((18.0 - minApproach) / 12.0, 0.0, 1.0) * facingBH;
+        // v ở hệ toạ độ mô phỏng -> đổi về hệ thế giới trước khi trộn (giống gbuffers_skybasic.fsh)
+        vec3 vWorld = normalize(bhRight * dot(v, camRight) + bhUp * dot(v, camUp)
+                              + bhForward * (dot(v, camDir) * viewScale));
+        vec3 vStar = normalize(mix(rayWorld, vWorld, blendLens));
         vec3 bgStars = sampleStarsClean(vStar, time);
-        finalColor = bgStars * transmittance + radAccum + celestialBloom;
+        finalColor = bgStars * mix(vec3(1.0), transmittance, facingBH) + radAccum * facingBH + celestialBloom;
     }
 
     float horizonGlow = smoothstep(0.0, 0.10, rayWorld.y) * smoothstep(0.35, 0.0, rayWorld.y);
