@@ -101,6 +101,18 @@ public class EndingSequenceClient {
     private static boolean stepDone = false;
 
     private static Perspective savedPerspective = Perspective.FIRST_PERSON;
+    // Cảnh toàn sau mốc x45 (chỉ ở The Womb): quả trứng ở tâm góc nhìn trước, thiên hà bắn ra; rồi cắt sang một cảnh
+    // toàn thấy cả Gargantua, thánh đường, người chơi và cái bóng khổng lồ; đoạn thoại tạm dừng trong lúc đó.
+    private static final int WIDE_DELAY = 170;   // 8.5 s giữ góc nhìn quả trứng ở tâm trước khi cắt
+    private static final int WIDE_LEN = 110;     // 5.5 s cảnh toàn
+    // Ở mốc x45 góc nhìn từ từ ngước lên đúng hướng Gargantua: quả trứng nằm gọn trong vòng tròn của hố đen
+    private static final int LOOK_UP_TICKS = 30;
+    private static int lookUpTicks = 0;
+    private static int wideDelay = -1;           // > 0 đang đếm; 0 = chờ lúc không gõ chat để cắt
+    private static int wideTicks = -1;           // >= 0 đang ở cảnh toàn
+    private static boolean wideDone = false;
+    private static Perspective widePerspective = Perspective.FIRST_PERSON;
+    private static boolean wideHud = false;
     private static boolean savedHudHidden = false;
 
     public static void register() {
@@ -253,6 +265,52 @@ public class EndingSequenceClient {
         }
         startJump(scale);
         eyeRevealed = scale >= EndingDialogue.EYE_REVEAL_SCALE;
+        if (eyeRevealed) scheduleWide(client);
+    }
+
+    private static boolean inWomb(MinecraftClient client) {
+        return client.world != null && client.world.getRegistryKey() == com.samsara.registry.SamsaraDimensions.THE_WOMB_WORLD_KEY;
+    }
+
+    private static void scheduleWide(MinecraftClient client) {
+        if (!wideDone && wideDelay < 0 && wideTicks < 0 && inWomb(client)) {
+            wideDelay = WIDE_DELAY;
+            lookUpTicks = LOOK_UP_TICKS;
+        }
+    }
+
+    /** Xoay dần góc nhìn người chơi về hướng Gargantua (mốc x45). */
+    private static void tickLookUp(MinecraftClient client) {
+        if (lookUpTicks <= 0 || client.player == null) return;
+        float targetYaw = (float) (MathHelper.atan2(GARGANTUA_DIR.z, GARGANTUA_DIR.x) * (180.0 / Math.PI)) - 90.0f;
+        float targetPitch = (float) -(MathHelper.atan2(GARGANTUA_DIR.y,
+                Math.sqrt(GARGANTUA_DIR.x * GARGANTUA_DIR.x + GARGANTUA_DIR.z * GARGANTUA_DIR.z)) * (180.0 / Math.PI));
+        float k = 1.0f / lookUpTicks;
+        float yaw = client.player.getYaw();
+        client.player.setYaw(yaw + MathHelper.wrapDegrees(targetYaw - yaw) * k);
+        client.player.setPitch(client.player.getPitch() + (targetPitch - client.player.getPitch()) * k);
+        lookUpTicks--;
+    }
+
+    private static void startWide(MinecraftClient client) {
+        wideDelay = -1;
+        wideTicks = 0;
+        wideDone = true;
+        widePerspective = client.options.getPerspective();
+        wideHud = client.options.hudHidden;
+        client.options.setPerspective(Perspective.THIRD_PERSON_BACK);   // để thấy người chơi trong cảnh
+        client.options.hudHidden = true;
+    }
+
+    private static void endWide(MinecraftClient client) {
+        wideTicks = -1;
+        client.options.setPerspective(widePerspective);
+        client.options.hudHidden = wideHud;
+    }
+
+    /** Cảnh toàn đang chiếu (đoạn thoại tạm dừng). */
+    public static boolean isWideShot() {
+        return wideTicks >= 0;
     }
 
     private static void startJump(float scale) {
@@ -298,6 +356,11 @@ public class EndingSequenceClient {
         jumpFrom = 1.0f;
         mirrorLagging = false;
         if (maxSizeSignal > 0.0f && client.world != null) client.world.setRainGradient(0.0f);
+        if (wideTicks >= 0 && client.options != null) endWide(client);
+        wideDelay = -1;
+        wideTicks = -1;
+        wideDone = false;
+        lookUpTicks = 0;
         maxSizeSignal = 0.0f;
         hatch = hatchTarget = 0.0f;
         shakeTicks = 0;
@@ -356,6 +419,15 @@ public class EndingSequenceClient {
         if (inWomb && (maxSizeSignal > 0.0f || before > 0.0f)) client.world.setRainGradient(maxSizeSignal);
         hatch += (hatchTarget - hatch) * 0.05f;
 
+        tickLookUp(client);
+        if (wideDelay > 0) wideDelay--;
+        if (wideDelay == 0) {
+            boolean typing = phase == Phase.DIALOGUE && stepIndex < script.size()
+                    && script.get(stepIndex).kind() == EndingDialogue.Kind.ME && stepTicks > 0;
+            if (!typing) startWide(client);
+        }
+        if (wideTicks >= 0 && ++wideTicks >= WIDE_LEN) endWide(client);
+
         switch (phase) {
             case CINEMATIC -> tickCinematic(client);
             case DIALOGUE -> tickDialogue(client);
@@ -402,6 +474,7 @@ public class EndingSequenceClient {
     // ---------------- Đoạn thoại ----------------
 
     private static void tickDialogue(MinecraftClient client) {
+        if (wideTicks >= 0) return;   // đoạn thoại tạm dừng trong cảnh toàn
         if (stepIndex >= script.size()) {
             enter(Phase.CLOSING);
             return;
@@ -423,7 +496,10 @@ public class EndingSequenceClient {
                     shakeTicks = 14;
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ENTITY_WARDEN_HEARTBEAT, 0.55f, 1.0f));
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), 0.5f, 0.6f));
-                    if (step.value() >= EndingDialogue.EYE_REVEAL_SCALE) eyeRevealed = true;
+                    if (step.value() >= EndingDialogue.EYE_REVEAL_SCALE) {
+                        eyeRevealed = true;
+                        scheduleWide(client);
+                    }
                 }
                 if (stepTicks >= 40) nextStep();
             }
@@ -504,6 +580,15 @@ public class EndingSequenceClient {
 
     /** Vị trí + điểm nhìn của camera cinematic; null nếu không ở pha cinematic. */
     public static Vec3d[] cinematicCamera(float tickDelta, Vec3d playerEye) {
+        if (wideTicks >= 0) {
+            // CẢNH TOÀN sau x45: máy xa phía tây nam, ngang tầm thánh đường, ngước lên theo hướng Gargantua (bắc).
+            // Quả trứng và thánh đường ở phần dưới khung hình, cái bóng khổng lồ đứng phía bắc, Gargantua ở trên.
+            float k = ease(MathHelper.clamp((wideTicks + tickDelta) / WIDE_LEN, 0f, 1f));
+            Vec3d from = eggPos.add(-26.0, 5.0, 46.0);
+            Vec3d to = eggPos.add(-23.0, 6.5, 41.0);
+            Vec3d look = eggPos.add(GARGANTUA_DIR.multiply(55.0));
+            return new Vec3d[]{from.lerp(to, k), look.add(0, -2.0 * k, 0)};
+        }
         if (phase != Phase.CINEMATIC) return null;
         float t = phaseTicks + tickDelta;
         Vec3d up = new Vec3d(0, 1, 0);

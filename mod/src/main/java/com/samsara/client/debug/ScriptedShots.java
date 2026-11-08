@@ -73,7 +73,7 @@ public final class ScriptedShots {
         }
         if (index == 0 && lines.get(0).startsWith("world ")) {
             index = 1;
-            waitTicks = 100;   // chờ world nạp xong
+            waitTicks = 10;    // chạy lệnh đầu thật sớm (vd. rời khỏi chỗ đứng cũ trước khi có gì tự kích hoạt)
         }
         if (waitTicks > 0) {
             waitTicks--;

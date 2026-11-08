@@ -157,7 +157,7 @@ Kích hoạt khi bước vào trong 6 block quanh Quả Trứng.
    - **Bóng phản chiếu = hình dạng của `<System>`:** dáng người chơi, **thân làm bằng trời sao chuyển động**, skin của chính người chơi phủ mờ bên ngoài, viền tím mờ.
    - Lúc mới trồi lên, nó **nhìn theo hướng người chơi nhìn như một tấm gương**. Từ câu đầu tiên của `<System>`, nó **chậm hơn nửa nhịp**.
    - Bóng **nhảy kích thước ×2, ×4, ×12, ×45**, mỗi lần nhảy có vài khung hình **nhiễu băng VHS** (rung ngang, tách màu, mất hình). Từ ×12 nó thôi bắt chước và nhìn thẳng vào người chơi.
-   - Ở ×45 (câu *"Họ cũng chính là cậu."*), con mắt của nó nằm **đúng chỗ Gargantua trên trời** (phía bắc): ngước lên là thấy **Gargantua chính là con mắt của nó**.
+   - Ở ×45 (câu *"Họ cũng chính là cậu."*), con mắt của nó nằm **đúng chỗ Gargantua trên trời** (phía bắc): ngước lên là thấy **Gargantua chính là con mắt của nó**. Quả Trứng nằm ngay tâm góc nhìn, đè lên Gargantua, các thiên hà bắn ra từ sau lưng nó như thể quả trứng là trung tâm của vạn vật; vài giây sau máy **cắt sang một cảnh toàn** từ xa: Gargantua trên cao, cái bóng khổng lồ đứng giữa biển, thánh đường treo với đại cầu thang và người chơi bé nhỏ trong hồ, rồi trở lại.
    - Quả Trứng nứt dần theo lời thoại.
    - Toàn bộ khoảng 3–4 phút.
 3. **Kết:** nhắm mắt, trứng nở, rồi màn **NO SIGNAL** ("OBS ■ REC STOPPED", tên file kiểu OBS "2021-03-14 03-29-51.mkv   00:03:42:09"). Câu kết hiện giữa màn hình:
