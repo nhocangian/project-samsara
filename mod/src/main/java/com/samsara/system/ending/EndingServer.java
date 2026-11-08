@@ -56,13 +56,13 @@ public class EndingServer {
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 20 * 60 * 5, 4, false, false, false));
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 20 * 60 * 5, 0, false, false, false));
 
-        // Hồ Gương ở Tháp: đặt người chơi đúng 4.5 block phía nam Quả Trứng (chỗ chụp ảnh tham chiếu), nhìn về bắc (lúc cắt sang cảnh toàn cảnh
+        // Hồ Gương ở Tháp: đặt người chơi đúng 6 block phía nam (đo lại theo ảnh đã duyệt: 4.5 block làm quả trứng che hết Gargantua) Quả Trứng (chỗ chụp ảnh tham chiếu), nhìn về bắc (lúc cắt sang cảnh toàn cảnh
         // nên không lộ). Ở khoảng này, ngước lên Gargantua thì quả trứng nằm gọn trong vòng tròn của hố đen (người dùng
         // chọn khung này, 08/11/2026); đứng sát hơn thì quả trứng to quá vòng tròn.
         net.minecraft.util.math.BlockPos altar = EggCycleState.get(player.getServer()).getEggAltarPos();
         if (player.getServerWorld().getRegistryKey() == com.samsara.registry.SamsaraDimensions.THE_WOMB_WORLD_KEY
                 && altar != null && Math.abs(altar.getX() + 0.5 - egg.getX()) < 2 && Math.abs(altar.getZ() + 0.5 - egg.getZ()) < 2) {
-            player.networkHandler.requestTeleport(egg.getX(), altar.getY() - 1.0, egg.getZ() + 4.5, 180.0f, 0.0f);
+            player.networkHandler.requestTeleport(egg.getX(), altar.getY() - 1.0, egg.getZ() + 6.0, 180.0f, 0.0f);
         }
 
         PacketByteBuf buf = PacketByteBufs.create();

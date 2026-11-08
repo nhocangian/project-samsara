@@ -69,7 +69,7 @@ public final class EndingDialogue {
         s.add(Step.sys(net.minecraft.client.resource.language.I18n.translate("samsara.ending.ho_cung_chinh_la")));
         s.add(Step.jump(EYE_REVEAL_SCALE));
         s.add(Step.hatch(0.6f));
-        s.add(Step.wait(80));
+        s.add(Step.wait(150)); // câu sau phải hiện SAU cảnh toàn (cảnh toàn ẩn HUD và tạm dừng đoạn thoại)
         s.add(Step.sys(net.minecraft.client.resource.language.I18n.translate("samsara.ending.nhung_ho_van_dang")));
         s.add(Step.wait(60));
         s.add(Step.sys(net.minecraft.client.resource.language.I18n.translate("samsara.ending.bay_gio_nam_hay")));

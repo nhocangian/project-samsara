@@ -86,6 +86,10 @@ public class PrimordialEggRenderer extends EntityRenderer<PrimordialEggEntity> {
         return true; // trứng to hơn hitbox nhiều; không để bị cắt khỏi khung nhìn
     }
 
+    /** Cỡ vỏ trứng (người chơi chọn theo ảnh ở khung x45, đứng cách 6 block); thu nhỏ quanh tâm để trứng vẫn giữa vòng hố đen. */
+    private static final float EGG_SCALE = 0.92f;
+    private static final float EGG_CENTER_Y = 3.0f;
+
     @Override
     public void render(PrimordialEggEntity entity, float yaw, float tickDelta, MatrixStack matrices,
                        VertexConsumerProvider consumers, int light) {
@@ -96,11 +100,11 @@ public class PrimordialEggRenderer extends EntityRenderer<PrimordialEggEntity> {
         float bpm = 60.0f + hatch * 90.0f;
         float beat = (time / 20.0f * bpm / 60.0f) % 1.0f;
         float pulse = (float) (Math.exp(-beat * 14.0) + 0.55 * Math.exp(-Math.max(0, beat - 0.22) * 14.0) * (beat > 0.22 ? 1 : 0));
-        float scale = 1.0f + pulse * (0.025f + hatch * 0.05f);
+        float scale = EGG_SCALE * (1.0f + pulse * (0.025f + hatch * 0.05f));
         float shake = hatch > 0 ? (float) Math.sin(time * 3.1f) * hatch * 0.06f : 0.0f;
 
         matrices.push();
-        matrices.translate(shake, Math.sin(time * 0.05) * 0.15, -shake);
+        matrices.translate(shake, Math.sin(time * 0.05) * 0.15 + EGG_CENTER_Y * (1.0f - EGG_SCALE), -shake);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(time * 0.4f));
         matrices.scale(scale, -scale, -scale); // lật trục model (Y xuống) về trục thế giới
 

@@ -56,7 +56,10 @@ public class NoSignalScreen extends Screen {
         }
         if (ticks >= EXIT_TICK && !exiting) {
             exiting = true;
-            exitToTitle(client);
+            // Không thoát ngay trong tick của màn hình: tạo world mới chạy vòng render lồng nhau,
+            // làm hỏng móc ScreenEvents của Fabric (crash "Screen cannot be null"). Dời sang tác vụ sau tick.
+            MinecraftClient c = client;
+            c.send(() -> exitToTitle(c));
         }
     }
 
