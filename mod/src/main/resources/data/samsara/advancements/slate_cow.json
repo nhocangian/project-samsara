@@ -1,0 +1,27 @@
+{
+  "parent": "samsara:cairn",
+  "display": {
+    "icon": {
+      "item": "minecraft:leather"
+    },
+    "title": {
+      "translate": "advancements.samsara.slate_cow.title"
+    },
+    "description": {
+      "translate": "advancements.samsara.slate_cow.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "kill_cow": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:cow"
+        }
+      }
+    }
+  }
+}

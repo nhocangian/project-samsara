@@ -1,0 +1,25 @@
+{
+  "parent": "samsara:the_wanderer",
+  "display": {
+    "icon": {
+      "item": "samsara:primordial_egg"
+    },
+    "title": {
+      "translate": "advancements.samsara.the_womb_awakening.title"
+    },
+    "description": {
+      "translate": "advancements.samsara.the_womb_awakening.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "enter_the_womb": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "samsara:the_womb"
+      }
+    }
+  }
+}

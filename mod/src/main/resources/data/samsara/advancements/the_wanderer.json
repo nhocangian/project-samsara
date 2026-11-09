@@ -1,0 +1,32 @@
+{
+  "parent": "samsara:slate_enderman",
+  "display": {
+    "icon": {
+      "item": "minecraft:echo_shard"
+    },
+    "title": {
+      "translate": "advancements.samsara.the_wanderer.title"
+    },
+    "description": {
+      "translate": "advancements.samsara.the_wanderer.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "looked_at_wanderer": {
+      "trigger": "minecraft:player_hurt_entity",
+      "conditions": {
+        "entity": {
+          "type": "samsara:the_wanderer"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "looked_at_wanderer"
+    ]
+  ]
+}

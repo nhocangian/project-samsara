@@ -1,0 +1,30 @@
+{
+  "has_precipitation": false,
+  "temperature": 0.8,
+  "downfall": 0.4,
+  "effects": {
+    "sky_color": 7907327,
+    "fog_color": 15984822,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color": 8311098,
+    "foliage_color": 7854646
+  },
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "samsara:sunflower_field"
+    ]
+  ]
+}

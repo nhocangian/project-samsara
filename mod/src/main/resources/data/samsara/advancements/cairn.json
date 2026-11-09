@@ -1,0 +1,31 @@
+{
+  "parent": "samsara:root",
+  "display": {
+    "icon": {
+      "item": "samsara:palimpsest_journal"
+    },
+    "title": {
+      "translate": "advancements.samsara.cairn.title"
+    },
+    "description": {
+      "translate": "advancements.samsara.cairn.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "has_journal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "samsara:palimpsest_journal"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

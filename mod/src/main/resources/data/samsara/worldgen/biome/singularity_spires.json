@@ -1,0 +1,24 @@
+{
+  "has_precipitation": false,
+  "temperature": 0.3,
+  "downfall": 0.0,
+  "effects": {
+    "sky_color": 2754619,
+    "fog_color": 5641067,
+    "water_color": 8069026,
+    "water_fog_color": 4853326,
+    "grass_color": 8069026,
+    "foliage_color": 8069026,
+    "ambient_sound": "minecraft:ambient.warped_forest.loop",
+    "mood_sound": {
+      "sound": "minecraft:block.amethyst_block.chime",
+      "tick_delay": 2500,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": {},
+  "features": []
+}

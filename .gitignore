@@ -19,6 +19,7 @@ _unsorted/
 *.lnk
 shaderpacks/
 data/
+!mod/src/main/resources/data/
 .claude/settings.local.json
 Thumbs.db
 desktop.ini

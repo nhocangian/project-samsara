@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "item": "samsara:fractured_slate"
+    },
+    "title": {
+      "translate": "advancements.samsara.root.title"
+    },
+    "description": {
+      "translate": "advancements.samsara.root.description"
+    },
+    "background": "minecraft:textures/block/crying_obsidian.png",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick"
+    }
+  }
+}

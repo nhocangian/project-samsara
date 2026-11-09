@@ -1,0 +1,48 @@
+{
+  "type": "samsara:the_womb",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "samsara:the_womb",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "samsara:origin_cradle",
+          "parameters": {
+            "temperature": 0.0,
+            "humidity": 0.0,
+            "continentalness": 0.7,
+            "erosion": 0.0,
+            "depth": 0.0,
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "samsara:titan_graveyard",
+          "parameters": {
+            "temperature": -0.6,
+            "humidity": -0.2,
+            "continentalness": -0.4,
+            "erosion": 0.0,
+            "depth": 0.0,
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "samsara:singularity_spires",
+          "parameters": {
+            "temperature": 0.6,
+            "humidity": 0.3,
+            "continentalness": -0.4,
+            "erosion": 0.0,
+            "depth": 0.0,
+            "weirdness": 0.0,
+            "offset": 0.0
+          }
+        }
+      ]
+    }
+  }
+}

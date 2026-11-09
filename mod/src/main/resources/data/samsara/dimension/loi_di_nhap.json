@@ -1,0 +1,22 @@
+{
+  "type": "samsara:loi_di_nhap",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "samsara:loi_di_nhap",
+      "features": false,
+      "lakes": false,
+      "layers": [
+        {
+          "block": "minecraft:bedrock",
+          "height": 1
+        },
+        {
+          "block": "minecraft:water",
+          "height": 64
+        }
+      ],
+      "structure_overrides": []
+    }
+  }
+}

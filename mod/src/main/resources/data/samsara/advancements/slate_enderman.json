@@ -1,0 +1,27 @@
+{
+  "parent": "samsara:slate_zombie",
+  "display": {
+    "icon": {
+      "item": "minecraft:ender_pearl"
+    },
+    "title": {
+      "translate": "advancements.samsara.slate_enderman.title"
+    },
+    "description": {
+      "translate": "advancements.samsara.slate_enderman.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "kill_enderman": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:enderman"
+        }
+      }
+    }
+  }
+}

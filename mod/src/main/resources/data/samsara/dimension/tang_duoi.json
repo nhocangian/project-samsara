@@ -1,0 +1,18 @@
+{
+  "type": "samsara:tang_duoi",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "samsara:tang_duoi",
+      "features": false,
+      "lakes": false,
+      "layers": [
+        {
+          "block": "minecraft:air",
+          "height": 1
+        }
+      ],
+      "structure_overrides": []
+    }
+  }
+}
