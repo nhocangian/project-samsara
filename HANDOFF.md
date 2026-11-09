@@ -196,7 +196,7 @@ Trạng thái (cuối phiên 06/11/2026):
 - Chụp ảnh tự động trên cao cần `cmd gamemode spectator` (không thì nhân vật rơi xuống nước).
 
 **Việc tiếp theo (bàn giao 09/11/2026):**
-- **Chưa commit:** toàn bộ Tầng Dưới (mod, shader `world3` của phiên shader, tài liệu) còn nằm trong thư mục làm việc; commit gần nhất là 30bfefa. Chỉ commit/push khi người dùng bảo. Ba GIF tham chiếu ở `D:\c` để ngoài git.
+- Mọi thứ của Tầng Dưới đã push tới ee4700c. Chỉ commit/push khi người dùng bảo. Ba GIF tham chiếu ở thư mục gốc để ngoài git.
 - **Bước sau:** bàn chi tiết rồi dựng tầng 2–4, từng tầng một, thiết kế ở `scripts/de_xuat/tang_duoi_tong_quan.md`. Ổ khoá căn hầm người dùng đã thấy "khá tốt"; có thể chỉnh nhịp nếu họ muốn. Đề xuất ống nước trên trần vẫn để ngỏ.
 - **Chưa kiểm chứng bằng tay:** ngắm máy quay vào vết khắc ở hầm (ảnh chụp mới ở chế độ gợi ý sau 8 lần sai), ngã 4 qua máy quay, vứt / cất máy quay.
 - **Cách làm việc người dùng thích:** Claude tự chụp ảnh bằng `ScriptedShots` để kiểm tra, gửi ảnh và ý kiến, sửa theo phản hồi; khi họ bảo "Mở game đi thử" thì mở game, dừng ở điểm cần xem, xong khôi phục save. Trước khi chạy thử: chép `mod/run/saves/` ra chỗ an toàn (thử `tang_duoi vao` và `ngu` có ghi vào save).
