@@ -124,6 +124,7 @@ public class SamsaraMod implements ModInitializer {
 
         // Project: Samsara Test & Debug Suite
         com.samsara.system.tangduoi.DuongOngRuntime.register();
+        com.samsara.system.tangduoi.LoiDiNhapRuntime.register();
         com.samsara.system.tangduoi.OKhoaHam.register();
         com.samsara.system.cycle.CamcorderKeepSystem.register();
         com.samsara.command.SamsaraTestCommands.register();

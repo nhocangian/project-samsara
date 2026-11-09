@@ -100,6 +100,10 @@ public class SamsaraClientMod implements ClientModInitializer {
                 com.samsara.registry.SamsaraBlockEntities.MEMORY_DOOR_GIANT_BE, ctx -> new com.samsara.client.womb.MemoryDoorGiantRenderer());
         net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(
                 com.samsara.registry.SamsaraBlockEntities.TITAN_HALO_BE, ctx -> new com.samsara.client.womb.TitanHaloRenderer());
+        net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(
+                com.samsara.registry.SamsaraBlockEntities.KHOI_NHAP_BE, ctx -> new com.samsara.client.tangduoi.KhoiNhapRenderer());
+        com.samsara.client.tangduoi.LoiDiNhapClient.register();
+        com.samsara.client.tangduoi.LoiDiNhapBirds.register();
 
         // Phantom qua ống kính máy quay: "Tàn Hồn Phantom" (mắt thường vẫn thấy Phantom vanilla)
         EntityRendererRegistry.register(net.minecraft.entity.EntityType.PHANTOM, com.samsara.entity.client.SoulPhantomRenderer::new);

@@ -177,6 +177,19 @@ public class SamsaraTestCommands {
                         // Test: Ảnh chụp F2 thấy mặt trời thật (/samsara test screenshot_sun)
                         .then(CommandManager.literal("screenshot_sun").executes(ctx -> testScreenshotSun(ctx.getSource())))
 
+                        // Test: Tầng Dưới, tầng 2 "Lối đi nháp": dựng lại, cầm máy quay, đưa tới phòng / cầu / đảo 1
+                        .then(CommandManager.literal("tang_duoi2").executes(ctx -> testTangDuoi2(ctx.getSource(), 0))
+                                .then(CommandManager.literal("cau").executes(ctx -> testTangDuoi2(ctx.getSource(), 1)))
+                                .then(CommandManager.literal("dao").executes(ctx -> testTangDuoi2(ctx.getSource(), 2)))
+                                .then(CommandManager.literal("vao").executes(ctx -> testTangDuoi2(ctx.getSource(), 3)))
+                                .then(CommandManager.literal("phong_cuoi").executes(ctx -> testTangDuoi2(ctx.getSource(), 4)))
+                                .then(CommandManager.literal("ngu").executes(ctx -> testTangDuoi2(ctx.getSource(), 5)))
+                                .then(CommandManager.literal("roi").executes(ctx -> testTangDuoi2(ctx.getSource(), 6)))
+                                .then(CommandManager.literal("khoi").executes(ctx -> testTangDuoi2(ctx.getSource(), 7)))
+                                .then(CommandManager.literal("doan")
+                                        .then(CommandManager.argument("so", IntegerArgumentType.integer(1, 5))
+                                                .executes(ctx -> testTangDuoi2(ctx.getSource(), 10 + IntegerArgumentType.getInteger(ctx, "so"))))))
+
                         // Test: Tầng Dưới, đoạn Đường Ống thử: dựng lại rồi đưa tới đầu ống (/samsara test tang_duoi)
                         .then(CommandManager.literal("tang_duoi").executes(ctx -> testTangDuoi(ctx.getSource(), 0))
                                 .then(CommandManager.literal("den_hong").executes(ctx -> testTangDuoi(ctx.getSource(), 1)))
@@ -892,6 +905,54 @@ public class SamsaraTestCommands {
             com.samsara.system.tangduoi.DuongOngRuntime.teleportLater(player, world, s.getX() + 0.5, s.getY(), s.getZ() + 0.5, 180.0f, 0.0f, 60);
         }
         source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng lại tầng 1. Dùng nga <1-5> để tới từng ngã."), false);
+        return 1;
+    }
+
+    private static int testTangDuoi2(ServerCommandSource source, int mode) {
+        ServerPlayerEntity player = source.getPlayer();
+        ServerWorld world = source.getServer().getWorld(com.samsara.registry.SamsaraDimensions.LOI_DI_NHAP_WORLD_KEY);
+        if (player == null || world == null) return 0;
+        if (!player.getMainHandStack().isOf(com.samsara.registry.SamsaraItems.FRACTURED_SLATE)) {
+            int slot = -1;
+            for (int i = 0; i < player.getInventory().size(); i++) {
+                if (player.getInventory().getStack(i).isOf(com.samsara.registry.SamsaraItems.FRACTURED_SLATE)) slot = i;
+            }
+            net.minecraft.item.ItemStack held = player.getMainHandStack().copy();
+            if (slot >= 0) {
+                player.setStackInHand(net.minecraft.util.Hand.MAIN_HAND, player.getInventory().getStack(slot).copy());
+                player.getInventory().setStack(slot, held);
+            } else {
+                player.setStackInHand(net.minecraft.util.Hand.MAIN_HAND, new net.minecraft.item.ItemStack(com.samsara.registry.SamsaraItems.FRACTURED_SLATE));
+                player.getInventory().offerOrDrop(held);
+            }
+        }
+        if (mode == 5) {
+            com.samsara.system.tangduoi.LoiDiNhapRuntime.startSleep(player);
+            return 1;
+        }
+        if (mode == 6) {
+            com.samsara.system.tangduoi.LoiDiNhapRuntime.forceFall(player);
+            return 1;
+        }
+        if (mode == 7) {
+            for (int i = 0; i <= com.samsara.system.tangduoi.LoiDiNhapKhoi.LAST; i++) {
+                com.samsara.system.tangduoi.LoiDiNhapKhoi.reveal(world, player, i, false);
+            }
+            return 1;
+        }
+        com.samsara.system.tangduoi.LoiDiNhapBuilder.build(world);
+        com.samsara.system.tangduoi.LoiDiNhapRuntime.reset();
+        if (mode == 3) {
+            com.samsara.system.tangduoi.LoiDiNhapRuntime.enter(player);
+            return 1;
+        }
+        BlockPos p = mode > 10 ? com.samsara.system.tangduoi.LoiDiNhapBuilder.checkpoint(mode - 11)
+                : mode == 4 ? com.samsara.system.tangduoi.LoiDiNhapBuilder.finalRoom()
+                : mode == 1 ? com.samsara.system.tangduoi.LoiDiNhapBuilder.pierEnd()
+                : mode == 2 ? com.samsara.system.tangduoi.LoiDiNhapBuilder.islandOne()
+                : com.samsara.system.tangduoi.LoiDiNhapBuilder.arrival();
+        com.samsara.system.tangduoi.DuongOngRuntime.teleportLater(player, world, p.getX() + 0.5, p.getY(), p.getZ() + 0.5, 180.0f, 0.0f, 60);
+        source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng tầng 2. Dùng doan <1-5> / phong_cuoi / vao / roi / ngu / khoi."), false);
         return 1;
     }
 

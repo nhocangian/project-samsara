@@ -98,6 +98,14 @@ public class SamsaraBlocks {
     public static final Block DEN_HONG = new com.samsara.block.DenHongBlock(FabricBlockSettings.copyOf(Blocks.STONE)
             .strength(-1.0f, 3600000.0f).dropsNothing());
 
+    /** Tầng Dưới, tầng 2: Khối Nháp, đứng được nhưng chỉ thấy qua máy quay. */
+    public static final Block KHOI_NHAP = new com.samsara.block.KhoiNhapBlock(FabricBlockSettings.create()
+            .strength(-1.0f, 3600000.0f).nonOpaque().dropsNothing()
+            .sounds(net.minecraft.sound.BlockSoundGroup.AMETHYST_CLUSTER), true);
+    /** Tầng 2, đoạn 4: cầu ván chỉ có trong mắt, đi qua được, nhìn qua máy quay thì không còn. */
+    public static final Block VAN_GIA = new com.samsara.block.KhoiNhapBlock(FabricBlockSettings.create()
+            .strength(-1.0f, 3600000.0f).nonOpaque().noCollision().dropsNothing(), false);
+
     /** Lớp vỏ glitch phủ lên vật thể ở Bến Đò (chỉ dùng trong block display). */
     public static final Block WOMB_GLITCH = new com.samsara.block.WombGlitchBlock(FabricBlockSettings.create()
             .strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing());
@@ -150,6 +158,8 @@ public class SamsaraBlocks {
         Registry.register(Registries.BLOCK, new Identifier("samsara", "hoa_kho"), HOA_KHO);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "den_chop"), DEN_CHOP);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "den_hong"), DEN_HONG);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "khoi_nhap"), KHOI_NHAP);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "van_gia"), VAN_GIA);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_glitch"), WOMB_GLITCH);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_code"), WOMB_CODE);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_veil"), WOMB_VEIL);

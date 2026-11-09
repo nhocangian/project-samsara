@@ -7,8 +7,6 @@ import com.samsara.registry.SamsaraDimensions;
 import com.samsara.registry.SamsaraParticles;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import com.samsara.system.cycle.EggCycleState;
-import com.samsara.system.womb.WombTravel;
 import net.minecraft.block.BedBlock;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -89,7 +87,7 @@ public final class DuongOngRuntime {
         SLEEPING.put(player.getUuid(), SLEEP_TICKS);
     }
 
-    /** Ngủ ở phòng cuối: mắt tối dần, một câu của System, rồi tỉnh dậy ở Bến Đò (tạm thời, khi chưa có tầng 2). */
+    /** Ngủ ở phòng cuối: mắt tối dần, một câu của System, rồi tỉnh dậy ở đầu tầng 2. */
     private static void tickSleep(ServerWorld world) {
         for (Iterator<Map.Entry<UUID, Integer>> it = SLEEPING.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<UUID, Integer> e = it.next();
@@ -105,8 +103,7 @@ public final class DuongOngRuntime {
             }
             if (left <= 0) {
                 it.remove();
-                EggCycleState.get(p.getServer()).markTangDuoiCleared(p.getUuid());
-                WombTravel.teleportToTheWomb(p);
+                LoiDiNhapRuntime.enter(p);
             }
         }
     }

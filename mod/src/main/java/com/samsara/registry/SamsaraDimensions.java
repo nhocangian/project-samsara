@@ -21,6 +21,12 @@ public class SamsaraDimensions {
             new Identifier("samsara", "tang_duoi")
     );
 
+    /** Tầng Dưới, tầng 2: biển phẳng dưới trời sáng, chiều riêng để có shader riêng (world4). */
+    public static final RegistryKey<World> LOI_DI_NHAP_WORLD_KEY = RegistryKey.of(
+            RegistryKeys.WORLD,
+            new Identifier("samsara", "loi_di_nhap")
+    );
+
     public static final RegistryKey<World> NAM_MEMORY_WORLD_KEY = RegistryKey.of(
             RegistryKeys.WORLD,
             NAM_MEMORY_ID

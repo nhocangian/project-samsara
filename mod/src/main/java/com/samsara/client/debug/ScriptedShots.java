@@ -22,6 +22,7 @@ import java.util.List;
  *   cmd samsara test ...    gửi lệnh (không có dấu /)
  *   look -90 20             đặt hướng nhìn (yaw, pitch)
  *   hud off|on              ẩn / hiện giao diện
+ *   aim on|off              ngắm / thôi ngắm máy quay (phải đang cầm máy quay)
  *   shot ten_anh            lưu run/screenshots/ten_anh.png (có shader)
  *   quit                    thoát game
  * </pre>
@@ -95,6 +96,7 @@ public final class ScriptedShots {
                 client.player.setPitch(Float.parseFloat(a[1]));
             }
             case "hud" -> client.options.hudHidden = arg.equals("off");
+            case "aim" -> com.samsara.client.CamcorderClientManager.setAiming(arg.equals("on"), client.player);
             case "shot" -> ScreenshotRecorder.saveScreenshot(new File(client.runDirectory.getAbsolutePath()),
                     arg + ".png", client.getFramebuffer(), text -> {});
             case "quit" -> client.scheduleStop();
