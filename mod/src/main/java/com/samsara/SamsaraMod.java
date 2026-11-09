@@ -123,6 +123,9 @@ public class SamsaraMod implements ModInitializer {
         com.samsara.system.womb.WombPacingSystem.register();
 
         // Project: Samsara Test & Debug Suite
+        com.samsara.system.tangduoi.DuongOngRuntime.register();
+        com.samsara.system.tangduoi.OKhoaHam.register();
+        com.samsara.system.cycle.CamcorderKeepSystem.register();
         com.samsara.command.SamsaraTestCommands.register();
 
         LOGGER.info("[Project: Samsara] The cycle is primed. Awaken.");

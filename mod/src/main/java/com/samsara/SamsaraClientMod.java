@@ -67,6 +67,9 @@ public class SamsaraClientMod implements ClientModInitializer {
         // Tuyến hành hương: dòng chảy đẩy thuyền, thuyền bóng ma chèo song song (qua máy quay)
         com.samsara.client.WombRouteClient.register();
         com.samsara.client.WombAmbienceClient.register();
+        com.samsara.client.TangDuoiAmbienceClient.register();
+        com.samsara.client.tangduoi.VetKhacRenderer.register();
+        com.samsara.client.tangduoi.TangDuoiBlackoutClient.register();
 
         // Kinh dị tầng giao diện: toast thành tựu giả, menu tạm dừng bị nhiễu
         com.samsara.client.ui.UiHorrorClient.register();
@@ -77,6 +80,19 @@ public class SamsaraClientMod implements ClientModInitializer {
                 com.samsara.registry.SamsaraParticles.RUNE, com.samsara.client.womb.RuneParticle.Factory::new);
         net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry.getInstance().register(
                 com.samsara.registry.SamsaraParticles.MOTE, com.samsara.client.womb.MoteParticle.Factory::new);
+        net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry.getInstance().register(
+                com.samsara.registry.SamsaraParticles.CANH_HOA, com.samsara.client.tangduoi.CanhHoaParticle.Factory::new);
+        net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry.getInstance().register(
+                com.samsara.registry.SamsaraParticles.CON_BO, com.samsara.client.tangduoi.ConBoParticle.Factory::new);
+        net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry.getInstance().register(
+                com.samsara.registry.SamsaraParticles.GIOT_NUOC, com.samsara.client.tangduoi.GiotNuocParticle.Factory::new);
+        net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry.getInstance().register(
+                com.samsara.registry.SamsaraParticles.VONG_NUOC, com.samsara.client.tangduoi.VongNuocParticle.Factory::new);
+        net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap.INSTANCE.putBlock(
+                com.samsara.registry.SamsaraBlocks.DAU_CHAN_GACH, net.minecraft.client.render.RenderLayer.getCutout());
+        // Hoa hướng dương khô ở Tầng Dưới: cắt alpha như hoa thường
+        net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap.INSTANCE.putBlock(
+                com.samsara.registry.SamsaraBlocks.HOA_KHO, net.minecraft.client.render.RenderLayer.getCutout());
         com.samsara.client.womb.RuneAmbienceClient.register();
         com.samsara.client.womb.TitanAmbienceClient.register();
         // Cánh cửa trắng khổng lồ cuối hành lang cửa (chương II của The Womb)

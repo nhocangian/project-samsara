@@ -111,5 +111,36 @@
         "volume": 0.7
       }
     ]
+  },
+  "block.den_hong_zap": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "samsara:tang_duoi/den_hong_zap_0"
+      },
+      {
+        "name": "samsara:tang_duoi/den_hong_zap_1"
+      },
+      {
+        "name": "samsara:tang_duoi/den_hong_zap_2"
+      },
+      {
+        "name": "samsara:tang_duoi/den_hong_zap_3"
+      }
+    ]
+  },
+  "block.den_chop_tick": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "samsara:tang_duoi/den_chop_tick_0"
+      },
+      {
+        "name": "samsara:tang_duoi/den_chop_tick_1"
+      },
+      {
+        "name": "samsara:tang_duoi/den_chop_tick_2"
+      }
+    ]
   }
 }

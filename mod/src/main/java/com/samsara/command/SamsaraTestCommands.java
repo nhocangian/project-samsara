@@ -177,6 +177,22 @@ public class SamsaraTestCommands {
                         // Test: Ảnh chụp F2 thấy mặt trời thật (/samsara test screenshot_sun)
                         .then(CommandManager.literal("screenshot_sun").executes(ctx -> testScreenshotSun(ctx.getSource())))
 
+                        // Test: Tầng Dưới, đoạn Đường Ống thử: dựng lại rồi đưa tới đầu ống (/samsara test tang_duoi)
+                        .then(CommandManager.literal("tang_duoi").executes(ctx -> testTangDuoi(ctx.getSource(), 0))
+                                .then(CommandManager.literal("den_hong").executes(ctx -> testTangDuoi(ctx.getSource(), 1)))
+                                .then(CommandManager.literal("den_chop").executes(ctx -> testTangDuoi(ctx.getSource(), 2)))
+                                .then(CommandManager.literal("ri").executes(ctx -> testTangDuoi(ctx.getSource(), 3)))
+                                .then(CommandManager.literal("vao").executes(ctx -> testTangDuoi(ctx.getSource(), 4)))
+                                .then(CommandManager.literal("phong").executes(ctx -> testTangDuoi(ctx.getSource(), 5)))
+                                .then(CommandManager.literal("ngu").executes(ctx -> testTangDuoi(ctx.getSource(), 6)))
+                                .then(CommandManager.literal("may_quay").executes(ctx -> testTangDuoi(ctx.getSource(), 7)))
+                                .then(CommandManager.literal("khoa")
+                                        .then(CommandManager.argument("ma", IntegerArgumentType.integer(0, 9999))
+                                                .executes(ctx -> testTangDuoi(ctx.getSource(), 100 + IntegerArgumentType.getInteger(ctx, "ma")))))
+                                .then(CommandManager.literal("nga")
+                                        .then(CommandManager.argument("so", IntegerArgumentType.integer(1, 5))
+                                                .executes(ctx -> testTangDuoi(ctx.getSource(), 10 + IntegerArgumentType.getInteger(ctx, "so"))))))
+
                         // Test: Khối Mã (mã nhị phân rơi, các khối cạnh nhau nối liền) (/samsara test code_block)
                         .then(CommandManager.literal("code_block").executes(ctx -> testCodeBlock(ctx.getSource())))
 
@@ -828,6 +844,57 @@ public class SamsaraTestCommands {
     }
 
     /** Dựng một bức tường 5x3 và một mảng sàn 3x3 bằng Khối Mã trước mặt người chơi để xem mã nối liền. */
+    private static int testTangDuoi(ServerCommandSource source, int mode) {
+        ServerPlayerEntity player = source.getPlayer();
+        ServerWorld world = source.getServer().getWorld(com.samsara.registry.SamsaraDimensions.TANG_DUOI_WORLD_KEY);
+        if (player == null || world == null) return 0;
+        // "khoa <mã>": đặt bốn bánh rồi xác nhận; "may_quay": đánh dấu đã tặng và lấy mất máy quay, để xem nó tự về túi
+        if (mode >= 100) {
+            com.samsara.system.tangduoi.OKhoaHam.forceCode(world, player, mode - 100);
+            return 1;
+        }
+        if (mode == 7) {
+            EggCycleState.get(source.getServer()).markCamcorderGiven(player.getUuid());
+            player.getInventory().remove(s -> s.isOf(com.samsara.registry.SamsaraItems.FRACTURED_SLATE), -1, player.playerScreenHandler.getCraftingInput());
+            return 1;
+        }
+        if (mode == 6) {
+            com.samsara.system.tangduoi.DuongOngRuntime.startSleep(player);
+            return 1;
+        }
+        // "vao": đi như từ vết rách dưới hầm (đặt lại trạng thái đã qua tầng); "phong": tới giữa phòng ngủ cuối ống
+        if (mode == 4) {
+            EggCycleState.get(source.getServer()).clearTangDuoiCleared(player.getUuid());
+            com.samsara.system.tangduoi.DuongOngRuntime.enter(player);
+            return 1;
+        }
+        if (mode == 5) {
+            BlockPos c = com.samsara.system.tangduoi.TangDuoiRoom.roomCenter();
+            player.teleport(world, c.getX() + 0.5, c.getY(), c.getZ() + 0.5, 180.0f, 0.0f);
+            return 1;
+        }
+        // "nga": chỉ đưa tới ngã cần xem, không dựng lại (giữ số lần đi sai và đèn đã tắt)
+        if (mode > 10) {
+            BlockPos before = com.samsara.system.tangduoi.DuongOngBuilder.before(mode - 11);
+            player.teleport(world, before.getX() + 0.5, before.getY(), before.getZ() + 0.5, 180.0f, 0.0f);
+            return 1;
+        }
+        com.samsara.system.tangduoi.DuongOngBuilder.buildTest(world);
+        com.samsara.system.tangduoi.DuongOngRuntime.reset();
+        BlockPos o = com.samsara.system.tangduoi.DuongOngBuilder.ORIGIN;
+        BlockPos lamp = mode == 1 ? com.samsara.system.tangduoi.DuongOngBuilder.firstBroken
+                : mode == 2 ? com.samsara.system.tangduoi.DuongOngBuilder.firstFlicker
+                : mode == 3 ? com.samsara.system.tangduoi.DuongOngBuilder.firstDrip : null;
+        // Đứng ngay dưới đèn, ngước lên: đèn có thể nằm ở nhánh ngang nên không lùi theo trục nào
+        if (lamp != null) com.samsara.system.tangduoi.DuongOngRuntime.teleportLater(player, world, lamp.getX() + 0.5, o.getY() + 1, lamp.getZ() + 0.5, 180.0f, -70.0f, 60);
+        else {
+            BlockPos s = com.samsara.system.tangduoi.DuongOngBuilder.start();
+            com.samsara.system.tangduoi.DuongOngRuntime.teleportLater(player, world, s.getX() + 0.5, s.getY(), s.getZ() + 0.5, 180.0f, 0.0f, 60);
+        }
+        source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng lại tầng 1. Dùng nga <1-5> để tới từng ngã."), false);
+        return 1;
+    }
+
     private static int testCodeBlock(ServerCommandSource source) {
         ServerPlayerEntity player = source.getPlayer();
         if (player == null) return 0;

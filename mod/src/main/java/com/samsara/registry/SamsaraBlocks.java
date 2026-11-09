@@ -63,6 +63,41 @@ public class SamsaraBlocks {
             .strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing(),
             net.minecraft.block.Block.createCuboidShape(0, 0, 0, 16, 0.25, 16));
 
+    /** Tầng Dưới: gạch men trắng ố lát Đường Ống. */
+    public static final Block GACH_MEN_O = new Block(FabricBlockSettings.copyOf(Blocks.STONE)
+            .strength(-1.0f, 3600000.0f).dropsNothing());
+    /** Tầng Dưới: dấu chân ướt trên gờ gạch, cùng hình với dấu chân ở Bến Đò nhưng màu xám. */
+    public static final Block DAU_CHAN_GACH = new com.samsara.block.DockPropBlock(FabricBlockSettings.create()
+            .strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing(),
+            net.minecraft.block.Block.createCuboidShape(0, 0, 0, 16, 0.25, 16));
+    /** Tầng Dưới: ô thiếu texture, càng xuống các tầng càng nhiều. */
+    public static final Block KHOI_CHUA_TAI = new Block(FabricBlockSettings.copyOf(Blocks.STONE)
+            .strength(-1.0f, 3600000.0f).dropsNothing());
+    /** Tầng Dưới: bánh số đá của ổ khoá ở căn hầm. */
+    public static final Block BANH_KHOA = new com.samsara.block.BanhKhoaBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS)
+            .strength(-1.0f, 3600000.0f).dropsNothing());
+    /** Tầng Dưới: gạch trần đang rỉ nước. */
+    public static final Block GACH_MEN_RI = new com.samsara.block.GachMenRiBlock(FabricBlockSettings.copyOf(Blocks.STONE)
+            .strength(-1.0f, 3600000.0f).dropsNothing());
+    /** Tầng Dưới: gạch men thỉnh thoảng bị xé lát, tách màu (texture động). */
+    public static final Block GACH_MEN_GLITCH = new Block(FabricBlockSettings.copyOf(Blocks.STONE)
+            .strength(-1.0f, 3600000.0f).dropsNothing());
+    /** Tầng Dưới: đèn huỳnh quang trên trần ống. */
+    public static final Block DEN_HUYNH_QUANG = new com.samsara.block.DenOngBlock(FabricBlockSettings.copyOf(Blocks.STONE)
+            .strength(-1.0f, 3600000.0f).dropsNothing().luminance(state -> 15));
+
+    /** Tầng Dưới: hoa hướng dương đã khô (ngã 3 của tầng 1); hình dáng và FACING như hoa thường. */
+    public static final Block HOA_KHO = new com.samsara.block.MemorySunflowerBlock(
+            FabricBlockSettings.copyOf(Blocks.SUNFLOWER).dropsNothing());
+
+    /** Tầng Dưới: đèn chập chờn, sáng khi LIT. */
+    public static final Block DEN_CHOP = new com.samsara.block.DenChopBlock(FabricBlockSettings.copyOf(Blocks.STONE)
+            .strength(-1.0f, 3600000.0f).dropsNothing()
+            .luminance(state -> state.get(com.samsara.block.DenChopBlock.LIT) ? 15 : 0));
+    /** Tầng Dưới: đèn hỏng hẳn, bắn tia lửa. */
+    public static final Block DEN_HONG = new com.samsara.block.DenHongBlock(FabricBlockSettings.copyOf(Blocks.STONE)
+            .strength(-1.0f, 3600000.0f).dropsNothing());
+
     /** Lớp vỏ glitch phủ lên vật thể ở Bến Đò (chỉ dùng trong block display). */
     public static final Block WOMB_GLITCH = new com.samsara.block.WombGlitchBlock(FabricBlockSettings.create()
             .strength(-1.0f, 3600000.0f).noCollision().nonOpaque().dropsNothing());
@@ -105,6 +140,16 @@ public class SamsaraBlocks {
         Registry.register(Registries.BLOCK, new Identifier("samsara", "nam_computer"), NAM_COMPUTER);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "nam_wallpaper"), NAM_WALLPAPER);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "wet_footprints"), WET_FOOTPRINTS);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "gach_men_o"), GACH_MEN_O);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "dau_chan_gach"), DAU_CHAN_GACH);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "khoi_chua_tai"), KHOI_CHUA_TAI);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "banh_khoa"), BANH_KHOA);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "gach_men_ri"), GACH_MEN_RI);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "gach_men_glitch"), GACH_MEN_GLITCH);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "den_huynh_quang"), DEN_HUYNH_QUANG);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "hoa_kho"), HOA_KHO);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "den_chop"), DEN_CHOP);
+        Registry.register(Registries.BLOCK, new Identifier("samsara", "den_hong"), DEN_HONG);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_glitch"), WOMB_GLITCH);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_code"), WOMB_CODE);
         Registry.register(Registries.BLOCK, new Identifier("samsara", "womb_veil"), WOMB_VEIL);

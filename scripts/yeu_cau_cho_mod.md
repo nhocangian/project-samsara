@@ -25,3 +25,14 @@ Các thay đổi đã được người dùng duyệt, cần dựng trong game. 
 - **3. Ảnh chụp F2** từ Stage 1 ghi được mặt trời hố đen; mắt vẫn thấy vanilla. Lệnh `/samsara test screenshot_sun`.
 - **4. Chu Kỳ ≥2:** lần đầu Nam_1998 vào game gõ 3 dòng Video 3 (`em` / đường dẫn OBS / `xem từ tệp đầu tiên. đừng tua`) rồi rời đi. Lệnh `/samsara test ui archive`.
 - **5. Màn NO SIGNAL:** `2021-03-14 03-29-51.mkv   00:03:42:09` thay cho `Nam_1998_LOG_09.mp4`.
+
+---
+
+## 6. Tầng Dưới: Đường Ống và Tầng 1 "Hoa Quay Lưng"
+
+- **Trạng thái:** ĐANG DỰNG (09/11/2026). Xong cả 4 bước và ổ khoá 0518 ở căn hầm (đã duyệt 09/11/2026), gồm máy quay không vứt được. Khác đề xuất: đường vòng là ống thật, không dịch chuyển.
+- **Ưu tiên:** Cao
+- **Duyệt:** 09/11/2026
+- **Mô tả, chữ nguyên văn, luật chơi:** `de_xuat/tang_duoi_01_nha_nam_2018.md`.
+- **Thứ cần thay trong `hien_trang_trong_mod.md`:** vết rách dưới hầm nhà Nam (mục 3) dẫn vào Tầng Dưới thay vì vào thẳng The Womb; thêm mục mới cho Tầng Dưới khi dựng xong.
+

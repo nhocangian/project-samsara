@@ -15,6 +15,12 @@ public class SamsaraDimensions {
     /** "Ký Ức Của Nam": cánh đồng hướng dương phẳng, nơi đến đầu tiên sau giấc ngủ thứ 7. */
     public static final Identifier NAM_MEMORY_ID = new Identifier("samsara", "nam_memory");
 
+    /** Tầng Dưới: Đường Ống Dreamcore giữa Ký Ức Của Nam và The Womb. */
+    public static final RegistryKey<World> TANG_DUOI_WORLD_KEY = RegistryKey.of(
+            RegistryKeys.WORLD,
+            new Identifier("samsara", "tang_duoi")
+    );
+
     public static final RegistryKey<World> NAM_MEMORY_WORLD_KEY = RegistryKey.of(
             RegistryKeys.WORLD,
             NAM_MEMORY_ID

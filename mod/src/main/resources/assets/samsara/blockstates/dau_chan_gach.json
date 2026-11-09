@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "samsara:block/dau_chan_gach"
+    },
+    "facing=east": {
+      "model": "samsara:block/dau_chan_gach",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "samsara:block/dau_chan_gach",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "samsara:block/dau_chan_gach",
+      "y": 270
+    }
+  }
+}

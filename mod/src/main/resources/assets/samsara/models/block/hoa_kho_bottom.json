@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "samsara:block/hoa_kho_bottom"
+  }
+}

@@ -9,6 +9,11 @@ import net.minecraft.util.Identifier;
  * Registry for all Project: Samsara custom sound events.
  */
 public class SamsaraSounds {
+    public static final Identifier DEN_HONG_ZAP_ID = new Identifier("samsara", "block.den_hong_zap");
+    public static final SoundEvent DEN_HONG_ZAP = SoundEvent.of(DEN_HONG_ZAP_ID);
+    public static final Identifier DEN_CHOP_TICK_ID = new Identifier("samsara", "block.den_chop_tick");
+    public static final SoundEvent DEN_CHOP_TICK = SoundEvent.of(DEN_CHOP_TICK_ID);
+
     public static final Identifier CAVE_REVERSED_ID = new Identifier("samsara", "ambient.cave_reversed");
     public static final SoundEvent CAVE_REVERSED = SoundEvent.of(CAVE_REVERSED_ID);
 
@@ -29,6 +34,8 @@ public class SamsaraSounds {
     public static final SoundEvent REVERSED_FAMILIAR = SoundEvent.of(REVERSED_FAMILIAR_ID);
 
     public static void registerSounds() {
+        Registry.register(Registries.SOUND_EVENT, DEN_HONG_ZAP_ID, DEN_HONG_ZAP);
+        Registry.register(Registries.SOUND_EVENT, DEN_CHOP_TICK_ID, DEN_CHOP_TICK);
         Registry.register(Registries.SOUND_EVENT, REVERSED_FAMILIAR_ID, REVERSED_FAMILIAR);
         Registry.register(Registries.SOUND_EVENT, PHANTOM_REVERSED_ID, PHANTOM_REVERSED);
         Registry.register(Registries.SOUND_EVENT, SYSTEM_STATIC_ID, SYSTEM_STATIC);

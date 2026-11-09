@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "samsara:block/gach_men_glitch_0"
+      },
+      {
+        "model": "samsara:block/gach_men_glitch_1"
+      }
+    ]
+  }
+}

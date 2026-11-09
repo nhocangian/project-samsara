@@ -118,7 +118,19 @@ Mỗi lần ngủ qua đêm tăng số giấc ngủ của cả thế giới.
   - **[NHÀ]**: mọi thứ y như 2018, chỉ có chân trời cong lên như đáy bát; hướng dương quay về chỗ anh vừa tỉnh dậy; *"Anh không nhớ mình đã trồng chúng."*
   - **[CHO EM]**: *"Anh để lại các đoạn ghi hình ở đây: **C:/Users/Nam/Videos/OBS/Samsara_Archive/** — Xem từ tệp đầu tiên. Đừng tua."*
   - **[DƯỚI HẦM]**: vết rách vẫn mở, bên kia là biển đen và con ngươi khổng lồ; có thứ gọi anh bằng tên, giọng giống giọng anh. *"Anh đi đây."*
-- Cũng dưới hầm có **vết rách** dẫn sang The Womb.
+- Cũng dưới hầm có **vết rách**. Lần đầu nó dẫn xuống **Tầng Dưới** (mục 3b); đã đi hết tầng này thì dẫn thẳng sang The Womb.
+
+## 3b. Tầng Dưới (đang dựng: mới có tầng 1)
+
+Giữa Ký Ức Của Nam và The Womb. Đường Ống Dreamcore: ống tròn lát gạch men trắng ố, nước đục ngang mắt cá, đèn huỳnh quang ù ù, không một sinh vật. Thỉnh thoảng có đèn chập chờn, đèn hỏng bắn tia lửa, bọ bay quanh đèn, nước rỉ từ trần tạo vòng loang trên mặt nước, gạch bị xé lát và Khối Mã. Đứng yên quá 20 giây thì đèn phía sau lưng tắt dần.
+
+**Tầng 1 "Hoa Quay Lưng" (Nhà Nam 05/2018):** vào qua vết rách, tỉnh dậy trong một căn hầm giống hệt nhưng rương trống, không còn vết rách. Tường bắc kín, có **ổ khoá bốn bánh số** và một nút đá; **mã 0518** (tháng 5/2018, như bảng trước nhà Nam). Bốn vết khắc ở bốn góc hầm (0, 5, 1, 8) và mũi tên chỉ thứ tự **chỉ hiện qua máy quay**. Nhập sai thì bánh về 0; nhập 1998 thì một tấm bảng hiện *"không phải anh"*; sai 5 lần có action bar *"Hắn đã khắc nó khi còn nhớ."*; sai 8 lần vết khắc hiện mờ với mắt thường. Đúng thì sau một tiếng ù, mã nhị phân ăn mòn dần mảng tường từ các bánh số lan ra, rồi cả mảng mã chớp dồn, cả căn hầm nháy thành mã trong tích tắc, tất cả tắt sạch và im bặt một nhịp; khi mắt sáng lại tường đã mất, và đèn trong ống bật lần lượt chạy vào sâu tới tận bông hoa đầu tiên. Vài vết mã còn sót lại quanh lỗ. Bảng đầu ống: *"hoa vẫn nhìn / về nhà. / / anh thì phải đi"*.
+
+Năm ngã tư nối bằng ống thật (không dịch chuyển). Hoa nhìn về nhà, **lối đúng nằm sau lưng hoa**: ngã 1 và 2 dạy luật; ngã 3 có một bông tươi và một bông khô (chỉ bông sống mới đúng); ngã 4 tắt đèn, phải soi máy quay; ngã 5 không còn hoa, chỉ còn **cánh hoa trôi theo dòng nước** về lối đúng. Nhánh sai là đường vòng nhập lại ống vào. Càng đi sai ở một ngã càng lệch: lần 2 một đèn tắt, lần 3 có bảng *"anh đi vòng / rồi"*, lần 4 tiếng cửa đóng xa, lần 5 action bar *"Hoa không nhìn cậu."* và lối đúng sáng nhẹ. Trên gờ ống có vài dãy dấu chân ướt đi tới rồi dừng giữa chừng.
+
+Cuối ống là cánh cửa gỗ, phòng ngủ năm 2018 im phăng phắc; vào hẳn trong thì cửa biến thành tường. Ngoài cửa sổ cánh đồng đứng yên, mọi bông hoa quay lưng lại căn phòng. Có đúng một ô Khối Chưa Tải (tím đen). Trên giá đọc là **"Mảnh Nhật Ký: 05/2018"**. Trên đầu giường có bảng *"đừng bấm ngủ"*, nhưng giường là lối ra duy nhất: ngủ thì mắt tối đi, `<System>`: *"Một lớp nữa."*, rồi tỉnh dậy ở Bến Đò (tạm thời, khi chưa có tầng 2). Giấc ngủ này không tính vào số giấc ngủ.
+
+**Máy quay không vứt được:** từ lúc được tặng, ném ra đất, chết hay cất vào rương thì nó tự về ô số 3.
 
 ## 4. The Womb – tuyến hành hương (thay cho Video 8)
 

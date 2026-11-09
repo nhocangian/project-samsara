@@ -161,6 +161,12 @@ public class DimensionalRiftEntity extends Entity {
     private void triggerTeleport(ServerPlayerEntity player) {
         String type = getRiftType();
         // Elysian Highlands đã bị gỡ: mọi vết rách đều dẫn về The Womb
+        // Vết rách dưới hầm nhà Nam: lần đầu dẫn xuống Tầng Dưới
+        if (player.getWorld().getRegistryKey() == com.samsara.registry.SamsaraDimensions.NAM_MEMORY_WORLD_KEY
+                && !com.samsara.system.cycle.EggCycleState.get(player.getServer()).hasClearedTangDuoi(player.getUuid())) {
+            com.samsara.system.tangduoi.DuongOngRuntime.enter(player);
+            return;
+        }
         WombTravel.teleportToTheWomb(player);
     }
 }

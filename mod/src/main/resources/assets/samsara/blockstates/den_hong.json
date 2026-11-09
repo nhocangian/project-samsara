@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "samsara:block/den_hong"
+    },
+    "axis=z": {
+      "model": "samsara:block/den_hong",
+      "y": 90
+    }
+  }
+}

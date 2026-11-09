@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "digit=0,hint=false": {
+      "model": "samsara:block/banh_khoa_0"
+    },
+    "digit=0,hint=true": {
+      "model": "samsara:block/banh_khoa_0"
+    },
+    "digit=1,hint=false": {
+      "model": "samsara:block/banh_khoa_1"
+    },
+    "digit=1,hint=true": {
+      "model": "samsara:block/banh_khoa_1"
+    },
+    "digit=2,hint=false": {
+      "model": "samsara:block/banh_khoa_2"
+    },
+    "digit=2,hint=true": {
+      "model": "samsara:block/banh_khoa_2"
+    },
+    "digit=3,hint=false": {
+      "model": "samsara:block/banh_khoa_3"
+    },
+    "digit=3,hint=true": {
+      "model": "samsara:block/banh_khoa_3"
+    },
+    "digit=4,hint=false": {
+      "model": "samsara:block/banh_khoa_4"
+    },
+    "digit=4,hint=true": {
+      "model": "samsara:block/banh_khoa_4"
+    },
+    "digit=5,hint=false": {
+      "model": "samsara:block/banh_khoa_5"
+    },
+    "digit=5,hint=true": {
+      "model": "samsara:block/banh_khoa_5"
+    },
+    "digit=6,hint=false": {
+      "model": "samsara:block/banh_khoa_6"
+    },
+    "digit=6,hint=true": {
+      "model": "samsara:block/banh_khoa_6"
+    },
+    "digit=7,hint=false": {
+      "model": "samsara:block/banh_khoa_7"
+    },
+    "digit=7,hint=true": {
+      "model": "samsara:block/banh_khoa_7"
+    },
+    "digit=8,hint=false": {
+      "model": "samsara:block/banh_khoa_8"
+    },
+    "digit=8,hint=true": {
+      "model": "samsara:block/banh_khoa_8"
+    },
+    "digit=9,hint=false": {
+      "model": "samsara:block/banh_khoa_9"
+    },
+    "digit=9,hint=true": {
+      "model": "samsara:block/banh_khoa_9"
+    }
+  }
+}

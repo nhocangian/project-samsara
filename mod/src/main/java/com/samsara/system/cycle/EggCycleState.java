@@ -51,6 +51,8 @@ public class EggCycleState extends PersistentState {
     private net.minecraft.util.math.BlockPos routeOrigin = null;
     /** Người chơi đã xem đoạn kết (đối thoại với <System>). */
     private final Set<UUID> endingSeen = new HashSet<>();
+    /** Đã đi hết Tầng Dưới: vết rách dưới hầm nhà Nam dẫn thẳng tới The Womb. */
+    private final Set<UUID> tangDuoiCleared = new HashSet<>();
 
     public static EggCycleState get(MinecraftServer server) {
         PersistentStateManager psm = server.getOverworld().getPersistentStateManager();
@@ -163,6 +165,9 @@ public class EggCycleState extends PersistentState {
     public void setRouteOrigin(net.minecraft.util.math.BlockPos pos) { routeOrigin = pos; markDirty(); }
 
     public boolean hasSeenEnding(UUID uuid) { return endingSeen.contains(uuid); }
+    public boolean hasClearedTangDuoi(UUID uuid) { return tangDuoiCleared.contains(uuid); }
+    public void markTangDuoiCleared(UUID uuid) { if (tangDuoiCleared.add(uuid)) markDirty(); }
+    public void clearTangDuoiCleared(UUID uuid) { if (tangDuoiCleared.remove(uuid)) markDirty(); }
     public void markEndingSeen(UUID uuid) { if (endingSeen.add(uuid)) markDirty(); }
     public void clearEndingSeen(UUID uuid) { if (endingSeen.remove(uuid)) markDirty(); }
 
@@ -182,6 +187,7 @@ public class EggCycleState extends PersistentState {
         s.cycleHouseBuilt = nbt.getBoolean("CycleHouseBuilt");
         if (nbt.contains("EggAltarPos")) s.eggAltarPos = net.minecraft.util.math.BlockPos.fromLong(nbt.getLong("EggAltarPos"));
         readUuids(nbt, "EndingSeen", s.endingSeen);
+        readUuids(nbt, "TangDuoiCleared", s.tangDuoiCleared);
         for (net.minecraft.nbt.NbtElement e : nbt.getList("UiFlags", NbtElement.STRING_TYPE)) s.uiFlags.add(e.asString());
         if (nbt.contains("OriginalLevelName")) s.originalLevelName = nbt.getString("OriginalLevelName");
         if (nbt.contains("RouteOrigin")) s.routeOrigin = net.minecraft.util.math.BlockPos.fromLong(nbt.getLong("RouteOrigin"));
@@ -200,6 +206,7 @@ public class EggCycleState extends PersistentState {
         nbt.putBoolean("CycleHouseBuilt", cycleHouseBuilt);
         if (eggAltarPos != null) nbt.putLong("EggAltarPos", eggAltarPos.asLong());
         writeUuids(nbt, "EndingSeen", endingSeen);
+        writeUuids(nbt, "TangDuoiCleared", tangDuoiCleared);
         if (routeOrigin != null) nbt.putLong("RouteOrigin", routeOrigin.asLong());
         NbtList flags = new NbtList();
         for (String f : uiFlags) flags.add(NbtString.of(f));

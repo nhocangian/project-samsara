@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "samsara:block/den_huynh_quang"
+    },
+    "axis=z": {
+      "model": "samsara:block/den_huynh_quang",
+      "y": 90
+    }
+  }
+}
