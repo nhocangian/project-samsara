@@ -84,6 +84,11 @@ public class WanderChaseSystem {
         ServerTickEvents.END_SERVER_TICK.register(WanderChaseSystem::tick);
     }
 
+    /** Người chơi đang áp máy quay lên mắt (client báo qua AIM_PACKET). */
+    public static boolean isAiming(UUID player) {
+        return AIMING.contains(player);
+    }
+
     public static boolean isTracked(TheWandererEntity entity) {
         for (Chase c : CHASES.values()) {
             if (c.entity == entity) return true;

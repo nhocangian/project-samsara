@@ -20,9 +20,21 @@ const float GIANT_SHADE_TOP = 0.92;     // độ sáng mặt trên, hai mặt b�
 const float GIANT_SHADE_X = 0.66;
 const float GIANT_SHADE_Z = 0.50;
 const float GIANT_TILE = 4.0;            // cạnh mỗi ô gạch (block): giảm thì nhiều ô hơn
-const float GIANT_GROUT = 0.05;         // bề rộng mạch, tính theo phần của một ô
+const float GIANT_GROUT = 0.05;
+const float GIANT_TILE_MAJOR = 4.0;     // cứ chừng này ô thì có một đường mạch lớn
+const float GIANT_GROUT_MAJOR = 0.02;
+const float GIANT_AIR_NEAR = 400.0;     // từ khoảng cách này khối bắt đầu nhạt thêm theo không khí
+const float GIANT_AIR_FAR = 1800.0;
+const float GIANT_AIR_EXTRA = 0.38;
+const float GIANT_AIR_EDGE = 4500.0;    // các tháp ở tận chân trời nhạt thêm một bậc
+const float GIANT_AIR_EDGE_EXTRA = 0.14;
+const float GIANT_ANGEL_AIR = 0.45;     // Ophanim nhạt theo không khí bằng chừng này phần so với khối         // bề rộng mạch, tính theo phần của một ô
 const vec3  GIANT_TILE_COLOR = vec3(0.93, 0.91, 0.87);
 const vec3  GIANT_GROUT_COLOR = vec3(0.50, 0.47, 0.46);
+const float GIANT_SUN_FOCUS = 9.0;      // tăng thì vầng chói gom sát quanh mặt trời hơn
+const float GIANT_SUN_GLARE = 0.75;     // độ chói ở phần khối gần mặt trời
+const float GIANT_SUN_FACE = 0.18;      // mặt quay về phía nắng sáng thêm
+const vec3  GIANT_SUN_COLOR = vec3(1.00, 0.82, 0.62);
 const vec3  GIANT_MIST_COLOR = vec3(0.98, 0.70, 0.66);
 
 varying vec2 texCoord;
@@ -48,7 +60,12 @@ void main() {
     // Các khối khổng lồ (LoiDiNhapKhoi) mọc lên từ biển mây: sương theo độ cao, chân tan hẳn, đỉnh rõ.
     // Chỉ áp dụng ở xa hơn tầm chunk, nơi không có thực thể nào khác.
     float giant = smoothstep(110.0, 150.0, dist);
-    if (giant > 0.0) {
+    // Ophanim (LoiDiNhapAngel, alpha đỉnh 253): sương, nắng như khối khổng lồ nhưng không lát gạch và nhạt ít hơn
+    bool angel = color.a < 0.994;
+    // Chim ở xa (LoiDiNhapBirds, alpha 254): chỉ nhạt đi theo không khí
+    bool bird = color.a < 0.999 && !angel;
+    if (bird) finalColor = mix(vanillaColor, skyBehind, 0.30 * giant);
+    if (giant > 0.0 && !bird) {
         vec3 world = relative + cameraPosition;
         float height = world.y - GIANT_SEA_LEVEL;
         // Mép sương gợn lên xuống như mặt trên của mây
@@ -60,11 +77,12 @@ void main() {
         // Mỗi mặt một độ sáng, không thì khối bị cháy thành mảng phẳng
         vec3 faceNormal = abs(normalize(cross(dFdx(relative), dFdy(relative))));
         float shade = faceNormal.y * GIANT_SHADE_TOP + faceNormal.x * GIANT_SHADE_X + faceNormal.z * GIANT_SHADE_Z;
+        if (angel) shade = 0.72 + 0.16 * faceNormal.y;   // mắt và lông quay về camera, không được tối như mặt khối
         vec3 surface = vanillaColor;
 
         // Khối trắng / gạch men được lát hàng trăm ô nhỏ theo toạ độ thế giới, để thấy nó to tới đâu
         float greyness = max(albedo.r, max(albedo.g, albedo.b)) - min(albedo.r, min(albedo.g, albedo.b));
-        if (greyness < 0.12 && dot(albedo.rgb, vec3(0.333)) > 0.55) {
+        if (!angel && greyness < 0.12 && dot(albedo.rgb, vec3(0.333)) > 0.55) {
             vec2 face = faceNormal.y > 0.5 ? world.xz : (faceNormal.x > 0.5 ? world.zy : world.xy);
             vec2 cell = face / GIANT_TILE;
             vec2 id = floor(cell);
@@ -74,6 +92,12 @@ void main() {
             vec2 lines = 1.0 - smoothstep(vec2(GIANT_GROUT), vec2(GIANT_GROUT) + pixel * 1.4, edge);
             // Xa quá thì mạch không còn chia được thành pixel: nhạt đi thay vì nhấp nháy
             float grout = max(lines.x, lines.y) * (1.0 - smoothstep(0.35, 0.9, max(pixel.x, pixel.y)));
+            // Đường lớn mỗi GIANT_TILE_MAJOR ô: ở rất xa vẫn còn thấy, mặt khối không thành mảng phẳng
+            vec2 major = face / (GIANT_TILE * GIANT_TILE_MAJOR);
+            vec2 majorPixel = fwidth(major);
+            vec2 majorEdge = min(fract(major), 1.0 - fract(major));
+            vec2 majorLines = 1.0 - smoothstep(vec2(GIANT_GROUT_MAJOR), vec2(GIANT_GROUT_MAJOR) + majorPixel * 1.4, majorEdge);
+            grout = max(grout, max(majorLines.x, majorLines.y) * (1.0 - smoothstep(0.35, 0.9, max(majorPixel.x, majorPixel.y))));
 
             float tone = 0.86 + 0.14 * ldnHash(id);
             float stain = ldnNoise(face * 0.035) * 0.6 + ldnNoise(face * 0.11) * 0.4;
@@ -81,7 +105,19 @@ void main() {
             surface = mix(tile, GIANT_GROUT_COLOR, grout);
         }
 
-        vec3 clear = mix(surface * shade, skyBehind, GIANT_AIR);
+        // Càng xa càng chìm vào không khí: tạo các lớp chiều sâu
+        float air = GIANT_AIR + smoothstep(GIANT_AIR_NEAR, GIANT_AIR_FAR, dist) * GIANT_AIR_EXTRA
+                  + smoothstep(GIANT_AIR_FAR, GIANT_AIR_EDGE, dist) * GIANT_AIR_EDGE_EXTRA;
+        if (angel) air *= GIANT_ANGEL_AIR;
+        vec3 clear = mix(surface * shade, skyBehind, air);
+        // Phần khối nằm gần mặt trời trên màn hình bị nắng chói lấn vào, mặt quay về phía nắng sáng hơn
+        vec3 sunDir = normalize(LDN_SUN_POS);
+        float nearSun = pow(max(dot(normalize(relative), sunDir), 0.0), GIANT_SUN_FOCUS);
+        vec3 signedNormal = normalize(cross(dFdx(relative), dFdy(relative)));
+        if (dot(signedNormal, relative) > 0.0) signedNormal = -signedNormal;
+        float facing = max(dot(signedNormal, sunDir), 0.0);
+        // Ophanim chỉ nhận vầng chói ở rìa gần mặt trời, không cộng nắng lên mặt (cộng vào là cháy trắng)
+        clear += GIANT_SUN_COLOR * (angel ? nearSun * GIANT_SUN_GLARE * 0.5 : nearSun * GIANT_SUN_GLARE + facing * GIANT_SUN_FACE);
         vec3 giantColor = mix(clear, GIANT_MIST_COLOR, mist);
         finalColor = mix(finalColor, giantColor, giant);
     }

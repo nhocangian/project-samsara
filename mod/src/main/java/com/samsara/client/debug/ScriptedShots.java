@@ -97,6 +97,7 @@ public final class ScriptedShots {
             }
             case "hud" -> client.options.hudHidden = arg.equals("off");
             case "aim" -> com.samsara.client.CamcorderClientManager.setAiming(arg.equals("on"), client.player);
+            case "angel" -> com.samsara.client.tangduoi.LoiDiNhapAngel.forceStage(Integer.parseInt(arg));
             case "shot" -> ScreenshotRecorder.saveScreenshot(new File(client.runDirectory.getAbsolutePath()),
                     arg + ".png", client.getFramebuffer(), text -> {});
             case "quit" -> client.scheduleStop();

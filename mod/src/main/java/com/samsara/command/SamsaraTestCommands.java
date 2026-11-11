@@ -186,8 +186,11 @@ public class SamsaraTestCommands {
                                 .then(CommandManager.literal("ngu").executes(ctx -> testTangDuoi2(ctx.getSource(), 5)))
                                 .then(CommandManager.literal("roi").executes(ctx -> testTangDuoi2(ctx.getSource(), 6)))
                                 .then(CommandManager.literal("khoi").executes(ctx -> testTangDuoi2(ctx.getSource(), 7)))
+                                .then(CommandManager.literal("thien_than").executes(ctx -> testTangDuoi2(ctx.getSource(), 8)))
+                                .then(CommandManager.literal("giuong").executes(ctx -> testTangDuoi2(ctx.getSource(), 9)))
+                                .then(CommandManager.literal("trang").executes(ctx -> testTangDuoi2(ctx.getSource(), 20)))
                                 .then(CommandManager.literal("doan")
-                                        .then(CommandManager.argument("so", IntegerArgumentType.integer(1, 5))
+                                        .then(CommandManager.argument("so", IntegerArgumentType.integer(1, 7))
                                                 .executes(ctx -> testTangDuoi2(ctx.getSource(), 10 + IntegerArgumentType.getInteger(ctx, "so"))))))
 
                         // Test: Tầng Dưới, đoạn Đường Ống thử: dựng lại rồi đưa tới đầu ống (/samsara test tang_duoi)
@@ -866,6 +869,11 @@ public class SamsaraTestCommands {
             com.samsara.system.tangduoi.OKhoaHam.forceCode(world, player, mode - 100);
             return 1;
         }
+        // "trang": nhận đủ bốn trang xé
+        if (mode == 20) {
+            for (int i = 1; i <= 4; i++) player.getInventory().offerOrDrop(com.samsara.system.tangduoi.LoiDiNhapBuilder.pageBook(i));
+            return 1;
+        }
         if (mode == 7) {
             EggCycleState.get(source.getServer()).markCamcorderGiven(player.getUuid());
             player.getInventory().remove(s -> s.isOf(com.samsara.registry.SamsaraItems.FRACTURED_SLATE), -1, player.playerScreenHandler.getCraftingInput());
@@ -935,24 +943,30 @@ public class SamsaraTestCommands {
             return 1;
         }
         if (mode == 7) {
-            for (int i = 0; i <= com.samsara.system.tangduoi.LoiDiNhapKhoi.LAST; i++) {
-                com.samsara.system.tangduoi.LoiDiNhapKhoi.reveal(world, player, i, false);
-            }
+            com.samsara.system.tangduoi.LoiDiNhapKhoi.rebuild(world, 0, com.samsara.system.tangduoi.LoiDiNhapKhoi.LAST);
             return 1;
         }
         com.samsara.system.tangduoi.LoiDiNhapBuilder.build(world);
         com.samsara.system.tangduoi.LoiDiNhapRuntime.reset();
+        // "thien_than": đứng ở đảo 2 (từ đây Ophanim mới xuất hiện), quay về phía nó (chỉ thấy khi ngắm máy quay)
+        if (mode == 8) {
+            BlockPos p = com.samsara.system.tangduoi.LoiDiNhapBuilder.checkpoint(2);
+            com.samsara.system.tangduoi.DuongOngRuntime.teleportLater(player, world, p.getX() + 0.5, p.getY(), p.getZ() + 0.5, 196.3f, -23.2f, 60);
+            return 1;
+        }
         if (mode == 3) {
             com.samsara.system.tangduoi.LoiDiNhapRuntime.enter(player);
             return 1;
         }
         BlockPos p = mode > 10 ? com.samsara.system.tangduoi.LoiDiNhapBuilder.checkpoint(mode - 11)
-                : mode == 4 ? com.samsara.system.tangduoi.LoiDiNhapBuilder.finalRoom()
+                : mode == 4 || mode == 9 ? com.samsara.system.tangduoi.LoiDiNhapBuilder.finalRoom()
                 : mode == 1 ? com.samsara.system.tangduoi.LoiDiNhapBuilder.pierEnd()
                 : mode == 2 ? com.samsara.system.tangduoi.LoiDiNhapBuilder.islandOne()
                 : com.samsara.system.tangduoi.LoiDiNhapBuilder.arrival();
         com.samsara.system.tangduoi.DuongOngRuntime.teleportLater(player, world, p.getX() + 0.5, p.getY(), p.getZ() + 0.5, 180.0f, 0.0f, 60);
-        source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng tầng 2. Dùng doan <1-5> / phong_cuoi / vao / roi / ngu / khoi."), false);
+        // "giuong": vào phòng cuối, cầm sẵn giường của em
+        if (mode == 9) player.getInventory().offerOrDrop(com.samsara.system.tangduoi.LoiDiNhapBuilder.bedItem());
+        source.sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng tầng 2. Dùng doan <1-7> / phong_cuoi / vao / roi / ngu / khoi / thien_than / giuong / trang."), false);
         return 1;
     }
 

@@ -2,7 +2,7 @@
 
 *Thiết kế đã bàn với người dùng ngày 09/11/2026. Tầng 1 đã dựng; tầng 2–4 mới là đề xuất, sẽ bàn chi tiết từng tầng rồi mới dựng (chốt tầng nào dựng tầng đó).*
 
-**Ý đồ:** bước chuyển giữa Ký Ức Của Nam và The Womb, tước dần ký ức của Nam từng lớp. Mỗi tầng là một save cũ hơn, những save này sẽ gặp lại trên các cánh cửa ở chương II của The Womb. Không có quái, không có cái chết; thua chỉ bị đưa lại chỗ cũ. The Wanderer không xuất hiện ở đây: Dreamcore mạnh nhất khi vắng người.
+**Ý đồ:** bước chuyển giữa Ký Ức Của Nam và The Womb, tước dần ký ức của Nam từng lớp. Mỗi tầng là một save cũ hơn, những save này sẽ gặp lại trên các cánh cửa ở chương II của The Womb. Không có quái đuổi theo, không có cái chết (ngoại lệ do người dùng chốt 10/11/2026: Ophanim ở tầng 2 chỉ nhìn rồi núp, không gây hại); thua chỉ bị đưa lại chỗ cũ. The Wanderer không xuất hiện ở đây: Dreamcore mạnh nhất khi vắng người.
 
 **Nền chung (đã dựng):** Đường Ống gạch men, nước đục, đèn huỳnh quang, đèn chập chờn và đèn hỏng, bọ quanh đèn, nước rỉ, glitch và Khối Mã 5–10% bề mặt, Khối Chưa Tải (càng xuống càng nhiều). Mỗi tầng có luật chơi riêng; cuối tầng là chiếc giường đỏ với bảng *"đừng bấm ngủ"*, chữ càng xuống càng non nớt. Mỗi tầng trả lại một mảnh nhật ký.
 

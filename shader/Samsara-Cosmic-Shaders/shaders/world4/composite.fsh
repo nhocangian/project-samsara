@@ -32,9 +32,9 @@ const vec3  UNDERWATER_MID    = vec3(0.02, 0.35, 0.42);
 const vec3  UNDERWATER_LIGHT  = vec3(0.35, 0.70, 0.70);
 
 const int   GLOW_TAPS = 32;
-const float GLOW_RADIUS = 0.09;       // độ rộng quầng, tính theo chiều cao màn hình
-const float GLOW_THRESHOLD = 0.78;    // chỉ vùng sáng hơn mức này mới toả
-const float GLOW_STRENGTH = 0.55;
+const float GLOW_RADIUS = 0.12;       // độ rộng quầng, tính theo chiều cao màn hình
+const float GLOW_THRESHOLD = 0.74;    // chỉ vùng sáng hơn mức này mới toả
+const float GLOW_STRENGTH = 0.74;
 
 const int   SHAFT_TAPS = 28;
 const float SHAFT_STRENGTH = 0.85;    // độ mạnh tia nắng
@@ -236,6 +236,8 @@ void main() {
         float angle = float(i) * 2.39996;
         float radius = sqrt((float(i) + 0.5) / float(GLOW_TAPS)) * GLOW_RADIUS;
         vec2 offset = vec2(cos(angle) * radius / aspectRatio, sin(angle) * radius);
+        // Chỉ trời và mặt trời toả sáng: khối trắng tự toả thì bị quầng nhoè quanh mép
+        if (!isSky(uv + offset)) continue;
         vec3 tap = applyExposure(clamp(texture2D(colortex0, uv + offset).rgb, 0.0, 1.0));
         glow += tap * smoothstep(GLOW_THRESHOLD, 0.98, dot(tap, vec3(0.299, 0.587, 0.114)));
     }

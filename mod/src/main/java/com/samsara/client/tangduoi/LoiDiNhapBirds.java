@@ -16,7 +16,7 @@ import org.joml.Vector3f;
 
 /**
  * Tầng 2: các đàn chim bay vòng quanh những khối khổng lồ, chỉ là hình bóng đen vỗ cánh ở rất xa. Vẽ phía client, không phải
- * thực thể. Mỗi con là một tấm quay về phía camera; texture có hai hình cánh (nửa trái, nửa phải).
+ * thực thể. Mỗi con là một tấm quay về phía camera; texture trắng có hai hình cánh (nửa trái, nửa phải), mỗi con tô một sắc xám.
  */
 public final class LoiDiNhapBirds {
     private LoiDiNhapBirds() {}
@@ -27,9 +27,10 @@ public final class LoiDiNhapBirds {
     /** Đàn: tâm x, y, z (toạ độ thế giới), bán kính vòng, số con, tốc độ (rad/giây, âm là bay ngược chiều). */
     private static final double[][] FLOCKS = {
             {-300, 215, -430, 165, 11, 0.055},
-            {320, 240, -380, 145, 9, -0.065},
-            {280, 305, -640, 130, 8, 0.05},
+            {60, 300, -300, 120, 9, -0.065},
+            {-420, 260, -670, 130, 8, 0.05},
             {-40, 250, -560, 190, 7, -0.04},
+            {640, 420, -900, 260, 14, 0.03},
     };
     private static final float HALF_W = 3.4f;
     private static final float HALF_H = 1.7f;
@@ -65,27 +66,30 @@ public final class LoiDiNhapBirds {
                 double z = flock[2] + Math.sin(phase) * radius - cam.z;
                 boolean wingsUp = Math.sin(time * 5.2 + i * 1.9 + f) > 0.0;
                 float u0 = wingsUp ? 0.0f : 0.5f;
-                bird(vc, m, (float) x, (float) y, (float) z, right, up, u0);
+                // Mỗi con một sắc từ gần trắng tới gần đen
+                int shade = 30 + (int) (Math.abs(Math.sin(i * 12.9898 + f * 78.233) * 43758.5453) % 1.0 * 200);
+                bird(vc, m, (float) x, (float) y, (float) z, right, up, u0, shade);
             }
         }
         matrices.pop();
     }
 
-    private static void bird(VertexConsumer vc, Matrix4f m, float x, float y, float z, Vector3f right, Vector3f up, float u0) {
+    private static void bird(VertexConsumer vc, Matrix4f m, float x, float y, float z, Vector3f right, Vector3f up, float u0, int shade) {
         float rx = right.x * HALF_W;
         float ry = right.y * HALF_W;
         float rz = right.z * HALF_W;
         float ux = up.x * HALF_H;
         float uy = up.y * HALF_H;
         float uz = up.z * HALF_H;
-        vertex(vc, m, x - rx + ux, y - ry + uy, z - rz + uz, u0, 0f);
-        vertex(vc, m, x - rx - ux, y - ry - uy, z - rz - uz, u0, 1f);
-        vertex(vc, m, x + rx - ux, y + ry - uy, z + rz - uz, u0 + 0.5f, 1f);
-        vertex(vc, m, x + rx + ux, y + ry + uy, z + rz + uz, u0 + 0.5f, 0f);
+        vertex(vc, m, x - rx + ux, y - ry + uy, z - rz + uz, u0, 0f, shade);
+        vertex(vc, m, x - rx - ux, y - ry - uy, z - rz - uz, u0, 1f, shade);
+        vertex(vc, m, x + rx - ux, y + ry - uy, z + rz - uz, u0 + 0.5f, 1f, shade);
+        vertex(vc, m, x + rx + ux, y + ry + uy, z + rz + uz, u0 + 0.5f, 0f, shade);
     }
 
-    private static void vertex(VertexConsumer vc, Matrix4f m, float x, float y, float z, float u, float v) {
-        vc.vertex(m, x, y, z).color(255, 255, 255, 255).texture(u, v)
+    /** Alpha 254 là dấu cho shader world4 biết đây là chim, không phải khối khổng lồ (không lát gạch, không sương theo độ cao). */
+    private static void vertex(VertexConsumer vc, Matrix4f m, float x, float y, float z, float u, float v, int shade) {
+        vc.vertex(m, x, y, z).color(shade, shade, shade, 254).texture(u, v)
                 .overlay(OverlayTexture.DEFAULT_UV).light(FULL_BRIGHT).normal(0, 1, 0).next();
     }
 }

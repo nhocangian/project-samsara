@@ -1,6 +1,6 @@
 """Sinh texture đàn chim ở xa của tầng 2 (assets/samsara/textures/misc/chim_xa.png).
 
-Hai hình bóng đen cạnh nhau: nửa trái cánh giơ lên, nửa phải cánh hạ xuống. Sửa ở đây rồi chạy lại, đừng sửa PNG.
+Hai hình bóng trắng cạnh nhau: nửa trái cánh giơ lên, nửa phải cánh hạ xuống. Sửa ở đây rồi chạy lại, đừng sửa PNG.
 """
 from pathlib import Path
 
@@ -10,7 +10,7 @@ W, H = 64, 16
 SS = 4
 OUT = Path(__file__).resolve().parent.parent / "src/main/resources/assets/samsara/textures/misc/chim_xa.png"
 OUT.parent.mkdir(parents=True, exist_ok=True)
-INK = (20, 16, 26, 255)
+INK = (255, 255, 255, 255)   # trắng: màu từng con do LoiDiNhapBirds tô qua màu đỉnh
 
 img = Image.new("RGBA", (W * SS, H * SS), (0, 0, 0, 0))
 d = ImageDraw.Draw(img)
