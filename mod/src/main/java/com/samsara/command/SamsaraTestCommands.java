@@ -178,6 +178,29 @@ public class SamsaraTestCommands {
                         .then(CommandManager.literal("screenshot_sun").executes(ctx -> testScreenshotSun(ctx.getSource())))
 
                         // Test: Tầng Dưới, tầng 2 "Lối đi nháp": dựng lại, cầm máy quay, đưa tới phòng / cầu / đảo 1
+                        // Test: Tầng Dưới, tầng 3 "Trốn tìm": dựng lại căn nhà, vào từ đầu / nhảy tới vòng n / phòng ngủ đã mở / ngủ
+                        .then(CommandManager.literal("tron_tim").executes(ctx -> {
+                            if (ctx.getSource().getPlayer() == null) return 0;
+                            com.samsara.system.trontim.TronTimRuntime.enter(ctx.getSource().getPlayer());
+                            return 1;
+                        })
+                                .then(CommandManager.literal("vong")
+                                        .then(CommandManager.argument("so", IntegerArgumentType.integer(1, 3)).executes(ctx -> {
+                                            if (ctx.getSource().getPlayer() == null) return 0;
+                                            com.samsara.system.trontim.TronTimRuntime.testRound(ctx.getSource().getPlayer(), IntegerArgumentType.getInteger(ctx, "so"));
+                                            return 1;
+                                        })))
+                                .then(CommandManager.literal("phong_ngu").executes(ctx -> {
+                                    if (ctx.getSource().getPlayer() == null) return 0;
+                                    com.samsara.system.trontim.TronTimRuntime.testRound(ctx.getSource().getPlayer(), 4);
+                                    return 1;
+                                }))
+                                .then(CommandManager.literal("ngu").executes(ctx -> {
+                                    if (ctx.getSource().getPlayer() == null) return 0;
+                                    com.samsara.system.trontim.TronTimRuntime.testSleep(ctx.getSource().getPlayer());
+                                    return 1;
+                                })))
+
                         .then(CommandManager.literal("tang_duoi2").executes(ctx -> testTangDuoi2(ctx.getSource(), 0))
                                 .then(CommandManager.literal("cau").executes(ctx -> testTangDuoi2(ctx.getSource(), 1)))
                                 .then(CommandManager.literal("dao").executes(ctx -> testTangDuoi2(ctx.getSource(), 2)))

@@ -27,6 +27,12 @@ public class SamsaraDimensions {
             new Identifier("samsara", "loi_di_nhap")
     );
 
+    /** Tầng Dưới, tầng 3 "Trốn tìm": tối đen, chỉ thấy qua tiếng vọng (shader world5). */
+    public static final RegistryKey<World> TRON_TIM_WORLD_KEY = RegistryKey.of(
+            RegistryKeys.WORLD,
+            new Identifier("samsara", "tron_tim")
+    );
+
     public static final RegistryKey<World> NAM_MEMORY_WORLD_KEY = RegistryKey.of(
             RegistryKeys.WORLD,
             NAM_MEMORY_ID

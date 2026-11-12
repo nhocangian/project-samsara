@@ -2,8 +2,6 @@ package com.samsara.system.tangduoi;
 
 import com.samsara.registry.SamsaraBlocks;
 import com.samsara.registry.SamsaraDimensions;
-import com.samsara.system.cycle.EggCycleState;
-import com.samsara.system.womb.WombTravel;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.BedBlock;
@@ -148,8 +146,7 @@ public final class LoiDiNhapRuntime {
             }
             if (left <= 0) {
                 it.remove();
-                EggCycleState.get(p.getServer()).markTangDuoiCleared(p.getUuid());
-                WombTravel.teleportToTheWomb(p);
+                com.samsara.system.trontim.TronTimRuntime.enter(p);
             }
         }
     }

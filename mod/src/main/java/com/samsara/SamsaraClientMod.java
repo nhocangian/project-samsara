@@ -34,6 +34,7 @@ public class SamsaraClientMod implements ClientModInitializer {
         // Register custom entity renderers
         EntityRendererRegistry.register(SamsaraEntities.THE_WANDERER, TheWandererRenderer::new);
         EntityRendererRegistry.register(SamsaraEntities.ECHO_DUMMY, EchoDummyRenderer::new);
+        EntityRendererRegistry.register(SamsaraEntities.EM, com.samsara.client.trontim.EmRenderer::new);
         EntityRendererRegistry.register(SamsaraEntities.DIMENSIONAL_RIFT, com.samsara.entity.client.DimensionalRiftRenderer::new);
 
         // Register custom aurora skybox for The Womb dimension (when shaders are off)
@@ -105,6 +106,7 @@ public class SamsaraClientMod implements ClientModInitializer {
         com.samsara.client.tangduoi.LoiDiNhapClient.register();
         com.samsara.client.tangduoi.LoiDiNhapBirds.register();
         com.samsara.client.tangduoi.LoiDiNhapAngel.register();
+        com.samsara.client.trontim.EchoRenderer.register();
 
         // Phantom qua ống kính máy quay: "Tàn Hồn Phantom" (mắt thường vẫn thấy Phantom vanilla)
         EntityRendererRegistry.register(net.minecraft.entity.EntityType.PHANTOM, com.samsara.entity.client.SoulPhantomRenderer::new);

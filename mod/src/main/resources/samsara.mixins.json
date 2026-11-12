@@ -34,7 +34,11 @@
     "MinecraftClientScreenshotMixin",
     "WombRainSignalMixin",
     "FarPlaneMixin",
-    "TrangXeRenderMixin"
+    "TrangXeRenderMixin",
+    "EchoSoundMixin",
+    "TronTimToastMixin",
+    "TronTimDarkMixin",
+    "TronTimSkyMixin"
   ],
   "injectors": {
     "defaultRequire": 1

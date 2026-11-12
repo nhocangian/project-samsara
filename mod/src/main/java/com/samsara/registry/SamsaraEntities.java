@@ -62,7 +62,19 @@ public class SamsaraEntities {
                     .build()
     );
 
+    /** Tầng 3 "Trốn tìm": đứa em / kẻ ngồi trốn, chỉ hiện qua tiếng vọng. */
+    public static final EntityType<com.samsara.entity.EmEntity> EM = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier("samsara", "em"),
+            FabricEntityTypeBuilder.<com.samsara.entity.EmEntity>create(SpawnGroup.MISC, com.samsara.entity.EmEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.6f, 1.8f))
+                    .trackRangeBlocks(64)
+                    .trackedUpdateRate(1)
+                    .build()
+    );
+
     public static void registerEntities() {
+        FabricDefaultAttributeRegistry.register(EM, com.samsara.entity.EmEntity.createEmAttributes());
         FabricDefaultAttributeRegistry.register(THE_WANDERER, TheWandererEntity.createWandererAttributes());
         FabricDefaultAttributeRegistry.register(ECHO_DUMMY, EchoDummyEntity.createDummyAttributes());
     }

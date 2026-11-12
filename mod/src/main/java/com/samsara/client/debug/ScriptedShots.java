@@ -24,6 +24,8 @@ import java.util.List;
  *   hud off|on              ẩn / hiện giao diện
  *   aim on|off              ngắm / thôi ngắm máy quay (phải đang cầm máy quay)
  *   shot ten_anh            lưu run/screenshots/ten_anh.png (có shader)
+ *   use                     bấm chuột phải vào khối đang nhìn
+ *   shaders on|off          bật / tắt shaderpack (Iris)
  *   quit                    thoát game
  * </pre>
  * Màn cảnh báo "Worlds using Experimental Settings" được tự bấm "I know what I'm doing!".
@@ -100,6 +102,21 @@ public final class ScriptedShots {
             case "angel" -> com.samsara.client.tangduoi.LoiDiNhapAngel.forceStage(Integer.parseInt(arg));
             case "shot" -> ScreenshotRecorder.saveScreenshot(new File(client.runDirectory.getAbsolutePath()),
                     arg + ".png", client.getFramebuffer(), text -> {});
+            case "use" -> {
+                // Bấm chuột phải vào khối đang nhìn (mở cửa, bấm giường...)
+                if (client.crosshairTarget instanceof net.minecraft.util.hit.BlockHitResult hit && client.interactionManager != null) {
+                    client.interactionManager.interactBlock(client.player, net.minecraft.util.Hand.MAIN_HAND, hit);
+                }
+            }
+            case "shaders" -> {
+                // Bật / tắt shaderpack qua Iris (để thử phương án dự phòng khi không có shader)
+                try {
+                    Class<?> api = Class.forName("net.irisshaders.iris.api.v0.IrisApi");
+                    Object config = api.getMethod("getConfig").invoke(api.getMethod("getInstance").invoke(null));
+                    config.getClass().getMethod("setShadersEnabledAndApply", boolean.class).invoke(config, arg.equals("on"));
+                } catch (Throwable ignored) {
+                }
+            }
             case "quit" -> client.scheduleStop();
             default -> { }
         }

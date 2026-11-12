@@ -1,0 +1,16 @@
+{
+  "type": "samsara:tron_tim",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "samsara:tron_tim",
+      "features": false,
+      "lakes": false,
+      "layers": [
+        { "block": "minecraft:bedrock", "height": 1 },
+        { "block": "minecraft:smooth_stone", "height": 63 }
+      ],
+      "structure_overrides": []
+    }
+  }
+}
