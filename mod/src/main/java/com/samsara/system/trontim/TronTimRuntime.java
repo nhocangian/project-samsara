@@ -47,7 +47,26 @@ public final class TronTimRuntime {
         boolean moved = false;
         int crowd = 0;
         UUID em = null;
+        // Vòng 1: bước chân thứ hai sau lưng
+        UUID follower = null;
+        int followEpisodes = 0;
+        int followSteps = 0;
+        int followSoundAt = -1;
+        int followCooldown = 0;
+        Vec3d lastPos = null;
+        double walked = 0;
+        // Vòng 2: tiếng đếm thứ hai, một bóng người đứng quay mặt vào tường
+        UUID decoy = null;
+        boolean decoyDone = false;
     }
+
+    /** Vòng 1, từ số 30: tối đa 3 lần, mỗi lần chừng 6 bước, có ai đó bước theo ngay sau lưng. */
+    private static final int FOLLOW_FROM = 30;
+    private static final int FOLLOW_EPISODES = 3;
+    private static final int FOLLOW_STEPS = 6;
+    /** Vòng 2, từ số 20: đứa thứ hai đếm lệch nhịp, chậm hơn 13 số. */
+    private static final int DECOY_FROM = 20;
+    private static final int DECOY_LAG = 13;
 
     private static final Map<UUID, State> STATES = new HashMap<>();
     private static final int COUNT_TICKS = 20;
@@ -108,7 +127,7 @@ public final class TronTimRuntime {
     }
 
     private static void removeEm(ServerWorld world) {
-        world.getEntitiesByClass(EmEntity.class, TronTimBuilder.houseBox(), e -> true).forEach(e -> e.discard());
+        world.getEntitiesByClass(EmEntity.class, TronTimFinale.area(), e -> true).forEach(e -> e.discard());
     }
 
     // ==========================================
@@ -121,6 +140,7 @@ public final class TronTimRuntime {
             if (world.getPlayers().isEmpty()) return;
             ambient(world);
             tickMusic(world);
+            TronTimFinale.tick();
             // Chép danh sách: cuối tầng người chơi bị đưa sang chiều khác ngay trong vòng lặp
             for (ServerPlayerEntity player : new java.util.ArrayList<>(world.getPlayers())) tick(world, player);
         });
@@ -137,6 +157,7 @@ public final class TronTimRuntime {
 
     /** Tiếng của căn nhà: xích đu, đồng hồ, vòi nước. Mỗi tiếng là một vòng sóng ở client. */
     private static void ambient(ServerWorld world) {
+        if (TronTimFinale.isActive()) return;   // căn nhà đã biến mất
         long t = world.getTime();
         if (t % 80 == 0) world.playSound(null, TronTimBuilder.SWING, SoundEvents.BLOCK_CHAIN_STEP, SoundCategory.BLOCKS, 0.9f, 0.6f);
         if (t % 30 == 0) world.playSound(null, TronTimBuilder.CLOCK, SoundEvents.BLOCK_NOTE_BLOCK_HAT.value(), SoundCategory.BLOCKS, 0.5f, 1.8f);
@@ -188,6 +209,8 @@ public final class TronTimRuntime {
             found(world, player, s, em);
             return;
         }
+        if (s.round == 1) tickFollower(world, player, s);
+        if (s.round == 2) tickDecoy(world, player, s);
         if (s.timer % COUNT_TICKS != 0) return;
 
         // Vòng 3: đếm tới 47 thì kẹt; không cười, chỉ còn hộp nhạc
@@ -214,6 +237,8 @@ public final class TronTimRuntime {
         }
         if (s.count >= LAST_NUMBER) {
             em(player, Text.translatable("samsara.tron_tim.em.cham_qua"));
+            removeExtras(world, s);
+            s.decoyDone = false;
             em.discard();
             s.em = null;
             s.phase = Phase.INTRO;
@@ -222,7 +247,117 @@ public final class TronTimRuntime {
         }
     }
 
+    // ==========================================
+    // VÒNG 1: BƯỚC CHÂN THỨ HAI
+    // ==========================================
+
+    /**
+     * Mỗi bước người chơi đi (tính theo quãng đường ở server), đôi khi có một nhịp bước nữa trễ nửa giây ngay sau lưng:
+     * tiếng đó tỏa sóng và soi ra một bóng người (skin người chơi) đứng sát sau. Nó chỉ ở đó khi người chơi đang quay lưng:
+     * vừa quay lại nhìn là biến mất. Chỉ ở vòng 1, sau số 30, vài lần trong cả vòng.
+     */
+    private static void tickFollower(ServerWorld world, ServerPlayerEntity player, State s) {
+        EmEntity f = s.follower == null ? null : world.getEntity(s.follower) instanceof EmEntity e && e.isAlive() ? e : null;
+        if (f != null) {
+            Vec3d to = f.getPos().subtract(player.getPos()).multiply(1, 0, 1).normalize();
+            Vec3d look = player.getRotationVec(1.0f).multiply(1, 0, 1).normalize();
+            if (look.dotProduct(to) > Math.cos(Math.toRadians(75))) {
+                endFollow(f, s);   // quay lại nhìn: không còn ai
+                return;
+            }
+            if (s.followSoundAt == s.timer) {
+                world.playSound(null, f.getX(), f.getY(), f.getZ(), SoundEvents.BLOCK_WOOD_STEP, SoundCategory.NEUTRAL, 0.45f, 0.9f);
+            }
+        }
+        if (s.followCooldown > 0) s.followCooldown--;
+        Vec3d pos = player.getPos();
+        if (s.lastPos != null && player.isOnGround() && !player.isSneaking()) s.walked += pos.subtract(s.lastPos).multiply(1, 0, 1).length();
+        s.lastPos = pos;
+        if (s.walked < 1.7) return;
+        s.walked = 0;
+        if (f == null) {
+            if (s.count < FOLLOW_FROM || s.followEpisodes >= FOLLOW_EPISODES || s.followCooldown > 0) return;
+            if (world.random.nextFloat() > 0.3f) return;
+            f = SamsaraEntities.EM.create(world);
+            if (f == null) return;
+            f.setCrowd(true);
+            f.refreshPositionAndAngles(player.getX(), player.getY(), player.getZ(), 0f, 0f);
+            world.spawnEntity(f);
+            s.follower = f.getUuid();
+            s.followSteps = 0;
+        }
+        // Đứng lại ngay sau lưng, quay mặt vào người chơi; bước chân của nó nghe trễ nửa giây
+        Vec3d back = player.getRotationVec(1.0f).multiply(1, 0, 1).normalize().multiply(-2.2).add(player.getPos());
+        BlockPos at = BlockPos.ofFloored(back);
+        if (!world.getBlockState(at).isAir() || !world.getBlockState(at.up()).isAir()) return;
+        float yaw = player.getYaw();
+        f.refreshPositionAndAngles(back.x, player.getY(), back.z, yaw, 0f);
+        f.setHeadYaw(yaw);
+        f.setBodyYaw(yaw);
+        // Tiếng đã hẹn thì giữ nguyên: đi liên tục thì mỗi bước chỉ đẩy lùi nó mãi, bóng người không bao giờ lộ ra
+        if (s.followSoundAt < s.timer) s.followSoundAt = s.timer + 8;
+        if (++s.followSteps >= FOLLOW_STEPS) {
+            s.followSoundAt = -1;
+            endFollow(f, s);
+        }
+    }
+
+    private static void endFollow(EmEntity f, State s) {
+        f.discard();
+        s.follower = null;
+        s.followEpisodes++;
+        s.followCooldown = 400;
+    }
+
+    // ==========================================
+    // VÒNG 2: TIẾNG ĐẾM THỨ HAI
+    // ==========================================
+
+    /**
+     * Từ số 20, một "em" thứ hai cùng đếm, lệch nửa nhịp và chậm hơn 13 số, cũng cười từ một góc khác của phòng khách.
+     * Lần tới chỗ đó thì chỉ có một bóng người mang skin người chơi đứng quay mặt vào tường; tới sát thì nó biến mất,
+     * tiếng đếm thứ hai tắt. Không nói gì thêm.
+     */
+    private static void tickDecoy(ServerWorld world, ServerPlayerEntity player, State s) {
+        if (s.decoyDone || s.count < DECOY_FROM) return;
+        EmEntity d = s.decoy == null ? null : world.getEntity(s.decoy) instanceof EmEntity e && e.isAlive() ? e : null;
+        if (d == null) {
+            d = SamsaraEntities.EM.create(world);
+            if (d == null) return;
+            BlockPos p = TronTimBuilder.SPOT_DECOY;
+            d.refreshPositionAndAngles(p.getX() + 0.5, p.getY(), p.getZ() + 0.5, 90f, 0f);   // quay mặt vào tường tây
+            d.setHeadYaw(90f);
+            d.setBodyYaw(90f);
+            d.setCrowd(true);
+            world.spawnEntity(d);
+            s.decoy = d.getUuid();
+        }
+        Vec3d to = player.getPos().subtract(d.getPos());
+        if (Math.abs(to.y) < 2.5 && to.x * to.x + to.z * to.z < 1.8 * 1.8) {
+            d.discard();
+            s.decoy = null;
+            s.decoyDone = true;
+            return;
+        }
+        if (s.timer % COUNT_TICKS == COUNT_TICKS / 2) {
+            int n = s.count - DECOY_LAG;
+            // Đứa thứ hai: cả dòng xám đậm, nghiêng, như tiếng vọng nhạt của tiếng đếm thật (không lẫn với lỗi lặp chat)
+            if (n > 0) player.sendMessage(Text.literal("<em> " + n).formatted(Formatting.DARK_GRAY, Formatting.ITALIC), false);
+            if (n > 0 && n % 12 == 6) giggle(world, d);
+        }
+    }
+
+    /** Bỏ bóng người phụ (bước chân thứ hai, đứa đếm thứ hai) khi vòng kết thúc. */
+    private static void removeExtras(ServerWorld world, State s) {
+        for (UUID id : new UUID[]{s.follower, s.decoy}) {
+            if (id != null && world.getEntity(id) instanceof EmEntity e) e.discard();
+        }
+        s.follower = null;
+        s.decoy = null;
+    }
+
     private static void found(ServerWorld world, ServerPlayerEntity player, State s, EmEntity em) {
+        removeExtras(world, s);
         s.phase = Phase.FOUND;
         s.timer = 0;
         BlockPos spot = em.getBlockPos();
@@ -272,6 +407,7 @@ public final class TronTimRuntime {
 
     private static void startSleep(ServerPlayerEntity player, State s) {
         if (s.phase == Phase.SLEEP) return;
+        TronTimFinale.prepare(world(player));
         s.phase = Phase.SLEEP;
         s.timer = 0;
         s.crowd = 0;
@@ -280,6 +416,8 @@ public final class TronTimRuntime {
     /** Lúc ngủ: "anh oi" lặp đi lặp lại; mỗi lần có thêm vài người đứng sau lưng, gần hơn, cùng nhìn về người chơi. */
     private static final int[] CALLS = {20, 42, 62, 80, 96, 110, 122};
     private static final int CROWD_MAX = 22;
+    /** Tick (tính từ lúc bấm giường) <System> nói và cảnh cuối bắt đầu. */
+    private static final int FINALE = 150;
 
     /**
      * Tên "em" trong chat nhiễu dần thành tên người chơi. Mỗi tiếng "anh oi" đi kèm một tiếng động khẽ ngay sau lưng,
@@ -296,14 +434,13 @@ public final class TronTimRuntime {
                     : Text.literal(name);
             chat(player, who, line);
             spawnCrowd(world, player, s, k);
-            // Tiếng động khẽ sau lưng: sóng của nó soi ra đám đông
             // Tiếng động khẽ ở phía cửa (người chơi quay lưng ra cửa để bấm giường)
             Vec3d toDoor = doorCenter().subtract(player.getPos()).multiply(1, 0, 1).normalize();
             Vec3d back = toDoor.multiply(1.5).add(player.getPos());
             world.playSound(null, back.x, back.y + 1.0, back.z, SoundEvents.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM,
                     SoundCategory.NEUTRAL, 0.5f, 0.55f + 0.05f * k);
         }
-        // Cả đám luôn quay mặt về người chơi
+        // Cả đám luôn quay mặt về người chơi (đám đông lớn của cảnh cuối thì đã quay sẵn, chỉ cập nhật đám gần)
         for (EmEntity e : world.getEntitiesByClass(EmEntity.class, TronTimBuilder.houseBox(), EmEntity::isCrowd)) {
             double dx = player.getX() - e.getX(), dz = player.getZ() - e.getZ();
             float yaw = (float) (Math.toDegrees(Math.atan2(dz, dx)) - 90.0);
@@ -311,11 +448,24 @@ public final class TronTimRuntime {
             e.setHeadYaw(yaw);
             e.setBodyYaw(yaw);
         }
+        // Cảnh cuối: <System> nói, căn nhà biến mất; 6-7 giây tối hẳn; rồi năm đợt sóng lớn, đợt cuối thu vào tâm
         switch (s.timer) {
-            case 140 -> player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 120, 0, false, false, false));
-            case 170 -> player.sendMessage(Text.literal("§e<System> ")
-                    .append(Text.translatable("samsara.tron_tim.system").formatted(Formatting.YELLOW)), false);
-            case 225 -> {
+            case FINALE -> {
+                player.sendMessage(Text.literal("§e<System> ")
+                        .append(Text.translatable("samsara.tron_tim.system").formatted(Formatting.YELLOW)), false);
+                TronTimFinale.begin(world, player);
+            }
+            case FINALE + 130 -> TronTimFinale.wave(player, 14f, 9f, 0.9f, false, 1);     // nhà đã biến mất
+            case FINALE + 195 -> TronTimFinale.wave(player, 70f, 28f, 1.4f, false, 1);    // rễ cây, bậc đất gần
+            case FINALE + 265 -> TronTimFinale.wave(player, 105f, 34f, 1.6f, false, 1);   // xa hơn nữa
+            case FINALE + 330 -> TronTimFinale.spawnMultitude(world, player);
+            case FINALE + 336 -> TronTimFinale.wave(player, 130f, 38f, 7.0f, false, 1);   // rất nhiều người, nét đọng rất lâu
+            case FINALE + 520 -> TronTimFinale.wave(player, 130f, 46f, 0.35f, true, 2);   // thu từ ngoài vào tâm
+            case FINALE + 580 -> player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 60, 0, false, false, false));
+            case FINALE + 600 -> {
+                TronTimFinale.release(world);
+                player.removeStatusEffect(StatusEffects.SLOWNESS);
+                player.removeStatusEffect(StatusEffects.JUMP_BOOST);
                 STATES.remove(player.getUuid());
                 removeEm(world);
                 EggCycleState.get(player.getServer()).markTangDuoiCleared(player.getUuid());
@@ -383,7 +533,7 @@ public final class TronTimRuntime {
 
     /** Tiếng cười khúc khích từ chỗ trốn (âm allay, cao). Client tô vòng sóng của nó màu vàng ấm. */
     private static void giggle(ServerWorld world, EmEntity em) {
-        world.playSound(null, em.getX(), em.getY() + 1.0, em.getZ(), SoundEvents.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, SoundCategory.NEUTRAL, 1.0f, 1.35f);
+        world.playSound(null, em.getX(), em.getY() + 1.0, em.getZ(), com.samsara.registry.SamsaraSounds.EM_CUOI, SoundCategory.NEUTRAL, 1.0f, 1.0f);
     }
 
     /** Hộp nhạc trên gác: năm nốt chuông, cách nhau 6 tick. */

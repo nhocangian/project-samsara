@@ -53,6 +53,8 @@ public final class TronTimBuilder {
     public static final BlockPos SPOT_KITCHEN_A = at(11, 0, -20);
     public static final BlockPos SPOT_KITCHEN_B = at(5, 0, -3);
     public static final BlockPos SPOT_WARDROBE = at(-13, 11, -37);
+    /** Vòng 2: chỗ của "em" thứ hai, góc phòng khách sát tủ sách, quay mặt vào tường. */
+    public static final BlockPos SPOT_DECOY = at(-14, 0, -16);
 
     public static BlockPos arrival() {
         return at(0, 0, 12);
@@ -82,6 +84,7 @@ public final class TronTimBuilder {
 
     public static void build(ServerWorld world) {
         Random random = Random.create(0x2012L);
+        TronTimFinale.clear(world);
         clear(world);
         yard(world);
         shell(world, random);
@@ -96,8 +99,10 @@ public final class TronTimBuilder {
     private static void clear(ServerWorld world) {
         BlockState air = Blocks.AIR.getDefaultState();
         BlockState stone = Blocks.SMOOTH_STONE.getDefaultState();
-        for (int x = -20; x <= 20; x++) {
-            for (int z = -45; z <= 18; z++) {
+        // Chiều này là hư không: tự lát một tấm nền đá dưới nhà và sân (cảnh cuối sẽ gỡ cả tấm này đi)
+        for (int x = -26; x <= 26; x++) {
+            for (int z = -50; z <= 24; z++) {
+                for (int y = -6; y <= -2; y++) world.setBlockState(at(x, y, z), air, FLAGS);
                 world.setBlockState(at(x, -1, z), stone, FLAGS);
                 for (int y = 0; y <= 24; y++) world.setBlockState(at(x, y, z), air, FLAGS);
             }

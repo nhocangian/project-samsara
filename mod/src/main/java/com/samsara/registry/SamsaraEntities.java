@@ -68,7 +68,7 @@ public class SamsaraEntities {
             new Identifier("samsara", "em"),
             FabricEntityTypeBuilder.<com.samsara.entity.EmEntity>create(SpawnGroup.MISC, com.samsara.entity.EmEntity::new)
                     .dimensions(EntityDimensions.fixed(0.6f, 1.8f))
-                    .trackRangeBlocks(64)
+                    .trackRangeBlocks(256)   // cảnh cuối: đám đông đứng xa tới hơn 120 block (còn bị giới hạn bởi tầm nhìn)
                     .trackedUpdateRate(1)
                     .build()
     );

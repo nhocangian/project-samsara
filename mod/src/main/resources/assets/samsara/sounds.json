@@ -142,5 +142,39 @@
         "name": "samsara:tang_duoi/den_chop_tick_2"
       }
     ]
+  },
+  "tron_tim.cuoi": {
+    "category": "neutral",
+    "subtitle": "subtitles.samsara.tron_tim.cuoi",
+    "sounds": [
+      {
+        "name": "samsara:tron_tim/cuoi_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "samsara:tron_tim/cuoi_2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "samsara:tron_tim/cuoi_3",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "samsara:tron_tim/cuoi_4",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "samsara:tron_tim/cuoi_5",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "samsara:tron_tim/cuoi_6",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "samsara:tron_tim/cuoi_7",
+        "attenuation_distance": 24
+      }
+    ]
   }
 }

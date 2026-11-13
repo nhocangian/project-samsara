@@ -16,7 +16,8 @@ const float ECHO_MARK = 253.0 / 255.0;
 void main() {
     vec4 tex = texture2D(texture, texcoord);
     if (tex.a < 0.1) discard;
-    bool echo = abs(color.g - ECHO_MARK) < 0.002 && abs(color.b - ECHO_MARK) < 0.002;
+    // Đỏ = 255 còn xanh lá = xanh dương = 253: màu đổ bóng góc (AO) của khối luôn xám (r = g = b) nên không bao giờ trùng
+    bool echo = color.r > 0.998 && abs(color.g - ECHO_MARK) < 0.0015 && abs(color.b - ECHO_MARK) < 0.0015;
     if (!echo) {
         gl_FragData[0] = vec4(0.0, 0.0, 0.0, 1.0);
         return;

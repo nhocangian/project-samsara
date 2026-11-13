@@ -70,8 +70,19 @@ public final class EchoRenderer {
     private static final int MAX_RADIUS = 22;
     /** Dấu tiếng vọng trong màu đỉnh: shader world5 chỉ cho texture sáng khi g = b = 253/255. */
     private static final float MARK = 253f / 255f;
+    /**
+     * Nét tắt theo hàm mũ nhưng bị cắt hẳn sau CUT lần hằng số tắt (còn chừng 5%). Không cắt thì nét xa còn lơ lửng rất
+     * mờ cả chục giây, mảnh dưới một điểm ảnh, trông như viền lấm tấm dù chẳng có tiếng động nào.
+     */
+    private static final double CUT = 3.0;
+    private static final double MIN_ALPHA = 0.06;
 
-    private record Edge(float x1, float y1, float z1, float x2, float y2, float z2, float dist, boolean strong, boolean figure) {}
+    /**
+     * Một cạnh và pháp tuyến hai mặt kề nó. Chỉ vẽ khi cạnh là đường bao nhìn từ mắt: một mặt quay về phía mắt, mặt kia
+     * quay đi (xem {@link #silhouette}). Nét bên trong (hai mặt cùng thấy, góc lõm, giữa mặt phẳng) không vẽ.
+     */
+    private record Edge(float x1, float y1, float z1, float x2, float y2, float z2, float dist, boolean figure,
+                        float ax, float ay, float az, float bx, float by, float bz) {}
 
     /** Một mặt khối: 4 đỉnh (toạ độ thế giới) và UV trên atlas. */
     private record Face(float[] xyz, float[] uv, float nx, float ny, float nz, float dist) {}
@@ -92,6 +103,25 @@ public final class EchoRenderer {
         final List<Face> faces = new ArrayList<>();
         final List<SignEcho> signs = new ArrayList<>();
         final List<Figure> figures = new ArrayList<>();
+        double speed = SPEED;
+        double fade = FADE;
+        boolean reverse = false;
+        /** Texture chỉ hiện trong bán kính này (sóng thường: DETAIL x bán kính; sóng lớn cảnh cuối: tối đa 16). */
+        double detail;
+        boolean[] sil = null;
+        double silX = Double.NaN, silY, silZ;
+
+        /** Cạnh nào đang là đường bao, tính lại khi mắt dời quá 2 cm. */
+        boolean[] silhouettes(Vec3d cam) {
+            if (sil == null || Math.abs(cam.x - silX) > 0.02 || Math.abs(cam.y - silY) > 0.02 || Math.abs(cam.z - silZ) > 0.02) {
+                if (sil == null) sil = new boolean[edges.size()];
+                for (int i = 0; i < sil.length; i++) sil[i] = silhouette(edges.get(i), cam);
+                silX = cam.x;
+                silY = cam.y;
+                silZ = cam.z;
+            }
+            return sil;
+        }
 
         Ping(double start, float radius, float r, float g, float b) {
             this.start = start;
@@ -99,13 +129,40 @@ public final class EchoRenderer {
             this.r = r;
             this.g = g;
             this.b = b;
+            this.detail = radius * DETAIL;
         }
+
+        /** Lúc sóng chạm tới khoảng cách {@code dist} (giây kể từ lúc phát). Sóng thu vào thì chạm chỗ xa trước. */
+        double arrival(double dist) {
+            return (reverse ? radius - dist : dist) / speed;
+        }
+
+        double life() {
+            return radius / speed + FLASH + fade * CUT;
+        }
+    }
+
+    /** Sóng thu vào đang chạy (cảnh cuối): mọi nét cũ nằm ngoài vòng đang thu đều tắt theo. */
+    private static Ping collapse = null;
+    /** Đã nhận đợt sóng lớn đầu tiên của cảnh cuối (tới khi rời chiều này). */
+    private static boolean finale = false;
+
+    public static boolean inFinale() {
+        return finale && inFloor(MinecraftClient.getInstance());
     }
 
     private static final List<Ping> PINGS = new ArrayList<>();
     private static double lastStep = -1;
 
     public static void register() {
+        net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
+                com.samsara.system.trontim.TronTimFinale.WAVE, (client, handler, buf, sender) -> {
+                    Vec3d c = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+                    float radius = buf.readFloat(), speed = buf.readFloat(), fade = buf.readFloat();
+                    boolean reverse = buf.readBoolean();
+                    int sound = buf.readByte();
+                    client.execute(() -> bigWave(client, c, radius, speed, fade, reverse, sound));
+                });
         WorldRenderEvents.AFTER_TRANSLUCENT.register(EchoRenderer::render);
         // Khung chọn khối (đi qua gbuffers_basic) sẽ lộ khối đang nhìn: tắt hẳn trong chiều này
         WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register((context, hit) -> !inFloor(MinecraftClient.getInstance()));
@@ -149,16 +206,18 @@ public final class EchoRenderer {
             double t = now();
             if (t - lastStep < 0.12) return;
             lastStep = t;
-            radius = player.isSprinting() ? 8.0f : 5.5f;
+            radius = player.isSprinting() ? 11.0f : 8.5f;   // người dùng chốt: bước chân rộng hơn 3 block
             pos = player.getPos().add(0, 0.1, 0);
         } else {
             radius = Math.min(MAX_RADIUS, 6.0f + 10.0f * sound.getVolume());
         }
         Box near = new Box(pos, pos).expand(2.0);
-        boolean em = !client.world.getEntitiesByClass(com.samsara.entity.EmEntity.class, near, e -> true).isEmpty();
+        boolean giggle = path.equals("tron_tim.cuoi") || path.equals("entity.allay.ambient_without_item");
+        boolean em = giggle || !client.world.getEntitiesByClass(com.samsara.entity.EmEntity.class, near, e -> !e.isCrowd()).isEmpty();
+        boolean figure = !client.world.getEntitiesByClass(com.samsara.entity.EmEntity.class, near, e -> true).isEmpty();
         // Chỉ tiếng do người chơi gây ra (gần người chơi) hoặc tiếng của chính đứa em mới làm lộ nó;
         // tiếng của căn nhà (đồng hồ, vòi nước...) soi đồ đạc nhưng không soi người, kẻo trốn như không
-        boolean reveal = em || pos.squaredDistanceTo(player.getPos()) < 16.0;
+        boolean reveal = em || figure || pos.squaredDistanceTo(player.getPos()) < 16.0;
         if (em) ping(pos, radius, WARM[0], WARM[1], WARM[2], true);
         else ping(pos, radius, 1.0f, 1.0f, 1.0f, reveal);
     }
@@ -177,6 +236,66 @@ public final class EchoRenderer {
         PINGS.add(ping);
     }
 
+    /**
+     * Đợt sóng lớn của cảnh cuối (server gửi). Tiếng của nó là âm không vị trí nên không tự tạo thêm sóng thường.
+     * Quét theo từng section chunk, bỏ qua section trống, vì bán kính tới cả trăm block giữa hư không.
+     */
+    private static void bigWave(MinecraftClient client, Vec3d c, float radius, float speed, float fade, boolean reverse, int sound) {
+        if (client.world == null || !inFloor(client)) return;
+        if (sound == 3) {
+            PINGS.clear();
+            collapse = null;
+            return;
+        }
+        finale = true;
+        Ping ping = new Ping(now(), radius, 1.0f, 1.0f, 1.0f);
+        ping.speed = speed;
+        ping.fade = fade;
+        ping.reverse = reverse;
+        ping.detail = Math.min(radius * DETAIL, 16.0);
+        scanSections(client, client.world, c, radius, ping);
+        scanEntities(client, client.world, c, radius, ping);
+        PINGS.add(ping);
+        if (reverse) collapse = ping;
+        if (sound == 1) {
+            // Mỗi đợt sóng là một nhịp tim (đợt càng rộng nhịp càng nặng)
+            float weight = Math.min(1.0f, 0.55f + radius / 260f);
+            client.getSoundManager().play(net.minecraft.client.sound.PositionedSoundInstance.master(
+                    net.minecraft.sound.SoundEvents.ENTITY_WARDEN_HEARTBEAT, 0.85f, weight * 1.6f));
+        } else if (sound == 2) {
+            client.getSoundManager().play(net.minecraft.client.sound.PositionedSoundInstance.master(
+                    net.minecraft.sound.SoundEvents.BLOCK_BEACON_DEACTIVATE, 0.5f, 0.9f));
+        }
+    }
+
+    private static void scanSections(MinecraftClient client, ClientWorld world, Vec3d c, float radius, Ping ping) {
+        int r = (int) Math.ceil(radius);
+        BlockPos origin = BlockPos.ofFloored(c);
+        Random random = Random.create();
+        BlockPos.Mutable p = new BlockPos.Mutable();
+        for (int cx = (origin.getX() - r) >> 4; cx <= (origin.getX() + r) >> 4; cx++) {
+            for (int cz = (origin.getZ() - r) >> 4; cz <= (origin.getZ() + r) >> 4; cz++) {
+                net.minecraft.world.chunk.WorldChunk chunk = world.getChunkManager().getWorldChunk(cx, cz, false);
+                if (chunk == null) continue;
+                net.minecraft.world.chunk.ChunkSection[] sections = chunk.getSectionArray();
+                for (int i = 0; i < sections.length; i++) {
+                    if (sections[i] == null || sections[i].isEmpty()) continue;
+                    int baseY = world.sectionIndexToCoord(i) << 4;
+                    if (baseY + 16 < origin.getY() - r || baseY > origin.getY() + r) continue;
+                    for (int y = 0; y < 16; y++) {
+                        for (int z = 0; z < 16; z++) {
+                            for (int x = 0; x < 16; x++) {
+                                p.set((cx << 4) + x, baseY + y, (cz << 4) + z);
+                                if (p.getSquaredDistance(c) > (double) (r + 1) * (r + 1)) continue;
+                                scanOne(client, world, p, c, radius, random, ping);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // ==========================================
     // QUÉT KHỐI: NÉT VIỀN, MẶT CÓ TEXTURE, BẢNG
     // ==========================================
@@ -191,24 +310,32 @@ public final class EchoRenderer {
                 for (int dz = -r; dz <= r; dz++) {
                     if (dx * dx + dy * dy + dz * dz > (r + 1) * (r + 1)) continue;
                     p.set(origin.getX() + dx, origin.getY() + dy, origin.getZ() + dz);
-                    BlockState state = world.getBlockState(p);
-                    if (state.isAir()) continue;
-                    VoxelShape shape = state.getOutlineShape(world, p);
-                    if (shape.isEmpty()) continue;
-                    BlockPos pos = p.toImmutable();
-                    if (isFull(world, pos)) fullCubeEdges(world, pos, c, radius, ping.edges);
-                    else if (state.getBlock() instanceof net.minecraft.block.AbstractSignBlock) signEdges(state, pos, c, radius, ping.edges);
-                    else shapeEdges(shape, pos, c, radius, ping.edges);
-                    faces(client, world, state, pos, c, radius, random, ping.faces);
-                    if (world.getBlockEntity(pos) instanceof SignBlockEntity sign) {
-                        double d = Vec3d.ofCenter(pos).distanceTo(c);
-                        if (d <= radius) {
-                            Text[] lines = new Text[4];
-                            for (int i = 0; i < 4; i++) lines[i] = sign.getFrontText().getMessage(i, false);
-                            ping.signs.add(new SignEcho(pos, state, lines, (float) d));
-                        }
-                    }
+                    scanOne(client, world, p, c, radius, random, ping);
                 }
+            }
+        }
+    }
+
+    private static void scanOne(MinecraftClient client, ClientWorld world, BlockPos.Mutable p, Vec3d c, float radius, Random random, Ping ping) {
+        BlockState state = world.getBlockState(p);
+        if (state.isAir()) return;
+        VoxelShape shape = state.getOutlineShape(world, p);
+        if (shape.isEmpty()) return;
+        BlockPos pos = p.toImmutable();
+        boolean full = isFull(world, pos);
+        // Khối đầy nằm lọt giữa các khối đầy khác: không có cạnh nào lộ ra, bỏ qua sớm (thân rễ cây đặc ruột)
+        if (full && isFull(world, pos.up()) && isFull(world, pos.down()) && isFull(world, pos.north())
+                && isFull(world, pos.south()) && isFull(world, pos.east()) && isFull(world, pos.west())) return;
+        if (full) fullCubeEdges(world, pos, c, radius, ping.edges);
+        else if (state.getBlock() instanceof net.minecraft.block.AbstractSignBlock) signEdges(state, pos, c, radius, ping.edges);
+        else shapeEdges(shape, pos, c, radius, ping.edges);
+        if (Vec3d.ofCenter(pos).distanceTo(c) <= ping.detail + 1) faces(client, world, state, pos, c, radius, random, ping.faces);
+        if (world.getBlockEntity(pos) instanceof SignBlockEntity sign) {
+            double d = Vec3d.ofCenter(pos).distanceTo(c);
+            if (d <= radius) {
+                Text[] lines = new Text[4];
+                for (int i = 0; i < 4; i++) lines[i] = sign.getFrontText().getMessage(i, false);
+                ping.signs.add(new SignEcho(pos, state, lines, (float) d));
             }
         }
     }
@@ -252,34 +379,21 @@ public final class EchoRenderer {
         out.add(new Face(xyz, uv, n.x, n.y, n.z, (float) d));
     }
 
-    /**
-     * Khối đầy: chỉ vẽ cạnh lồi và cạnh lõm thật đậm; cạnh nằm giữa một mặt phẳng liền (sàn, tường) vẽ rất mờ để vẫn
-     * đoán được mặt phẳng mà không thành lưới ô vuông chói mắt.
-     */
+    /** Khối đầy: chỉ cạnh lồi (hai mặt kề đều lộ ra ngoài) mới có thể là đường bao. */
     private static void fullCubeEdges(ClientWorld world, BlockPos p, Vec3d c, float radius, List<Edge> out) {
         Direction[] dirs = Direction.values();
         for (int i = 0; i < dirs.length; i++) {
             for (int j = i + 1; j < dirs.length; j++) {
                 Direction d1 = dirs[i], d2 = dirs[j];
                 if (d1.getAxis() == d2.getAxis()) continue;
-                boolean e1 = !isFull(world, p.offset(d1));
-                boolean e2 = !isFull(world, p.offset(d2));
-                if (!e1 && !e2) continue;
-                boolean strong;
-                if (e1 && e2) {
-                    strong = true;
-                } else {
-                    Direction open = e1 ? d1 : d2;
-                    Direction closed = e1 ? d2 : d1;
-                    strong = isFull(world, p.offset(closed).offset(open));   // góc lõm
-                }
-                addCubeEdge(p, d1, d2, c, radius, strong, out);
+                if (isFull(world, p.offset(d1)) || isFull(world, p.offset(d2))) continue;
+                addCubeEdge(p, d1, d2, c, radius, out);
             }
         }
     }
 
     /** Cạnh chung của hai mặt {@code d1}, {@code d2} của khối ở {@code p}. */
-    private static void addCubeEdge(BlockPos p, Direction d1, Direction d2, Vec3d c, float radius, boolean strong, List<Edge> out) {
+    private static void addCubeEdge(BlockPos p, Direction d1, Direction d2, Vec3d c, float radius, List<Edge> out) {
         Direction.Axis axis = null;
         for (Direction.Axis a : Direction.Axis.values()) {
             if (a != d1.getAxis() && a != d2.getAxis()) axis = a;
@@ -293,10 +407,10 @@ public final class EchoRenderer {
             hi[k] = v;
         }
         hi[axis.ordinal()] += 1;
-        add(lo[0], lo[1], lo[2], hi[0], hi[1], hi[2], c, radius, strong, out);
+        add(lo[0], lo[1], lo[2], hi[0], hi[1], hi[2], c, radius, false,
+                d1.getOffsetX(), d1.getOffsetY(), d1.getOffsetZ(), d2.getOffsetX(), d2.getOffsetY(), d2.getOffsetZ(), out);
     }
 
-    /** Khối không đầy (bậc thang, rào, giường, bàn...): vẽ đủ 12 cạnh của từng hộp. */
     /**
      * Bảng: hitbox chỉ là một cột vuông, nên dựng lại đúng hình tấm bảng (và cọc nếu là bảng cắm đất) theo model gốc:
      * tấm 24x12x2, cọc 2x14x2 pixel model, thu nhỏ 2/3, xoay theo hướng bảng như SignBlockEntityRenderer.
@@ -313,55 +427,72 @@ public final class EchoRenderer {
         List<double[]> parts = new ArrayList<>();
         parts.add(new double[]{-12, 12, 2, 14, -1, 1});
         if (!wall) parts.add(new double[]{-1, 1, -12, 2, -1, 1});
+        // Trục x, z của bảng sau khi xoay
+        double[] ux = {cos, 0, -sin}, uz = {sin, 0, cos};
         for (double[] b : parts) {
             double[][] corner = new double[8][];
-            int n = 0;
-            for (int iy = 0; iy < 2; iy++) {
-                for (int iz = 0; iz < 2; iz++) {
-                    for (int ix = 0; ix < 2; ix++) {
-                        double lx = b[ix] * k, ly = b[2 + iy] * k + dy, lz = b[4 + iz] * k + dz;
-                        double wx = cos * lx + sin * lz, wz = -sin * lx + cos * lz;
-                        corner[n++] = new double[]{p.getX() + 0.5 + wx, p.getY() + 0.5 + ly, p.getZ() + 0.5 + wz};
-                    }
-                }
+            for (int n = 0; n < 8; n++) {
+                int ix = n & 1, iz = (n >> 1) & 1, iy = (n >> 2) & 1;
+                double lx = b[ix] * k, ly = b[2 + iy] * k + dy, lz = b[4 + iz] * k + dz;
+                double wx = cos * lx + sin * lz, wz = -sin * lx + cos * lz;
+                corner[n] = new double[]{p.getX() + 0.5 + wx, p.getY() + 0.5 + ly, p.getZ() + 0.5 + wz};
             }
-            int[][] pairs = {{0, 1}, {2, 3}, {4, 5}, {6, 7}, {0, 2}, {1, 3}, {4, 6}, {5, 7}, {0, 4}, {1, 5}, {2, 6}, {3, 7}};
-            for (int[] pr : pairs) {
-                double[] a = corner[pr[0]], e = corner[pr[1]];
-                add(a[0], a[1], a[2], e[0], e[1], e[2], c, radius, true, out);
-            }
+            boxFromCorners(corner, ux, uz, c, radius, false, out);
         }
     }
 
     private static void shapeEdges(VoxelShape shape, BlockPos p, Vec3d c, float radius, List<Edge> out) {
-        for (Box b : shape.getBoundingBoxes()) boxEdges(b.offset(p), c, radius, out);
-    }
-
-    private static void boxEdges(Box b, Vec3d c, float radius, List<Edge> out) {
-        double x0 = b.minX, y0 = b.minY, z0 = b.minZ, x1 = b.maxX, y1 = b.maxY, z1 = b.maxZ;
-        for (double y : new double[]{y0, y1}) {
-            add(x0, y, z0, x1, y, z0, c, radius, true, out);
-            add(x0, y, z1, x1, y, z1, c, radius, true, out);
-            add(x0, y, z0, x0, y, z1, c, radius, true, out);
-            add(x1, y, z0, x1, y, z1, c, radius, true, out);
+        for (Box b : shape.getBoundingBoxes()) {
+            Box w = b.offset(p);
+            double[][] corner = new double[8][];
+            for (int n = 0; n < 8; n++) {
+                corner[n] = new double[]{(n & 1) == 0 ? w.minX : w.maxX, ((n >> 2) & 1) == 0 ? w.minY : w.maxY, ((n >> 1) & 1) == 0 ? w.minZ : w.maxZ};
+            }
+            boxFromCorners(corner, new double[]{1, 0, 0}, new double[]{0, 0, 1}, c, radius, false, out);
         }
-        add(x0, y0, z0, x0, y1, z0, c, radius, true, out);
-        add(x1, y0, z0, x1, y1, z0, c, radius, true, out);
-        add(x0, y0, z1, x0, y1, z1, c, radius, true, out);
-        add(x1, y0, z1, x1, y1, z1, c, radius, true, out);
+    }
+
+    /**
+     * 12 cạnh của một hộp cho bởi 8 góc (bit 0 = x, bit 1 = z, bit 2 = y) và hai trục ngang {@code ux}, {@code uz} của hộp.
+     * Mỗi cạnh mang pháp tuyến hai mặt kề: cạnh dọc trục nào thì hai mặt là của hai trục còn lại, dấu theo bit của góc.
+     */
+    private static void boxFromCorners(double[][] corner, double[] ux, double[] uz, Vec3d c, float radius, boolean figure, List<Edge> out) {
+        double[] uy = {0, 1, 0};
+        double[][] axes = {ux, uz, uy};
+        for (int a = 0; a < 8; a++) {
+            for (int bit = 0; bit < 3; bit++) {
+                if ((a & (1 << bit)) != 0) continue;
+                int b = a | (1 << bit);
+                double[] n1 = null, n2 = null;
+                for (int other = 0; other < 3; other++) {
+                    if (other == bit) continue;
+                    double sign = (a & (1 << other)) != 0 ? 1 : -1;
+                    double[] ax = axes[other];
+                    double[] n = {ax[0] * sign, ax[1] * sign, ax[2] * sign};
+                    if (n1 == null) n1 = n;
+                    else n2 = n;
+                }
+                double[] p = corner[a], q = corner[b];
+                add(p[0], p[1], p[2], q[0], q[1], q[2], c, radius, figure, n1[0], n1[1], n1[2], n2[0], n2[1], n2[2], out);
+            }
+        }
     }
 
     private static void add(double x1, double y1, double z1, double x2, double y2, double z2, Vec3d c, float radius,
-                            boolean strong, List<Edge> out) {
-        add(x1, y1, z1, x2, y2, z2, c, radius, strong, false, out);
-    }
-
-    private static void add(double x1, double y1, double z1, double x2, double y2, double z2, Vec3d c, float radius,
-                            boolean strong, boolean figure, List<Edge> out) {
+                            boolean figure, double ax, double ay, double az, double bx, double by, double bz, List<Edge> out) {
         double mx = (x1 + x2) / 2 - c.x, my = (y1 + y2) / 2 - c.y, mz = (z1 + z2) / 2 - c.z;
         double d = Math.sqrt(mx * mx + my * my + mz * mz);
         if (d > radius) return;
-        out.add(new Edge((float) x1, (float) y1, (float) z1, (float) x2, (float) y2, (float) z2, (float) d, strong, figure));
+        out.add(new Edge((float) x1, (float) y1, (float) z1, (float) x2, (float) y2, (float) z2, (float) d, figure,
+                (float) ax, (float) ay, (float) az, (float) bx, (float) by, (float) bz));
+    }
+
+    /** Cạnh là đường bao nhìn từ {@code cam}: đúng một trong hai mặt kề quay về phía mắt. */
+    private static boolean silhouette(Edge e, Vec3d cam) {
+        double vx = (e.x1 + e.x2) / 2 - cam.x, vy = (e.y1 + e.y2) / 2 - cam.y, vz = (e.z1 + e.z2) / 2 - cam.z;
+        boolean fa = e.ax * vx + e.ay * vy + e.az * vz < 0;
+        boolean fb = e.bx * vx + e.by * vy + e.bz * vz < 0;
+        return fa != fb;
     }
 
     // ==========================================
@@ -407,30 +538,18 @@ public final class EchoRenderer {
     private static void partEdges(Vec3d base, float yaw, float scale, float[] part, Vec3d c, float radius, List<Edge> out) {
         float s = scale / 16f;
         float hx = part[2] / 2, hz = part[4] / 2;
-        float[][] corners = new float[8][3];
-        int k = 0;
-        for (int iy = 0; iy < 2; iy++) {
-            for (int iz = 0; iz < 2; iz++) {
-                for (int ix = 0; ix < 2; ix++) {
-                    float lx = part[0] + (ix == 0 ? -hx : hx);
-                    float lz = part[6] + (iz == 0 ? -hz : hz);
-                    float ly = part[1] + (iy == 0 ? 0 : part[3]);
-                    // Model nhìn về +z khi yaw = 0; xoay quanh trục đứng theo yaw của Minecraft
-                    float cos = (float) Math.cos(yaw), sin = (float) Math.sin(yaw);
-                    float wx = lx * cos - lz * sin;
-                    float wz = lx * sin + lz * cos;
-                    corners[k][0] = (float) base.x + wx * s;
-                    corners[k][1] = (float) base.y + ly * s;
-                    corners[k][2] = (float) base.z + wz * s;
-                    k++;
-                }
-            }
+        // Model nhìn về +z khi yaw = 0; xoay quanh trục đứng theo yaw của Minecraft
+        double cos = Math.cos(yaw), sin = Math.sin(yaw);
+        double[][] corner = new double[8][];
+        for (int n = 0; n < 8; n++) {
+            int ix = n & 1, iz = (n >> 1) & 1, iy = (n >> 2) & 1;
+            double lx = part[0] + (ix == 0 ? -hx : hx);
+            double lz = part[6] + (iz == 0 ? -hz : hz);
+            double ly = part[1] + (iy == 0 ? 0 : part[3]);
+            double wx = lx * cos - lz * sin, wz = lx * sin + lz * cos;
+            corner[n] = new double[]{base.x + wx * s, base.y + ly * s, base.z + wz * s};
         }
-        int[][] pairs = {{0, 1}, {2, 3}, {4, 5}, {6, 7}, {0, 2}, {1, 3}, {4, 6}, {5, 7}, {0, 4}, {1, 5}, {2, 6}, {3, 7}};
-        for (int[] pr : pairs) {
-            float[] a = corners[pr[0]], b = corners[pr[1]];
-            add(a[0], a[1], a[2], b[0], b[1], b[2], c, radius, true, true, out);
-        }
+        boxFromCorners(corner, new double[]{cos, 0, sin}, new double[]{-sin, 0, cos}, c, radius, true, out);
     }
 
     // ==========================================
@@ -441,6 +560,7 @@ public final class EchoRenderer {
         MinecraftClient client = MinecraftClient.getInstance();
         if (!inFloor(client)) {
             PINGS.clear();
+            finale = false;
             return;
         }
         if (PINGS.isEmpty() || context.consumers() == null || context.matrixStack() == null) return;
@@ -452,7 +572,14 @@ public final class EchoRenderer {
         Matrix3f normal = matrices.peek().getNormalMatrix();
 
         for (Iterator<Ping> it = PINGS.iterator(); it.hasNext(); ) {
-            if (t - it.next().start > MAX_RADIUS / SPEED + LIFE) it.remove();
+            Ping old = it.next();
+            if (t - old.start > Math.max(MAX_RADIUS / SPEED + LIFE, old.life())) it.remove();
+        }
+        // Vòng thu vào: bán kính hiện tại; nét của các sóng cũ nằm ngoài vòng này thì tắt
+        double front = Double.MAX_VALUE;
+        if (collapse != null) {
+            if (!PINGS.contains(collapse)) collapse = null;
+            else front = Math.max(0.0, collapse.radius - (t - collapse.start) * collapse.speed);
         }
 
         // 1. Texture thật ngay dải sóng
@@ -460,9 +587,9 @@ public final class EchoRenderer {
         for (Ping ping : PINGS) {
             double age = t - ping.start;
             for (Face f : ping.faces) {
-                double since = age - f.dist / SPEED;
+                double since = age - ping.arrival(f.dist);
                 // Gần tâm tiếng động: texture rõ và đọng lâu; xa dần thì nhạt và tắt sớm; ngoài DETAIL bán kính chỉ còn nét viền
-                double k = 1.0 - f.dist / (ping.radius * DETAIL);
+                double k = 1.0 - f.dist / ping.detail;
                 if (k <= 0) continue;
                 double life = TEXTURE * (0.35 + 1.4 * k);
                 if (since < 0 || since > life) continue;
@@ -476,7 +603,8 @@ public final class EchoRenderer {
         for (Ping ping : PINGS) {
             double age = t - ping.start;
             for (Figure fig : ping.figures) {
-                double since = age - fig.dist / SPEED;
+                if (fig.dist > 22) continue;
+                double since = age - ping.arrival(fig.dist);
                 double life = TEXTURE * 2.0;
                 if (since < 0 || since > life) continue;
                 Entity entity = client.world.getEntityById(fig.id);
@@ -495,15 +623,20 @@ public final class EchoRenderer {
         VertexConsumer lines = context.consumers().getBuffer(RenderLayer.getDebugQuads());
         for (Ping ping : PINGS) {
             double age = t - ping.start;
-            for (Edge e : ping.edges) {
-                double since = age - e.dist / SPEED;
+            boolean older = collapse != null && ping != collapse && ping.start < collapse.start;
+            boolean[] sil = ping.silhouettes(cam);
+            for (int i = 0; i < sil.length; i++) {
+                if (!sil[i]) continue;
+                Edge e = ping.edges.get(i);
+                if (older && e.dist > front) continue;
+                double since = age - ping.arrival(e.dist);
                 if (since < 0) continue;
-                double a = since < FLASH ? 1.0 : Math.exp(-(since - FLASH) / FADE);
+                if (since > FLASH + ping.fade * CUT) continue;
+                double a = since < FLASH ? 1.0 : Math.exp(-(since - FLASH) / ping.fade);
                 // Người thì sáng rõ và nét dày hơn, không nhạt theo khoảng cách: phải nhận ra ngay dáng ai
                 if (!e.figure) a *= 1.0 - 0.55 * (e.dist / ping.radius);
-                if (!e.strong) a *= WEAK;
-                if (a < 0.02) continue;
-                strip(lines, m, cam, e, e.figure ? 0.0045f : e.strong ? 0.0025f : 0.0016f, ping.r, ping.g, ping.b, (float) Math.min(1.0, a));
+                if (a < MIN_ALPHA) continue;
+                strip(lines, m, cam, e, e.figure ? 0.0045f : 0.0025f, ping.r, ping.g, ping.b, (float) Math.min(1.0, a));
             }
         }
 
@@ -512,7 +645,7 @@ public final class EchoRenderer {
         for (Ping ping : PINGS) {
             double age = t - ping.start;
             for (SignEcho s : ping.signs) {
-                double since = age - s.dist / SPEED;
+                double since = age - ping.arrival(s.dist);
                 if (since < 0) continue;
                 double a = since < FLASH ? 1.0 : Math.exp(-(since - FLASH) / (FADE * 1.6));
                 if (a < 0.05) continue;
@@ -562,7 +695,7 @@ public final class EchoRenderer {
         float scale = 0.015625f * 0.6666667f * 1.2f;   // to hơn bản gốc một chút cho dễ đọc trong bóng tối
         matrices.scale(scale, -scale, scale);
         int alpha = Math.max(8, (int) (a * 255)) << 24;
-        int color = alpha | 0xFDFDFD;   // r = g = b = 253: dấu tiếng vọng
+        int color = alpha | 0xFFFDFD;   // r = 255, g = b = 253: dấu tiếng vọng
         for (int i = 0; i < 4; i++) {
             OrderedText line = s.lines[i].asOrderedText();
             float x = -font.getWidth(line) / 2f;

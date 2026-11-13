@@ -33,7 +33,12 @@ public class SamsaraSounds {
     public static final Identifier REVERSED_FAMILIAR_ID = new Identifier("samsara", "ambient.reversed_familiar");
     public static final SoundEvent REVERSED_FAMILIAR = SoundEvent.of(REVERSED_FAMILIAR_ID);
 
+    /** Tầng 3 "Trốn tìm": tiếng đứa em cười khúc khích từ chỗ trốn (7 đoạn ngắn, mono để nghe ra hướng). */
+    public static final Identifier EM_CUOI_ID = new Identifier("samsara", "tron_tim.cuoi");
+    public static final SoundEvent EM_CUOI = SoundEvent.of(EM_CUOI_ID);
+
     public static void registerSounds() {
+        Registry.register(Registries.SOUND_EVENT, EM_CUOI_ID, EM_CUOI);
         Registry.register(Registries.SOUND_EVENT, DEN_HONG_ZAP_ID, DEN_HONG_ZAP);
         Registry.register(Registries.SOUND_EVENT, DEN_CHOP_TICK_ID, DEN_CHOP_TICK);
         Registry.register(Registries.SOUND_EVENT, REVERSED_FAMILIAR_ID, REVERSED_FAMILIAR);
