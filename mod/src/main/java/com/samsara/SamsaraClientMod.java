@@ -108,6 +108,7 @@ public class SamsaraClientMod implements ClientModInitializer {
         com.samsara.client.tangduoi.LoiDiNhapAngel.register();
         com.samsara.client.trontim.EchoRenderer.register();
         com.samsara.client.demdautien.DemDauTienClient.register();
+        com.samsara.client.demdautien.DemDauTienFallback.register();
 
         // Phantom qua ống kính máy quay: "Tàn Hồn Phantom" (mắt thường vẫn thấy Phantom vanilla)
         EntityRendererRegistry.register(net.minecraft.entity.EntityType.PHANTOM, com.samsara.entity.client.SoulPhantomRenderer::new);

@@ -17,12 +17,17 @@ public final class TronTimFallback {
     public static boolean active() {
         MinecraftClient client = MinecraftClient.getInstance();
         if (!EchoRenderer.inFloor(client)) return false;
+        return !samsaraShadersOn();
+    }
+
+    /** Shaderpack Samsara có đang chạy không (hỏi Iris mỗi giây một lần). Tầng 4 cũng dùng để biết khi nào cần bản dự phòng. */
+    public static boolean samsaraShadersOn() {
         long now = System.currentTimeMillis();
         if (now - checkedAt > 1000) {
             checkedAt = now;
             samsaraShaders = samsaraPackInUse();
         }
-        return !samsaraShaders;
+        return samsaraShaders;
     }
 
     /** Hỏi Iris (qua reflection, vì Iris không bắt buộc) xem có đang bật pack Samsara không. */
