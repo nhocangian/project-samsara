@@ -1,6 +1,6 @@
 #version 120
 
-/* DRAWBUFFERS:0 */
+/* DRAWBUFFERS:05 */
 
 uniform sampler2D tex;
 uniform sampler2D lightmap;
@@ -17,6 +17,7 @@ varying vec2 lmCoord;
 varying vec3 normal;
 varying vec4 color;
 varying vec3 viewPos;
+varying float glitchMark;
 
 void main() {
     vec4 albedo = texture2D(tex, texCoord);
@@ -75,4 +76,6 @@ void main() {
     }
 
     gl_FragData[0] = vec4(finalRgb, albedo.a);
+    // colortex5.r = đồ đạc phòng ngủ Bến Đò: final.fsh nhoè màu glitch ở đó
+    gl_FragData[1] = vec4(glitchMark, 0.0, 0.0, 1.0);
 }

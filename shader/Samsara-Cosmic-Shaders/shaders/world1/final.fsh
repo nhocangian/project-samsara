@@ -11,6 +11,8 @@ const float wetnessHalflife = 80.0;
 const float drynessHalflife = 20.0;
 
 uniform sampler2D colortex0;
+uniform sampler2D colortex5;
+const vec4 colortex5ClearColor = vec4(0.0, 0.0, 0.0, 0.0);
 uniform float frameTimeCounter;
 uniform float darknessFactor;
 uniform float blindness;
@@ -27,6 +29,14 @@ float hash(vec2 p) {
     return fract(p.x * p.y);
 }
 
+#include "/lib/glitch_split.glsl"
+
+// Đồ đạc phòng ngủ Bến Đò (colortex5.r, ghi từ gbuffers_terrain / block / entities): nhoè màu nhẹ, giật mạnh theo đợt
+vec3 dockSample(vec2 uv) {
+    float t = frameTimeCounter;
+    return glitchSplit(colortex0, colortex5, uv, t, 0.45 + 0.75 * glitchBurst(t));
+}
+
 void main() {
     bool isCamcorderAiming = (heldItemId == 1 || heldItemId2 == 1);
     bool isHoldingArtifact = isCamcorderAiming || (heldItemId == 2 || heldItemId2 == 2);
@@ -37,7 +47,7 @@ void main() {
 
     // Kiểm tra tối ưu hóa: Khi không có sự kiện ARG nào và không ở dưới nước, xuất ảnh trực tiếp 100% không tốn hiệu năng
     if (!isHoldingArtifact && glitchIntensity <= 0.001 && desyncIntensity <= 0.001 && isEyeInWater != 1) {
-        gl_FragData[0] = vec4(texture2D(colortex0, texCoord).rgb + eyeGlow(texCoord), 1.0);
+        gl_FragData[0] = vec4(dockSample(texCoord) + eyeGlow(texCoord), 1.0);
         return;
     }
 
@@ -101,9 +111,9 @@ void main() {
         blueOffset -= toCenter * radialDisp;
     }
 
-    float r = texture2D(colortex0, uv + redOffset).r;
-    float g = texture2D(colortex0, uv).g;
-    float b = texture2D(colortex0, uv + blueOffset).b;
+    float r = dockSample(uv + redOffset).r;
+    float g = dockSample(uv).g;
+    float b = dockSample(uv + blueOffset).b;
     vec3 sceneCol = vec3(r, g, b);
 
     // Radial ghosting blur khi xuất hồn

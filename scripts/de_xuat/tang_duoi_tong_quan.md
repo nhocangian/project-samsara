@@ -18,8 +18,13 @@ Bản dựng thay đoạn dưới bằng trốn tìm trong bóng tối, nhìn b�
 *Bản tóm tắt cũ:*
 Nhà do đứa em xây: vụng về, bảng hiệu sai chính tả, hai cái giường, một cái vẫn được dọn sẵn. Đồ đạc to gấp đôi, người chơi thấy mình như đứa trẻ. Đứa em đếm từ 1 đến 100 trong chat; phải tìm đủ ba món đồ nó giấu theo mấy tấm bảng. Hết giờ: *"anh chậm quá. lại nha"* và đếm lại. Tìm đủ thì phòng ngủ mở. Qua máy quay, kẻ ngồi trốn trong góc mặc skin của chính người chơi. Gài cho câu của `<System>` ở Video 9: người em trai đang đợi ở nhà cũng là cậu.
 
-## Tầng 4. Alpha 1.2.6 2010: "Đêm đầu tiên" (phải giữ)
+## Tầng 4. Alpha 1.2.6 2010: "Đêm đầu tiên" (ĐÃ DỰNG, 14/11/2026)
+Bản dựng: xem `tang_duoi_04_dem_dau_tien.md`.
+
+*Bản tóm tắt cũ:*
 Mất sạch túi đồ và máy quay (đây là ngoại lệ duy nhất của quy tắc máy quay không vứt được; cần thêm vào `CamcorderKeepSystem`). Một mảnh đất nhỏ, Khối Chưa Tải ăn dần từ ngoài vào, vài cái cây và đúng ba con cừu quay mặt về phía người chơi. Bản Alpha chưa có giường (Beta 1.3 mới có): người chơi tự chặt cây, lấy len, tự chế giường, vật phẩm hiện tooltip *"chưa có trong phiên bản này"*. Tự tay làm ra thứ bị cấm từ đầu, ngủ, rồi tỉnh dậy ở Bến Đò.
 
+**Bản thử 13/11/2026:** mảnh đất nhỏ thành một hòn đảo Alpha lớn hơn, rải những **vết rách** (kiểu "tear" của Bioshock Infinite, theo clip mẫu anh gửi): một góc địa hình bị cắt, mép răng cưa nhảy liên tục, bên trong lộ ra bản 1.20.1 (cây anh đào, góc nhà gạch bùn có đèn lồng, bụi đỗ quyên). Tạm thời không bước vào vết rách được. Chi tiết kỹ thuật ở `HANDOFF.md`.
+
 ## Khi dựng tầng sau
-Giường cuối tầng 1 dẫn vào tầng 2, giường tầng 2 dẫn vào tầng 3, giường tầng 3 hiện dẫn về Bến Đò (`TronTimRuntime.tickSleep`); đổi sang đầu tầng 4 khi có.
+Giường cuối tầng 1 dẫn vào tầng 2, giường tầng 2 dẫn vào tầng 3, giường tầng 3 dẫn vào tầng 4, giường tầng 4 về Bến Đò.

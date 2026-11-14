@@ -468,8 +468,8 @@ public final class TronTimRuntime {
                 player.removeStatusEffect(StatusEffects.JUMP_BOOST);
                 STATES.remove(player.getUuid());
                 removeEm(world);
-                EggCycleState.get(player.getServer()).markTangDuoiCleared(player.getUuid());
-                WombTravel.teleportToTheWomb(player);
+                // Sang tầng 4 "Đêm đầu tiên" (tầng cuối của Tầng Dưới; hết tầng đó mới tính là đã đi hết)
+                com.samsara.system.demdautien.DemDauTienRuntime.enter(player);
             }
             default -> { }
         }

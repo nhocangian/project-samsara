@@ -33,6 +33,12 @@ public class SamsaraDimensions {
             new Identifier("samsara", "tron_tim")
     );
 
+    /** Tầng Dưới, tầng 4 "Đêm đầu tiên": đảo bản Alpha với những vết rách lộ bản 1.20.1 (shader world6). */
+    public static final RegistryKey<World> DEM_DAU_TIEN_WORLD_KEY = RegistryKey.of(
+            RegistryKeys.WORLD,
+            new Identifier("samsara", "dem_dau_tien")
+    );
+
     public static final RegistryKey<World> NAM_MEMORY_WORLD_KEY = RegistryKey.of(
             RegistryKeys.WORLD,
             NAM_MEMORY_ID

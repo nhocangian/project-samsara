@@ -23,6 +23,8 @@ public class CamcorderGiftSystem {
         // Thế giới đã ở Giai đoạn 2+ (vd. save cũ) mà người chơi chưa nhận máy quay
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> server.execute(() -> {
             ServerPlayerEntity player = handler.getPlayer();
+            // Tầng 4 "Đêm đầu tiên" cố ý cất máy quay đi: không tặng lại ở đó
+            if (com.samsara.system.demdautien.DemDauTienClock.isFloor(player.getWorld())) return;
             if (EggCycleState.get(server).getStage() >= 2) {
                 tryGift(player, "samsara.camcorder_gift_system.system_cau_quay_lai");
             }

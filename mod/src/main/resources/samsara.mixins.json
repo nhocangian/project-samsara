@@ -6,7 +6,11 @@
   "mixins": [
     "LivingEntityDamageMixin",
     "CropBlockMixin",
-    "LevelPropertiesAccessor"
+    "LevelPropertiesAccessor",
+    "CraftingScreenHandlerAccessor",
+    "CraftingScreenHandlerMixin",
+    "BedBlockMixin",
+    "DemDauTienTimeMixin"
   ],
   "client": [
     "ClientPlayerEntityMixin",
@@ -38,7 +42,9 @@
     "EchoSoundMixin",
     "TronTimToastMixin",
     "TronTimDarkMixin",
-    "TronTimSkyMixin"
+    "TronTimSkyMixin",
+    "HandledScreenAccessor",
+    "SheepWoolFeatureRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

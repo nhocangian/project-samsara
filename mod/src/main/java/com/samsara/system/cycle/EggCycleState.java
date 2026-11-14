@@ -53,6 +53,8 @@ public class EggCycleState extends PersistentState {
     private final Set<UUID> endingSeen = new HashSet<>();
     /** Đã đi hết Tầng Dưới: vết rách dưới hầm nhà Nam dẫn thẳng tới The Womb. */
     private final Set<UUID> tangDuoiCleared = new HashSet<>();
+    /** Tầng 4 "Đêm đầu tiên" cất túi đồ (cả máy quay) lúc vào; ra khỏi tầng thì trả lại. */
+    private final java.util.Map<UUID, NbtList> demDauTienStash = new java.util.HashMap<>();
 
     public static EggCycleState get(MinecraftServer server) {
         PersistentStateManager psm = server.getOverworld().getPersistentStateManager();
@@ -168,6 +170,15 @@ public class EggCycleState extends PersistentState {
     public boolean hasClearedTangDuoi(UUID uuid) { return tangDuoiCleared.contains(uuid); }
     public void markTangDuoiCleared(UUID uuid) { if (tangDuoiCleared.add(uuid)) markDirty(); }
     public void clearTangDuoiCleared(UUID uuid) { if (tangDuoiCleared.remove(uuid)) markDirty(); }
+
+    public boolean hasDemDauTienStash(UUID uuid) { return demDauTienStash.containsKey(uuid); }
+    public void stashDemDauTien(UUID uuid, NbtList inventory) { demDauTienStash.put(uuid, inventory); markDirty(); }
+    /** Lấy túi đồ đã cất ra (và xoá khỏi kho); null nếu không có. */
+    public NbtList takeDemDauTienStash(UUID uuid) {
+        NbtList list = demDauTienStash.remove(uuid);
+        if (list != null) markDirty();
+        return list;
+    }
     public void markEndingSeen(UUID uuid) { if (endingSeen.add(uuid)) markDirty(); }
     public void clearEndingSeen(UUID uuid) { if (endingSeen.remove(uuid)) markDirty(); }
 
@@ -188,6 +199,13 @@ public class EggCycleState extends PersistentState {
         if (nbt.contains("EggAltarPos")) s.eggAltarPos = net.minecraft.util.math.BlockPos.fromLong(nbt.getLong("EggAltarPos"));
         readUuids(nbt, "EndingSeen", s.endingSeen);
         readUuids(nbt, "TangDuoiCleared", s.tangDuoiCleared);
+        NbtCompound stash = nbt.getCompound("DemDauTienStash");
+        for (String key : stash.getKeys()) {
+            try {
+                s.demDauTienStash.put(UUID.fromString(key), stash.getList(key, NbtElement.COMPOUND_TYPE));
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
         for (net.minecraft.nbt.NbtElement e : nbt.getList("UiFlags", NbtElement.STRING_TYPE)) s.uiFlags.add(e.asString());
         if (nbt.contains("OriginalLevelName")) s.originalLevelName = nbt.getString("OriginalLevelName");
         if (nbt.contains("RouteOrigin")) s.routeOrigin = net.minecraft.util.math.BlockPos.fromLong(nbt.getLong("RouteOrigin"));
@@ -207,6 +225,9 @@ public class EggCycleState extends PersistentState {
         if (eggAltarPos != null) nbt.putLong("EggAltarPos", eggAltarPos.asLong());
         writeUuids(nbt, "EndingSeen", endingSeen);
         writeUuids(nbt, "TangDuoiCleared", tangDuoiCleared);
+        NbtCompound stash = new NbtCompound();
+        demDauTienStash.forEach((uuid, list) -> stash.put(uuid.toString(), list));
+        nbt.put("DemDauTienStash", stash);
         if (routeOrigin != null) nbt.putLong("RouteOrigin", routeOrigin.asLong());
         NbtList flags = new NbtList();
         for (String f : uiFlags) flags.add(NbtString.of(f));

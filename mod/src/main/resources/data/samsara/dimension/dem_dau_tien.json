@@ -1,0 +1,15 @@
+{
+  "type": "samsara:dem_dau_tien",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "samsara:dem_dau_tien",
+      "features": false,
+      "lakes": false,
+      "layers": [
+        { "block": "minecraft:air", "height": 1 }
+      ],
+      "structure_overrides": []
+    }
+  }
+}

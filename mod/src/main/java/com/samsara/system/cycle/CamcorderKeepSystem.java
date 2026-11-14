@@ -11,7 +11,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 /**
  * Máy quay không vứt được: từ lúc được tặng, ném ra đất hay chết thì vật phẩm trên đất biến mất và máy quay trở lại túi;
- * cất vào rương thì nó tự về túi. (Tầng 4 của Tầng Dưới sẽ chủ động lấy máy quay đi: khi dựng tầng đó cần thêm ngoại lệ ở đây.)
+ * cất vào rương thì nó tự về túi. Ngoại lệ duy nhất: tầng 4 "Đêm đầu tiên" của Tầng Dưới cất máy quay đi cùng túi đồ
+ * ({@code DemDauTienRuntime}), ra khỏi tầng mới trả lại.
  */
 public final class CamcorderKeepSystem {
     private CamcorderKeepSystem() {}
@@ -26,6 +27,7 @@ public final class CamcorderKeepSystem {
             if (server.getTicks() % INTERVAL != 0) return;
             EggCycleState state = EggCycleState.get(server);
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+                if (com.samsara.system.demdautien.DemDauTienClock.isFloor(player.getWorld())) continue;
                 if (player.isAlive() && state.wasCamcorderGiven(player.getUuid())) keep(player);
             }
         });

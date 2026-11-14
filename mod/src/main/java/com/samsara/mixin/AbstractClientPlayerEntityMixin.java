@@ -21,6 +21,13 @@ public abstract class AbstractClientPlayerEntityMixin {
             cir.setReturnValue(com.samsara.client.trontim.EchoRenderer.inFinale() ? 1.12f : 1.0f);
             return;
         }
+        // Tầng 4 "Đêm đầu tiên": cảnh cuối cũng khoá chân bằng hiệu ứng chậm; giữ góc nhìn, không để zoom vào
+        net.minecraft.client.MinecraftClient mc = net.minecraft.client.MinecraftClient.getInstance();
+        if (mc.player != null && com.samsara.system.demdautien.DemDauTienClock.isFloor(mc.world)
+                && mc.player.hasStatusEffect(net.minecraft.entity.effect.StatusEffects.SLOWNESS)) {
+            cir.setReturnValue(1.0f);
+            return;
+        }
         float progress = CamcorderClientManager.getAimProgress();
         if (progress > 0.001f) {
             // Thu phóng mượt mà từ 1.0x xuống 0.74x (zoom quang học x1.35)

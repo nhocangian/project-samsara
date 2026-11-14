@@ -179,6 +179,22 @@ public class SamsaraTestCommands {
 
                         // Test: Tầng Dưới, tầng 2 "Lối đi nháp": dựng lại, cầm máy quay, đưa tới phòng / cầu / đảo 1
                         // Test: Tầng Dưới, tầng 3 "Trốn tìm": dựng lại căn nhà, vào từ đầu / nhảy tới vòng n / phòng ngủ đã mở / ngủ
+                        // Test: Tầng Dưới, tầng 4 "Đêm đầu tiên": vào tầng từ đầu (cất túi đồ) / nhảy tới sát giờ ngủ / đưa đồ chế giường
+                        .then(CommandManager.literal("dem_dau_tien").executes(ctx -> {
+                            if (ctx.getSource().getPlayer() == null) return 0;
+                            com.samsara.system.demdautien.DemDauTienRuntime.enter(ctx.getSource().getPlayer());
+                            return 1;
+                        })
+                                .then(CommandManager.literal("dem").executes(ctx -> {
+                                    if (ctx.getSource().getPlayer() == null) return 0;
+                                    com.samsara.system.demdautien.DemDauTienRuntime.testNight(ctx.getSource().getPlayer());
+                                    return 1;
+                                }))
+                                .then(CommandManager.literal("do").executes(ctx -> {
+                                    if (ctx.getSource().getPlayer() == null) return 0;
+                                    com.samsara.system.demdautien.DemDauTienRuntime.testItems(ctx.getSource().getPlayer());
+                                    return 1;
+                                })))
                         .then(CommandManager.literal("tron_tim").executes(ctx -> {
                             if (ctx.getSource().getPlayer() == null) return 0;
                             com.samsara.system.trontim.TronTimRuntime.enter(ctx.getSource().getPlayer());

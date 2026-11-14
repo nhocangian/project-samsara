@@ -108,6 +108,12 @@ public final class ScriptedShots {
                     client.interactionManager.interactBlock(client.player, net.minecraft.util.Hand.MAIN_HAND, hit);
                 }
             }
+            case "attack" -> {
+                // Đánh thực thể đang nhìn (vd. cừu ở tầng 4)
+                if (client.crosshairTarget instanceof net.minecraft.util.hit.EntityHitResult hit && client.interactionManager != null) {
+                    client.interactionManager.attackEntity(client.player, hit.getEntity());
+                }
+            }
             case "shaders" -> {
                 // Bật / tắt shaderpack qua Iris (để thử phương án dự phòng khi không có shader)
                 try {
