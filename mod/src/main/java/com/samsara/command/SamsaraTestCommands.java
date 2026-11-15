@@ -207,6 +207,13 @@ public class SamsaraTestCommands {
                             ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §a" + n + " bông hướng dương quay về phía bạn (quay đi 2 giây thì về lại)."), false);
                             return 1;
                         }))
+                        // Test: cắm ngay tấm biển mang tên bạn 6 khối trước mặt
+                        .then(CommandManager.literal("self_sign").executes(ctx -> {
+                            if (ctx.getSource().getPlayer() == null) return 0;
+                            boolean ok = com.samsara.system.overworld.SelfSign.testNow(ctx.getSource().getPlayer());
+                            if (!ok) ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §cTrước mặt không có chỗ đất trống để cắm biển."), false);
+                            return ok ? 1 : 0;
+                        }))
                         .then(CommandManager.literal("animal_stare").executes(ctx -> {
                             if (ctx.getSource().getPlayer() == null) return 0;
                             int n = com.samsara.system.overworld.AnimalStare.testNow(ctx.getSource().getPlayer());

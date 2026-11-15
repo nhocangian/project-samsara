@@ -55,6 +55,7 @@ public class SamsaraMod implements ModInitializer {
         com.samsara.system.overworld.NamTraces.register();
         com.samsara.system.overworld.OverworldSunflowerGaze.register();
         com.samsara.system.overworld.AnimalStare.register();
+        com.samsara.system.overworld.SelfSign.register();
 
         // ARG Ciphers & Metaphysical Enigmas
         com.samsara.system.arg.MorseAudioSignalSystem.register();
