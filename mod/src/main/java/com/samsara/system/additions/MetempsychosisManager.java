@@ -14,9 +14,8 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Creative Addition 2: Metempsychosis (Reincarnation Memory Logs).
- * Persists mortality, first deaths, and reincarnation cycles within world NBT.
- * Recontextualizes respawning not as game mechanics, but as continuous rebirth cycles.
+ * Đếm lặng lẽ số lần chết và chỗ chết đầu tiên của mỗi người chơi (lưu trong world). Không hiện gì cho người chơi;
+ * dữ liệu để dành cho câu đố / bảng F3 về sau.
  */
 public class MetempsychosisManager extends PersistentState {
     public static final String KEY = "samsara_metempsychosis";
@@ -57,16 +56,7 @@ public class MetempsychosisManager extends PersistentState {
             }
         });
 
-        // Upon rebirth / respawn
-        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
-            MetempsychosisManager manager = get(newPlayer.getServerWorld());
-            int cycle = manager.incarnationCycles.getOrDefault(newPlayer.getUuid(), 1);
-
-            newPlayer.sendMessage(
-                    Text.translatable("samsara.metempsychosis.reborn", cycle),
-                    true
-            );
-        });
+        // Hồi sinh: không báo gì (người dùng bỏ dòng "[Chu kỳ #n] Thân xác tái tạo"); chỉ lặng lẽ đếm số lần chết
     }
 
     public BlockPos getFirstDeathCoordinates(UUID uuid) {

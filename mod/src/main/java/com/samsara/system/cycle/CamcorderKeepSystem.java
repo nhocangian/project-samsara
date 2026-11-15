@@ -21,7 +21,7 @@ public final class CamcorderKeepSystem {
 
     public static void register() {
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (entity instanceof ItemEntity item && item.getStack().isOf(SamsaraItems.FRACTURED_SLATE)) item.discard();
+            if (entity instanceof ItemEntity item && item.getStack().isOf(SamsaraItems.CAMCORDER)) item.discard();
         });
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             if (server.getTicks() % INTERVAL != 0) return;
@@ -34,13 +34,13 @@ public final class CamcorderKeepSystem {
     }
 
     private static void keep(ServerPlayerEntity player) {
-        boolean inPlayer = player.getInventory().containsAny(s -> s.isOf(SamsaraItems.FRACTURED_SLATE))
-                || player.currentScreenHandler.getCursorStack().isOf(SamsaraItems.FRACTURED_SLATE);
+        boolean inPlayer = player.getInventory().containsAny(s -> s.isOf(SamsaraItems.CAMCORDER))
+                || player.currentScreenHandler.getCursorStack().isOf(SamsaraItems.CAMCORDER);
         if (inPlayer) return;
         // Đang nằm trong một ô của rương đang mở: lấy lại
         ScreenHandler handler = player.currentScreenHandler;
         for (Slot slot : handler.slots) {
-            if (slot.getStack().isOf(SamsaraItems.FRACTURED_SLATE)) slot.setStack(ItemStack.EMPTY);
+            if (slot.getStack().isOf(SamsaraItems.CAMCORDER)) slot.setStack(ItemStack.EMPTY);
         }
         CamcorderGiftSystem.give(player);
     }

@@ -2,7 +2,7 @@ package com.samsara.client;
 
 import com.samsara.entity.EchoDummyEntity;
 import com.samsara.entity.TheWandererEntity;
-import com.samsara.item.FracturedSlateItem;
+import com.samsara.item.CamcorderItem;
 import com.samsara.registry.SamsaraItems;
 import com.samsara.registry.SamsaraSounds;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -25,13 +25,9 @@ import org.lwjgl.glfw.GLFW;
 import java.util.List;
 
 /**
- * Quản lý trạng thái máy quay cầm tay Outlast Camcorder (Fractured Slate):
+ * Quản lý trạng thái máy quay cầm tay (item samsara:camcorder):
  * - Timing chuẩn xác: Nâng máy quay lên mặt trước rồi mới bật kính ngắm và shader VHS.
  * - Hệ thống Pin (Battery System): Tiêu hao pin khi nhìn đêm, phím 'R' thay pin.
- * - Hệ thống Phát lại Băng Ký ức (Memory Tapes Playback - Phím 'B'):
- *   + TAPE 01: Ký ức Bò (Vết cắt vô tội)
- *   + TAPE 02: Ký ức Zombie (Tấm gương thối rữa)
- *   + TAPE 03: Ký ức Enderman (Đôi mắt hư không)
  * - Hệ thống Nhiễu sóng Từ trường khi bóng ma lại gần (Magnetic Proximity Glitch):
  *   + Quét The Wanderer và Echo Dummy trong bán kính 20 blocks.
  *   + Rung giật màn hình, sọc tĩnh điện, rè radio khi ma áp sát.
@@ -47,9 +43,6 @@ public class CamcorderClientManager {
     private static float batteryLevel = 100.0f;
     private static int lowBatteryWarningTimer = 0;
 
-    // Quản lý phát lại băng ký ức (0 = Tắt, 1 = Tape 1, 2 = Tape 2, 3 = Tape 3)
-    private static int activeTape = 0;
-    private static int playbackTicks = 0;
 
     // Cường độ nhiễu sóng từ trường khi bóng ma lại gần (0.0f -> 1.0f)
     private static float ghostProximityStrength = 0.0f;
@@ -66,7 +59,6 @@ public class CamcorderClientManager {
 
     public static KeyBinding nightVisionKey;
     public static KeyBinding reloadKey;
-    public static KeyBinding playbackKey;
 
     public static void init() {
         // Đăng ký phím tắt Night Vision (Mặc định: Phím V)
@@ -82,14 +74,6 @@ public class CamcorderClientManager {
                 "key.samsara.reload_battery",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_R,
-                "key.categories.samsara"
-        ));
-
-        // Đăng ký phím tắt Phát lại Băng Ký ức (Mặc định: Phím B)
-        playbackKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.samsara.tape_playback",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_B,
                 "key.categories.samsara"
         ));
 
@@ -119,10 +103,6 @@ public class CamcorderClientManager {
             } else {
                 aimProgress = Math.max(0.0f, aimProgress - 0.20f);
                 engagedSoundPlayed = false;
-                if (activeTape > 0) {
-                    activeTape = 0;
-                    playbackTicks = 0;
-                }
             }
 
             // Kiểm tra xem người chơi còn đang cầm máy quay trên tay không
@@ -167,22 +147,6 @@ public class CamcorderClientManager {
                 } else {
                     player.sendMessage(Text.translatable("samsara.camcorder_client_manager.ban_can_cam_may"), true);
                 }
-            }
-
-            // =========================================================================
-            // XỬ LÝ PHÍM PHÁT LẠI BĂNG KÝ ỨC (PLAYBACK KEY - 'B')
-            // =========================================================================
-            while (playbackKey.wasPressed()) {
-                if (holding && isFullyAimed()) {
-                    cycleTapePlayback(player);
-                } else if (holding) {
-                    player.sendMessage(Text.translatable("samsara.camcorder_client_manager.hay_dua_may_quay"), true);
-                }
-            }
-
-            // Cập nhật bộ đếm thời gian phát băng ký ức
-            if (activeTape > 0) {
-                playbackTicks++;
             }
 
             // =========================================================================
@@ -275,14 +239,14 @@ public class CamcorderClientManager {
 
     public static boolean isHoldingCamcorder(PlayerEntity player) {
         if (player == null) return false;
-        return player.getMainHandStack().getItem() instanceof FracturedSlateItem
-                || player.getOffHandStack().getItem() instanceof FracturedSlateItem;
+        return player.getMainHandStack().getItem() instanceof CamcorderItem
+                || player.getOffHandStack().getItem() instanceof CamcorderItem;
     }
 
     public static ItemStack getHeldCamcorder(PlayerEntity player) {
         if (player == null) return ItemStack.EMPTY;
-        if (player.getMainHandStack().getItem() instanceof FracturedSlateItem) return player.getMainHandStack();
-        if (player.getOffHandStack().getItem() instanceof FracturedSlateItem) return player.getOffHandStack();
+        if (player.getMainHandStack().getItem() instanceof CamcorderItem) return player.getMainHandStack();
+        if (player.getOffHandStack().getItem() instanceof CamcorderItem) return player.getOffHandStack();
         return ItemStack.EMPTY;
     }
 
@@ -296,7 +260,7 @@ public class CamcorderClientManager {
 
     public static boolean isAiming(PlayerEntity player, Hand hand) {
         if (!aiming || player == null) return false;
-        return player.getStackInHand(hand).getItem() instanceof FracturedSlateItem;
+        return player.getStackInHand(hand).getItem() instanceof CamcorderItem;
     }
 
     public static float getAimProgress(float tickDelta) {
@@ -339,59 +303,6 @@ public class CamcorderClientManager {
         else a = 1.0f - (t - 0.62f) / 0.38f;
         a = MathHelper.clamp(a, 0.0f, 1.0f);
         return a * a * (3.0f - 2.0f * a);
-    }
-
-    public static int getActiveTape() {
-        return activeTape;
-    }
-
-    public static int getPlaybackTicks() {
-        return playbackTicks;
-    }
-
-    /**
-     * Chuyển đổi giữa các đoạn băng ký ức đã mở khóa:
-     * TAPE 01 -> TAPE 02 -> TAPE 03 -> Tắt Playback (về chế độ quay phim bình thường).
-     */
-    public static void cycleTapePlayback(PlayerEntity player) {
-        ItemStack camcorder = getHeldCamcorder(player);
-        if (camcorder.isEmpty()) return;
-
-        NbtCompound nbt = camcorder.getOrCreateNbt();
-        boolean cow = nbt.getBoolean(FracturedSlateItem.NBT_COW);
-        boolean zombie = nbt.getBoolean(FracturedSlateItem.NBT_ZOMBIE);
-        boolean enderman = nbt.getBoolean(FracturedSlateItem.NBT_ENDERMAN);
-
-        int unlockedCount = (cow ? 1 : 0) + (zombie ? 1 : 0) + (enderman ? 1 : 0);
-        if (unlockedCount == 0) {
-            player.playSound(SoundEvents.BLOCK_DISPENSER_FAIL, 0.7f, 1.6f);
-            player.sendMessage(Text.translatable("samsara.camcorder_client_manager.vcr_error_bang_tu"), true);
-            activeTape = 0;
-            return;
-        }
-
-        // Tìm đoạn băng tiếp theo có sẵn
-        int next = activeTape + 1;
-        while (next <= 3) {
-            if (next == 1 && cow) break;
-            if (next == 2 && zombie) break;
-            if (next == 3 && enderman) break;
-            next++;
-        }
-
-        if (next > 3) {
-            // Tắt phát lại, quay về chế độ REC bình thường
-            activeTape = 0;
-            playbackTicks = 0;
-            player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.6f, 1.2f);
-        } else {
-            activeTape = next;
-            playbackTicks = 0;
-            // Âm thanh cuộn băng VCR rít tua nhanh
-            player.playSound(SoundEvents.BLOCK_DISPENSER_DISPENSE, 0.8f, 1.8f);
-            player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), 0.7f, 0.8f);
-            player.playSound(SamsaraSounds.SLATE_WHISPER, 0.9f, 0.9f);
-        }
     }
 
     public static int getSpareBatteryCount(PlayerEntity player) {
@@ -453,8 +364,6 @@ public class CamcorderClientManager {
                 if (nightVision) {
                     setNightVision(false, player);
                 }
-                activeTape = 0;
-                playbackTicks = 0;
             }
         }
     }
@@ -487,8 +396,6 @@ public class CamcorderClientManager {
         aimProgress = 0.0f;
         prevAimProgress = 0.0f;
         engagedSoundPlayed = false;
-        activeTape = 0;
-        playbackTicks = 0;
         ghostProximityStrength = 0.0f;
         lcdOpen = 0.0f;
         prevLcdOpen = 0.0f;

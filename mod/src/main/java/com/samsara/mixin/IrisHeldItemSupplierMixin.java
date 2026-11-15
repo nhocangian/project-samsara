@@ -20,7 +20,7 @@ public class IrisHeldItemSupplierMixin {
     @Inject(method = "getIntID", at = @At("RETURN"), cancellable = true, require = 0)
     private void samsara$controlHeldItemId(CallbackInfoReturnable<Integer> cir) {
         int originalId = cir.getReturnValue();
-        // ID 1 là samsara:fractured_slate (Outlast Camcorder)
+        // ID 1 là samsara:camcorder (máy quay)
         if (originalId == 1) {
             if (!CamcorderClientManager.isFullyAimed()) {
                 cir.setReturnValue(0);

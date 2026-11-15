@@ -25,6 +25,8 @@ import java.util.List;
  *   aim on|off              ngắm / thôi ngắm máy quay (phải đang cầm máy quay)
  *   shot ten_anh            lưu run/screenshots/ten_anh.png (có shader)
  *   use                     bấm chuột phải vào khối đang nhìn
+ *   slot 37 [0|1] [quick]    bấm ô trong giao diện đang mở (túi đồ, bàn chế tạo); close để đóng
+ *   hotbar 2                chọn ô thanh công cụ
  *   shaders on|off          bật / tắt shaderpack (Iris)
  *   quit                    thoát game
  * </pre>
@@ -82,7 +84,9 @@ public final class ScriptedShots {
             waitTicks--;
             return;
         }
-        if (client.currentScreen != null) client.setScreen(null);
+        // Đóng màn hình đang mở trước mỗi lệnh, trừ giao diện túi đồ / bàn chế tạo (để lệnh slot bấm được; đóng bằng close)
+        if (client.currentScreen != null && !(client.currentScreen instanceof net.minecraft.client.gui.screen.ingame.HandledScreen<?>))
+            client.setScreen(null);
 
         String line = lines.get(index++).trim();
         if (line.isEmpty() || line.startsWith("#")) return;
@@ -123,6 +127,21 @@ public final class ScriptedShots {
                 } catch (Throwable ignored) {
                 }
             }
+            case "slot" -> {
+                // Bấm ô trong giao diện đang mở: slot <số ô> [nút 0|1] [pickup|quick]
+                String[] a = arg.split(" ");
+                if (client.interactionManager != null && client.player.currentScreenHandler != null) {
+                    int button = a.length > 1 ? Integer.parseInt(a[1]) : 0;
+                    net.minecraft.screen.slot.SlotActionType type = a.length > 2 && a[2].equals("quick")
+                            ? net.minecraft.screen.slot.SlotActionType.QUICK_MOVE : net.minecraft.screen.slot.SlotActionType.PICKUP;
+                    client.interactionManager.clickSlot(client.player.currentScreenHandler.syncId, Integer.parseInt(a[0]), button, type, client.player);
+                }
+            }
+            case "close" -> {
+                if (client.player.currentScreenHandler != client.player.playerScreenHandler) client.player.closeHandledScreen();
+                client.setScreen(null);
+            }
+            case "hotbar" -> client.player.getInventory().selectedSlot = Integer.parseInt(arg);
             case "quit" -> client.scheduleStop();
             default -> { }
         }

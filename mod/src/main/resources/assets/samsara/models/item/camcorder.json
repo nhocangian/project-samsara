@@ -1,7 +1,7 @@
 {
   "parent": "builtin/entity",
   "textures": {
-    "particle": "samsara:item/fractured_slate"
+    "particle": "samsara:item/camcorder"
   },
   "display": {
     "thirdperson_righthand": {

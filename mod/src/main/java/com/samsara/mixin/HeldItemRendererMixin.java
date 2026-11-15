@@ -1,7 +1,7 @@
 package com.samsara.mixin;
 
 import com.samsara.client.CamcorderClientManager;
-import com.samsara.item.FracturedSlateItem;
+import com.samsara.item.CamcorderItem;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * (khử góc xoay lúc cầm ở hông). Khi đã áp vào mắt ({@code isFullyAimed}) thì ẩn model, màn hình chuyển sang
  * góc nhìn máy quay với shader VHS.
  *
- * DISPLAY_* phải khớp {@code firstperson_righthand} trong models/item/fractured_slate.json
+ * DISPLAY_* phải khớp {@code firstperson_righthand} trong models/item/camcorder.json
  * (tay trái khai báo giống hệt, Minecraft tự lật trục X).
  */
 @Mixin(HeldItemRenderer.class)
@@ -53,7 +53,7 @@ public abstract class HeldItemRendererMixin {
             int light,
             CallbackInfo ci
     ) {
-        if (!(item.getItem() instanceof FracturedSlateItem)) return;
+        if (!(item.getItem() instanceof CamcorderItem)) return;
         if (!mode.isFirstPerson()) return;
 
         // Đã áp vào mắt: ẩn model, nhìn qua kính ngắm
@@ -105,7 +105,7 @@ public abstract class HeldItemRendererMixin {
     @Inject(method = "resetEquipProgress", at = @At("HEAD"), cancellable = true)
     private void samsara$keepCamcorderSteady(net.minecraft.util.Hand hand, CallbackInfo ci) {
         net.minecraft.client.MinecraftClient client = net.minecraft.client.MinecraftClient.getInstance();
-        if (client.player != null && client.player.getStackInHand(hand).getItem() instanceof FracturedSlateItem) {
+        if (client.player != null && client.player.getStackInHand(hand).getItem() instanceof CamcorderItem) {
             ci.cancel();
         }
     }

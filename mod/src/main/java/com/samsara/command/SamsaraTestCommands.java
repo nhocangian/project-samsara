@@ -180,6 +180,44 @@ public class SamsaraTestCommands {
                         // Test: Tầng Dưới, tầng 2 "Lối đi nháp": dựng lại, cầm máy quay, đưa tới phòng / cầu / đảo 1
                         // Test: Tầng Dưới, tầng 3 "Trốn tìm": dựng lại căn nhà, vào từ đầu / nhảy tới vòng n / phòng ngủ đã mở / ngủ
                         // Test: Tầng Dưới, tầng 4 "Đêm đầu tiên": vào tầng từ đầu (cất túi đồ) / nhảy tới sát giờ ngủ / đưa đồ chế giường
+                        // Test: quái quanh bạn khựng lại nhìn bạn (quái ngập ngừng) / một lượt bước chân dội lại sau lưng
+                        .then(CommandManager.literal("hesitate").executes(ctx -> {
+                            if (ctx.getSource().getPlayer() == null) return 0;
+                            int n = com.samsara.system.cycle.HostileHesitationSystem.testNow(ctx.getSource().getPlayer());
+                            ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §a" + n + " con quái khựng lại 2 giây."), false);
+                            return 1;
+                        }))
+                        // Test: dựng dấu vết người cũ quanh bạn / hoa hướng dương quanh bạn quay về phía bạn / cả đàn con vật nhìn bạn
+                        .then(CommandManager.literal("nam_traces").executes(ctx -> {
+                            if (ctx.getSource().getPlayer() == null) return 0;
+                            com.samsara.system.overworld.NamTraces.build(ctx.getSource().getWorld(), ctx.getSource().getPlayer().getBlockPos());
+                            ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng dấu vết người cũ quanh bạn (lán đất ~15 khối phía đông bắc). Dùng nam_traces xem <0-3> để tới xem."), false);
+                            return 1;
+                        })
+                                .then(CommandManager.literal("xem")
+                                        .then(CommandManager.argument("so", IntegerArgumentType.integer(0, 3)).executes(ctx -> {
+                                            if (ctx.getSource().getPlayer() == null) return 0;
+                                            boolean ok = com.samsara.system.overworld.NamTraces.view(ctx.getSource().getPlayer(), IntegerArgumentType.getInteger(ctx, "so"));
+                                            if (!ok) ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §cChưa dựng hoặc không có chỗ cho dấu vết này."), false);
+                                            return ok ? 1 : 0;
+                                        }))))
+                        .then(CommandManager.literal("sunflower_turn").executes(ctx -> {
+                            if (ctx.getSource().getPlayer() == null) return 0;
+                            int n = com.samsara.system.overworld.OverworldSunflowerGaze.testNow(ctx.getSource().getPlayer());
+                            ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §a" + n + " bông hướng dương quay về phía bạn (quay đi 2 giây thì về lại)."), false);
+                            return 1;
+                        }))
+                        .then(CommandManager.literal("animal_stare").executes(ctx -> {
+                            if (ctx.getSource().getPlayer() == null) return 0;
+                            int n = com.samsara.system.overworld.AnimalStare.testNow(ctx.getSource().getPlayer());
+                            ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §a" + n + " con vật quay lại nhìn bạn."), false);
+                            return 1;
+                        }))
+                        .then(CommandManager.literal("echo_steps").executes(ctx -> {
+                            if (ctx.getSource().getPlayer() == null) return 0;
+                            com.samsara.system.additions.PhantomAudioEchoSystem.testNow(ctx.getSource().getPlayer());
+                            return 1;
+                        }))
                         .then(CommandManager.literal("dem_dau_tien").executes(ctx -> {
                             if (ctx.getSource().getPlayer() == null) return 0;
                             com.samsara.system.demdautien.DemDauTienRuntime.enter(ctx.getSource().getPlayer());
@@ -193,6 +231,16 @@ public class SamsaraTestCommands {
                                 .then(CommandManager.literal("do").executes(ctx -> {
                                     if (ctx.getSource().getPlayer() == null) return 0;
                                     com.samsara.system.demdautien.DemDauTienRuntime.testItems(ctx.getSource().getPlayer());
+                                    return 1;
+                                }))
+                                .then(CommandManager.literal("ban").executes(ctx -> {
+                                    if (ctx.getSource().getPlayer() == null) return 0;
+                                    com.samsara.system.demdautien.DemDauTienRuntime.testSpot(ctx.getSource().getPlayer(), true);
+                                    return 1;
+                                }))
+                                .then(CommandManager.literal("cho_giuong").executes(ctx -> {
+                                    if (ctx.getSource().getPlayer() == null) return 0;
+                                    com.samsara.system.demdautien.DemDauTienRuntime.testSpot(ctx.getSource().getPlayer(), false);
                                     return 1;
                                 })))
                         .then(CommandManager.literal("tron_tim").executes(ctx -> {
@@ -394,8 +442,8 @@ public class SamsaraTestCommands {
         if (player == null) return 0;
         ServerWorld world = player.getServerWorld();
 
-        // 1. Máy quay (Phiến Đá Vỡ Nứt / Fractured Slate - Outlast Camcorder)
-        player.getInventory().insertStack(new ItemStack(SamsaraItems.FRACTURED_SLATE));
+        // 1. Máy quay (samsara:camcorder)
+        player.getInventory().insertStack(new ItemStack(SamsaraItems.CAMCORDER));
         // 2. 4x Pin máy quay
         player.getInventory().insertStack(new ItemStack(SamsaraItems.CAMCORDER_BATTERY, 4));
         // 3. Sách Nhật Ký Chu Kỳ #0 (Palimpsest #0)
@@ -786,9 +834,9 @@ public class SamsaraTestCommands {
     private static int testCamcorderModel(ServerCommandSource source) {
         ServerPlayerEntity player = source.getPlayer();
         if (player == null) return 0;
-        if (!player.getMainHandStack().isOf(SamsaraItems.FRACTURED_SLATE)) {
+        if (!player.getMainHandStack().isOf(SamsaraItems.CAMCORDER)) {
             ItemStack old = player.getMainHandStack().copy();
-            player.setStackInHand(net.minecraft.util.Hand.MAIN_HAND, new ItemStack(SamsaraItems.FRACTURED_SLATE));
+            player.setStackInHand(net.minecraft.util.Hand.MAIN_HAND, new ItemStack(SamsaraItems.CAMCORDER));
             if (!old.isEmpty()) player.getInventory().offerOrDrop(old);
         }
         player.getInventory().offerOrDrop(new ItemStack(SamsaraItems.CAMCORDER_BATTERY, 2));
@@ -915,7 +963,7 @@ public class SamsaraTestCommands {
         }
         if (mode == 7) {
             EggCycleState.get(source.getServer()).markCamcorderGiven(player.getUuid());
-            player.getInventory().remove(s -> s.isOf(com.samsara.registry.SamsaraItems.FRACTURED_SLATE), -1, player.playerScreenHandler.getCraftingInput());
+            player.getInventory().remove(s -> s.isOf(com.samsara.registry.SamsaraItems.CAMCORDER), -1, player.playerScreenHandler.getCraftingInput());
             return 1;
         }
         if (mode == 6) {
@@ -959,17 +1007,17 @@ public class SamsaraTestCommands {
         ServerPlayerEntity player = source.getPlayer();
         ServerWorld world = source.getServer().getWorld(com.samsara.registry.SamsaraDimensions.LOI_DI_NHAP_WORLD_KEY);
         if (player == null || world == null) return 0;
-        if (!player.getMainHandStack().isOf(com.samsara.registry.SamsaraItems.FRACTURED_SLATE)) {
+        if (!player.getMainHandStack().isOf(com.samsara.registry.SamsaraItems.CAMCORDER)) {
             int slot = -1;
             for (int i = 0; i < player.getInventory().size(); i++) {
-                if (player.getInventory().getStack(i).isOf(com.samsara.registry.SamsaraItems.FRACTURED_SLATE)) slot = i;
+                if (player.getInventory().getStack(i).isOf(com.samsara.registry.SamsaraItems.CAMCORDER)) slot = i;
             }
             net.minecraft.item.ItemStack held = player.getMainHandStack().copy();
             if (slot >= 0) {
                 player.setStackInHand(net.minecraft.util.Hand.MAIN_HAND, player.getInventory().getStack(slot).copy());
                 player.getInventory().setStack(slot, held);
             } else {
-                player.setStackInHand(net.minecraft.util.Hand.MAIN_HAND, new net.minecraft.item.ItemStack(com.samsara.registry.SamsaraItems.FRACTURED_SLATE));
+                player.setStackInHand(net.minecraft.util.Hand.MAIN_HAND, new net.minecraft.item.ItemStack(com.samsara.registry.SamsaraItems.CAMCORDER));
                 player.getInventory().offerOrDrop(held);
             }
         }

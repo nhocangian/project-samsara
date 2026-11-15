@@ -42,11 +42,11 @@ public class CamcorderGiftSystem {
 
         PlayerInventory inv = player.getInventory();
         // Đã tự tìm được máy quay thì <System> không cần can thiệp
-        if (inv.containsAny(stack -> stack.isOf(SamsaraItems.FRACTURED_SLATE))) return false;
+        if (inv.containsAny(stack -> stack.isOf(SamsaraItems.CAMCORDER))) return false;
 
         give(player);
         player.sendMessage(Text.translatable(systemLine), false);
-        com.samsara.system.ui.UiHorrorSystem.advancement(player, "camcorder", "samsara.advancement.mat_thu_ba", SamsaraItems.FRACTURED_SLATE);
+        com.samsara.system.ui.UiHorrorSystem.advancement(player, "camcorder", "samsara.advancement.mat_thu_ba", SamsaraItems.CAMCORDER);
         player.sendMessage(Text.translatable("samsara.camcorder_gift_system.o_so_3_tren"), true);
         player.getServerWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
                 SamsaraSounds.SYSTEM_STATIC, SoundCategory.PLAYERS, 0.9f, 0.6f);
@@ -57,7 +57,7 @@ public class CamcorderGiftSystem {
     public static void give(ServerPlayerEntity player) {
         PlayerInventory inv = player.getInventory();
         ItemStack displaced = inv.getStack(HOTBAR_SLOT);
-        inv.setStack(HOTBAR_SLOT, new ItemStack(SamsaraItems.FRACTURED_SLATE));
+        inv.setStack(HOTBAR_SLOT, new ItemStack(SamsaraItems.CAMCORDER));
         if (!displaced.isEmpty() && !inv.insertStack(displaced)) {
             player.dropItem(displaced, false);
         }

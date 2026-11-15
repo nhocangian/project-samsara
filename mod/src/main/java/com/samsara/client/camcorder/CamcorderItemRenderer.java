@@ -15,7 +15,7 @@ import net.minecraft.util.math.MathHelper;
 
 /**
  * Vẽ máy quay 3D ở mọi chế độ (tay, góc thứ ba, túi đồ, khung, rơi đất). Biến đổi theo chế độ lấy từ
- * {@code models/item/fractured_slate.json} (parent builtin/entity); hoạt ảnh nâng lên mặt vẫn do
+ * {@code models/item/camcorder.json} (parent builtin/entity); hoạt ảnh nâng lên mặt vẫn do
  * {@code HeldItemRendererMixin} đảm nhận (và ẩn hẳn model khi đã ngắm qua kính).
  *
  * Hoạt ảnh:

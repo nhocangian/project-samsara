@@ -6,13 +6,8 @@ import com.samsara.registry.SamsaraEntities;
 import com.samsara.registry.SamsaraItems;
 import com.samsara.registry.SamsaraSounds;
 import com.samsara.system.additions.MetempsychosisManager;
-import com.samsara.system.additions.OuroborosGlitchSystem;
 import com.samsara.system.additions.PhantomAudioEchoSystem;
 import com.samsara.system.echo.EchoResidueManager;
-import com.samsara.system.karma.SinEventListener;
-import com.samsara.system.narrative.SlateNarrativeHandler;
-import com.samsara.worldgen.ColossalInvertedMonolithFeature;
-import com.samsara.worldgen.CradleChamberFeature;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -37,8 +32,6 @@ public class SamsaraMod implements ModInitializer {
     public static final String MOD_ID = "samsara";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static final Feature<DefaultFeatureConfig> CRADLE_CHAMBER_FEATURE = new CradleChamberFeature(DefaultFeatureConfig.CODEC);
-    public static final Feature<DefaultFeatureConfig> COLOSSAL_MONOLITH_FEATURE = new ColossalInvertedMonolithFeature(DefaultFeatureConfig.CODEC);
 
     @Override
     public void onInitialize() {
@@ -54,41 +47,29 @@ public class SamsaraMod implements ModInitializer {
 
         // Core Narrative & Horror Subsystems
         EchoResidueManager.register();
-        SinEventListener.register();
-        SlateNarrativeHandler.register();
 
         // 4 Psychological Strategy Additions
         com.samsara.system.sleep.OutOfBodySleepGlitch.register();
-        com.samsara.system.karma.HostileHesitationSystem.register();
-        com.samsara.system.karma.VillagerConfinementSystem.register();
-        com.samsara.system.narrative.SilentConvergenceSystem.register();
+        com.samsara.system.cycle.HostileHesitationSystem.register();
+        // Overworld "ngờ ngợ": dấu vết người cũ quanh spawn, hoa quay theo người, con vật nhìn
+        com.samsara.system.overworld.NamTraces.register();
+        com.samsara.system.overworld.OverworldSunflowerGaze.register();
+        com.samsara.system.overworld.AnimalStare.register();
 
         // ARG Ciphers & Metaphysical Enigmas
         com.samsara.system.arg.MorseAudioSignalSystem.register();
         com.samsara.system.arg.SelfRealizationLecternSystem.register();
-        com.samsara.system.arg.AnvilMirrorCipherSystem.register();
 
         // Emergent Psychological Subsystems
         PhantomAudioEchoSystem.register();
         MetempsychosisManager.register();
-        OuroborosGlitchSystem.register();
 
         // Worldgen Registration
         com.samsara.worldgen.SpawnCairnGenerator.register();
-        Registry.register(Registries.FEATURE, new Identifier(MOD_ID, "cradle_chamber"), CRADLE_CHAMBER_FEATURE);
-        Registry.register(Registries.FEATURE, new Identifier(MOD_ID, "colossal_monolith"), COLOSSAL_MONOLITH_FEATURE);
         Registry.register(Registries.FEATURE, new Identifier(MOD_ID, "sunflower_field"),
                 new com.samsara.worldgen.memory.SunflowerFieldFeature(DefaultFeatureConfig.CODEC));
 
-        BiomeModifications.addFeature(
-                BiomeSelectors.foundInOverworld(),
-                GenerationStep.Feature.UNDERGROUND_STRUCTURES,
-                RegistryKey.of(RegistryKeys.PLACED_FEATURE, new Identifier(MOD_ID, "cradle_chamber"))
-        );
-
         // Megalithic Architectures & Supernatural Phenomena
-        com.samsara.worldgen.megalith.MegalithManager.register();
-        com.samsara.worldgen.ruins.ColossalRuinManager.register();
         com.samsara.worldgen.ruins.WombRuinManager.register();
         com.samsara.system.water.WombWaterWakeSystem.register();
 

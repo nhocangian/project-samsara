@@ -117,7 +117,7 @@ public class SamsaraClientMod implements ClientModInitializer {
         com.samsara.client.CamcorderClientManager.init();
         // Máy quay 3D (LCD lật, đèn REC, nắp băng) cho mọi chế độ hiển thị item
         net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(
-                com.samsara.registry.SamsaraItems.FRACTURED_SLATE, new com.samsara.client.camcorder.CamcorderItemRenderer());
+                com.samsara.registry.SamsaraItems.CAMCORDER, new com.samsara.client.camcorder.CamcorderItemRenderer());
         com.samsara.client.CamcorderOverlay.register();
     }
 }

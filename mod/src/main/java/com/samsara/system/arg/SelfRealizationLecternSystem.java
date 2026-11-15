@@ -22,7 +22,7 @@ import net.minecraft.util.ActionResult;
  * Khi người chơi đặt một cuốn sách đã ký có chứa các câu hỏi triết học về bản ngã:
  * - "Tôi là ai?", "Who am I", "Bản ngã", "Samsara"
  * Mực đen sẽ tự động ăn mòn và trả lời bằng dòng chữ đỏ máu:
- * "Ngươi đang hỏi kẻ cầm bút... hay kẻ đang nhìn vào trang giấy này?"
+ * "Cậu đang hỏi kẻ cầm bút... hay đang hỏi kẻ đang nhìn vào trang giấy này?"
  */
 public class SelfRealizationLecternSystem {
     private static final String TAG_ANSWERED = "samsara_answered";
@@ -53,24 +53,9 @@ public class SelfRealizationLecternSystem {
                             nbt.put(WrittenBookItem.PAGES_KEY, newPages);
                             lectern.markDirty();
 
-                            // Hiệu ứng tâm lý rợn ngợp
-                            world.playSound(
-                                    null,
-                                    hitResult.getBlockPos(),
-                                    SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(),
-                                    SoundCategory.BLOCKS,
-                                    1.2f, 0.6f
-                            );
-
-                            serverPlayer.getServerWorld().spawnParticles(
-                                    ParticleTypes.REVERSE_PORTAL,
-                                    hitResult.getBlockPos().getX() + 0.5,
-                                    hitResult.getBlockPos().getY() + 1.2,
-                                    hitResult.getBlockPos().getZ() + 0.5,
-                                    40, 0.3, 0.3, 0.3, 0.05
-                            );
-
-                            serverPlayer.sendMessage(Text.translatable("samsara.self_realization_lectern_system.chu_viet_tay_trong"), true);
+                            // Kín đáo: chỉ một tiếng lật trang trầm, không hạt, không chữ báo
+                            world.playSound(null, hitResult.getBlockPos(), SoundEvents.ITEM_BOOK_PAGE_TURN,
+                                    SoundCategory.BLOCKS, 0.8f, 0.5f);
                             return ActionResult.SUCCESS;
                         }
                     }

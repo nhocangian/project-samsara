@@ -98,8 +98,6 @@ public class CamcorderOverlay implements HudRenderCallback {
         TextRenderer textRenderer = client.textRenderer;
         long time = client.world.getTime();
 
-        int activeTape = CamcorderClientManager.getActiveTape();
-        int playbackTicks = CamcorderClientManager.getPlaybackTicks();
         float ghostStrength = CamcorderClientManager.getGhostProximityStrength();
 
         int cx = width / 2;
@@ -124,31 +122,21 @@ public class CamcorderOverlay implements HudRenderCallback {
 
         int leftX = 42;
 
-        if (activeTape > 0) {
-            // Đang phát lại băng từ VCR
-            boolean playBlink = (time % 16) < 11;
-            int playColor = playBlink ? 0xFF55FFFF : 0x6655FFFF;
-            drawContext.drawTextWithShadow(textRenderer, "▶ PLAY", leftX, 14, playColor);
-            drawContext.drawTextWithShadow(textRenderer, "TAPE #0" + activeTape, leftX + 46, 14, 0xFFFFFFFF);
-            drawContext.drawTextWithShadow(textRenderer, "◄◄ VCR REWIND  SP", leftX, 26, 0xFF88CCEE);
-            drawContext.drawTextWithShadow(textRenderer, "24. OCT 1993", leftX, 38, 0xFF555555);
-        } else {
-            // Chế độ ghi hình bình thường (● REC)
-            boolean recBlink = (time % 20) < 12;
-            int recColor = recBlink ? 0xFFFF2222 : 0x44FF2222;
-            drawContext.drawTextWithShadow(textRenderer, "●", leftX, 14, recColor);
-            drawContext.drawTextWithShadow(textRenderer, "REC", leftX + 10, 14, 0xFFFFFFFF);
-            drawContext.drawTextWithShadow(textRenderer, "SP", leftX + 34, 14, 0xFFAAAAAA);
+        // Chế độ ghi hình bình thường (● REC)
+        boolean recBlink = (time % 20) < 12;
+        int recColor = recBlink ? 0xFFFF2222 : 0x44FF2222;
+        drawContext.drawTextWithShadow(textRenderer, "●", leftX, 14, recColor);
+        drawContext.drawTextWithShadow(textRenderer, "REC", leftX + 10, 14, 0xFFFFFFFF);
+        drawContext.drawTextWithShadow(textRenderer, "SP", leftX + 34, 14, 0xFFAAAAAA);
 
-            if (CamcorderClientManager.isNightVision()) {
-                drawContext.drawTextWithShadow(textRenderer, "[IR NIGHT VISION ON]", leftX + 56, 14, 0xFF44FF66);
-                drawContext.drawTextWithShadow(textRenderer, "GAIN: +18dB (INFRARED)", leftX, 26, 0xFF22AA44);
-            } else {
-                drawContext.drawTextWithShadow(textRenderer, "AUTO WB", leftX + 56, 14, 0xFF888888);
-                drawContext.drawTextWithShadow(textRenderer, timecode, leftX, 26, 0xFF666666);
-            }
-            drawContext.drawTextWithShadow(textRenderer, "24. OCT 1993", leftX, 38, 0xFF555555);
+        if (CamcorderClientManager.isNightVision()) {
+            drawContext.drawTextWithShadow(textRenderer, "[IR NIGHT VISION ON]", leftX + 56, 14, 0xFF44FF66);
+            drawContext.drawTextWithShadow(textRenderer, "GAIN: +18dB (INFRARED)", leftX, 26, 0xFF22AA44);
+        } else {
+            drawContext.drawTextWithShadow(textRenderer, "AUTO WB", leftX + 56, 14, 0xFF888888);
+            drawContext.drawTextWithShadow(textRenderer, timecode, leftX, 26, 0xFF666666);
         }
+        drawContext.drawTextWithShadow(textRenderer, "24. OCT 1993", leftX, 38, 0xFF555555);
 
         // =========================================================================
         // 2. GÓC TRÊN PHẢI (TOP-RIGHT): CỘT PIN OUTLAST & PHÍM TẮT ĐIỀU KHIỂN
@@ -260,61 +248,6 @@ public class CamcorderOverlay implements HudRenderCallback {
         // Góc dưới-phải
         drawContext.fill(cx + bSize - 10, cy + bSize - bThick, cx + bSize, cy + bSize, bColor);
         drawContext.fill(cx + bSize - bThick, cy + bSize - 10, cx + bSize, cy + bSize, bColor);
-
-        // =========================================================================
-        // 5. HỘP PHỤ ĐỀ KÝ ỨC VCR (TAPE PLAYBACK SUBTITLES)
-        // Bắt đầu tại (cy + 36) - nằm dưới khung ngắm trung tâm, cách xa hotbar và không bị đè chữ
-        // =========================================================================
-        if (activeTape > 0) {
-            // Dải sóng tracking cuộn màn hình
-            int scanY = (int) ((playbackTicks * 2) % height);
-            drawContext.fill(0, scanY, width, scanY + 1, 0x3355FFFF);
-
-            String title;
-            String quote1;
-            String quote2;
-            int titleColor;
-
-            if (activeTape == 1) {
-                title = net.minecraft.client.resource.language.I18n.translate("samsara.camcorder_overlay.tape_01_vet_tu");
-                quote1 = net.minecraft.client.resource.language.I18n.translate("samsara.camcorder_overlay.cau_co_nhan_ra");
-                quote2 = net.minecraft.client.resource.language.I18n.translate("samsara.camcorder_overlay.hoi_am_tat_dan");
-                titleColor = 0xFFFFAA44;
-            } else if (activeTape == 2) {
-                title = net.minecraft.client.resource.language.I18n.translate("samsara.camcorder_overlay.tape_02_ban_ghi");
-                quote1 = net.minecraft.client.resource.language.I18n.translate("samsara.camcorder_overlay.no_khong_he_tan");
-                quote2 = net.minecraft.client.resource.language.I18n.translate("samsara.camcorder_overlay.cau_da_chon_bao");
-                titleColor = 0xFFFF5555;
-            } else {
-                title = net.minecraft.client.resource.language.I18n.translate("samsara.camcorder_overlay.tape_03_tan_so");
-                quote1 = net.minecraft.client.resource.language.I18n.translate("samsara.camcorder_overlay.dung_nhin_vao_mat");
-                quote2 = net.minecraft.client.resource.language.I18n.translate("samsara.camcorder_overlay.tat_may_quay_di");
-                titleColor = 0xFFDD55FF;
-            }
-
-            String hint = net.minecraft.client.resource.language.I18n.translate("samsara.camcorder_overlay.phim_b_chuyen_tape");
-            int w1 = textRenderer.getWidth(quote1);
-            int w2 = textRenderer.getWidth(quote2);
-            int titleW = textRenderer.getWidth(title);
-            int hintW = textRenderer.getWidth(hint);
-            int maxTextW = Math.max(Math.max(w1, w2), Math.max(hintW, titleW));
-
-            int boxW = maxTextW + 36;
-            int boxH = 64;
-            int boxY = cy + 36;
-            int boxX = cx - (boxW / 2);
-
-            // Nền đen bán trong suốt với viền trên cyan VCR và viền dưới tinh tế
-            drawContext.fill(boxX, boxY, boxX + boxW, boxY + boxH, 0xB0080808);
-            drawContext.fill(boxX, boxY, boxX + boxW, boxY + 1, 0xAA55FFFF);
-            drawContext.fill(boxX, boxY + boxH - 1, boxX + boxW, boxY + boxH, 0x3355FFFF);
-
-            // Các dòng chữ giãn cách đều đặn, căn giữa hoàn hảo
-            drawContext.drawTextWithShadow(textRenderer, title, cx - (titleW / 2), boxY + 6, titleColor);
-            drawContext.drawTextWithShadow(textRenderer, quote1, cx - (w1 / 2), boxY + 20, 0xFFFFFFFF);
-            drawContext.drawTextWithShadow(textRenderer, quote2, cx - (w2 / 2), boxY + 33, 0xFFAAAAAA);
-            drawContext.drawTextWithShadow(textRenderer, hint, cx - (hintW / 2), boxY + 48, 0xFF55FFFF);
-        }
 
         // =========================================================================
         // 6. GARGANTUA BEACON & SPECTRAL ARG DECODER (CHIỀU KHÔNG GIAN THE WOMB)

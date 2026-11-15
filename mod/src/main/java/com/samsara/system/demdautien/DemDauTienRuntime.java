@@ -30,6 +30,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.ArrayDeque;
@@ -410,6 +411,34 @@ public final class DemDauTienRuntime {
         ServerWorld world = DemDauTienBuilder.world(player);
         if (world == null || !active) return;
         setClock(world, DemDauTienClock.SLEEP_FROM - 100);
+    }
+
+    /**
+     * Thử câu đố bằng kịch bản chụp: "ban" đặt bàn chế tạo sát gốc cây anh đào (giữa vết rách lớn nhất) và đưa người
+     * chơi tới nhìn vào nó; "cho_giuong" đưa người chơi tới nhìn xuống chỗ đặt giường cạnh đó (dọn cánh hoa ở chỗ giường).
+     */
+    public static void testSpot(ServerPlayerEntity player, boolean table) {
+        ServerWorld world = DemDauTienBuilder.world(player);
+        if (world == null) return;
+        double[] t = DemDauTienBuilder.TEARS[0];
+        BlockPos stand, target;
+        Vec3d look;
+        if (table) {
+            target = DemDauTienBuilder.ground(t, 1, 1);
+            world.setBlockState(target, Blocks.CRAFTING_TABLE.getDefaultState());
+            stand = DemDauTienBuilder.ground(t, 1, 3);
+            look = Vec3d.ofCenter(target);
+        } else {
+            target = DemDauTienBuilder.ground(t, -1, 2).down();
+            for (int dz = 1; dz <= 3; dz++) world.setBlockState(DemDauTienBuilder.ground(t, -1, dz), Blocks.AIR.getDefaultState());
+            stand = DemDauTienBuilder.ground(t, -1, 4);
+            look = Vec3d.ofCenter(target).add(0, 0.5, 0);
+        }
+        Vec3d eye = new Vec3d(stand.getX() + 0.5, stand.getY() + player.getStandingEyeHeight(), stand.getZ() + 0.5);
+        Vec3d d = look.subtract(eye);
+        float yaw = (float) (MathHelper.atan2(d.z, d.x) * 180 / Math.PI) - 90f;
+        float pitch = (float) (-MathHelper.atan2(d.y, Math.sqrt(d.x * d.x + d.z * d.z)) * 180 / Math.PI);
+        player.teleport(world, stand.getX() + 0.5, stand.getY(), stand.getZ() + 0.5, yaw, pitch);
     }
 
     /** Đưa đồ để chế giường ngay (3 len, 3 ván, bàn chế tạo). */

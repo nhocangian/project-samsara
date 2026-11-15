@@ -187,7 +187,7 @@ public final class DemDauTienBuilder {
     // VẾT RÁCH: ĐỒ CỦA BẢN MỚI (chỉ hiện trong vết rách)
     // ==========================================
 
-    private static BlockPos ground(double[] t, int dx, int dz) {
+    static BlockPos ground(double[] t, int dx, int dz) {
         int x = MathHelper.floor(t[0]) + dx, z = MathHelper.floor(t[2]) + dz;
         return new BlockPos(x, height(x, z) + 1, z);
     }

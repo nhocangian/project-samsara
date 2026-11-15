@@ -73,6 +73,6 @@ viewPos = curvedView.xyz;
 
 ## Ràng buộc với mod
 
-- `item.properties` phải giữ `item.1 = samsara:fractured_slate` (máy quay) vì `final.fsh` dựa vào nó.
+- `item.properties` phải giữ `item.1 = samsara:camcorder` (máy quay) vì `final.fsh` dựa vào nó.
 - Mặt trời hố đen chỉ hiện khi đang ngắm qua máy quay; logic này nằm trong mod, không nằm trong shader.
 - Trong môi trường dev, `mod/run/shaderpacks/Samsara-Cosmic-Shaders` là junction tới thư mục này: sửa xong chỉ cần tải lại shader trong game (phím R trong màn hình Shader Packs, hoặc tắt/bật shader).

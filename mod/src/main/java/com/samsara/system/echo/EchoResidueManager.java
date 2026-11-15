@@ -18,7 +18,8 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Manages periodic recording and manifestation of the Player Echo Residue.
+ * Bóng tàn dư (Overworld): ghi lại vị trí, tư thế người chơi; thỉnh thoảng (1%/phút khi ở dưới Y 0, hoặc đang chặt cây
+ * một mình ban đêm) dựng một bóng đứng đúng chỗ, đúng dáng người chơi 60 giây trước, rồi tự tan.
  */
 public class EchoResidueManager {
     private static final Map<UUID, PlayerActionBuffer> BUFFERS = new HashMap<>();
@@ -44,6 +45,8 @@ public class EchoResidueManager {
 
     private static void evaluateEchoTrigger(ServerPlayerEntity player, PlayerActionBuffer buffer, long currentTick) {
         ServerWorld world = player.getServerWorld();
+        // Chỉ ở thế giới chính: các chiều riêng (Tầng Dưới, The Womb...) có cảnh của riêng chúng
+        if (world.getRegistryKey() != net.minecraft.world.World.OVERWORLD) return;
 
         // 1% chance per minute
         if (world.random.nextFloat() > 0.01f) {

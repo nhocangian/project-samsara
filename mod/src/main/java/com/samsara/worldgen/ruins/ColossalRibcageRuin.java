@@ -160,7 +160,7 @@ public class ColossalRibcageRuin {
         BlockPos chestPos = altarPos.north(2);
         world.setBlockState(chestPos, Blocks.CHEST.getDefaultState(), 2);
         if (world.getBlockEntity(chestPos) instanceof ChestBlockEntity chest) {
-            chest.setStack(13, new ItemStack(SamsaraItems.FRACTURED_SLATE));
+            chest.setStack(13, new ItemStack(SamsaraItems.CAMCORDER));
             chest.setStack(4, new ItemStack(Items.ECHO_SHARD, 5));
             chest.setStack(22, new ItemStack(Items.BONE_BLOCK, 16));
             chest.markDirty();

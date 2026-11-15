@@ -76,12 +76,8 @@ Mỗi lần ngủ qua đêm tăng số giấc ngủ của cả thế giới.
   - Chuột phải: đưa máy lên mắt, chuyển sang hình VHS.
   - Phím V: nhìn đêm hồng ngoại, tốn pin.
   - Phím R: thay pin.
-  - Phím B: phát băng ký ức.
 - Máy quay là model 3D có màn LCD lật mở, đèn REC nhấp nháy và nắp băng.
-- **Ba cuộn băng ký ức** mở khoá khi giết sinh vật (lời hiện trên màn hình máy quay):
-  - **TAPE 01 – Vết Tử Thương** (bò): *"Cậu có nhận ra... vết cắt trên cổ nó giống hệt vết dao của cậu sáng nay không?"*
-  - **TAPE 02 – Bản Ghi Đứng Yên** (zombie): *"Cậu đã chôn bao nhiêu người ở dưới lớp đất này rồi... hay chỉ chôn một người, nhiều lần?"*
-  - **TAPE 03 – Tần Số 14.8 MHz** (enderman): *"Đừng nhìn vào mắt nó nữa... Nó chỉ đang cố đọc lại những ký ức mà cậu đã cố tình quên."*
+- **Ba cuộn băng ký ức** (TAPE 01–03, mở khoá khi giết bò / zombie / enderman, phím B) **đã cất đi** (15/11/2026): kịch bản để ngỏ, không muốn băng thành đồ sưu tầm. Code cũ ở `_trash/tapes_removed/`; khi kịch bản chốt TAPE 03 sẽ dựng lại thành vật chứng nhặt ở một chỗ cụ thể.
 - Khi bóng ma lại gần, hình ảnh rè nhiễu băng VHS và cảm biến báo *"DỊ THƯỜNG TỪ TRƯỜNG TRONG KHUNG HÌNH"*.
 
 ### Kinh dị tầng giao diện (mod tự thêm)
@@ -194,22 +190,26 @@ Kích hoạt khi bước vào trong 6 block quanh Quả Trứng.
 
 ---
 
-## 7. Hệ thống phụ còn trong mod (từ các bản trước, chưa gắn rõ vào kịch bản)
+## 7. Hệ thống phụ ở Overworld (đã dọn 15/11/2026)
 
-Các hệ thống dưới đây vẫn chạy, nhưng tài liệu gốc không nhắc tới. Kịch bản mới có thể giữ, sửa nghĩa hoặc bảo bỏ.
+Người dùng duyệt dọn các tính năng cũ để Overworld chỉ còn cảm giác **ngờ ngợ**: không chữ giải thích, không công trình khổng lồ.
 
-- **Chiếc Nôi (The Cradle)** và **khối Quả Trứng Nguyên Thủy kiểu cũ**:
-  - Hiến 4 vật vào Chiếc Nôi thì có chuỗi thoại: *"Sao cậu lại nghĩ chỉ có một mình trong chiếc hộp này?"*, *"Mỗi nhát kiếm cậu vung ra đều khắc lên chính da thịt cậu."*, *"Vòng lặp đã vỡ. Hãy thức tỉnh."*, rồi bị đẩy khỏi game.
-  - Khối trứng cũ có chuỗi *"Cậu đã nếm đủ mọi nỗi đau của kẻ bị săn..."*.
-  - Hai thứ này **trùng ý với đoạn kết chính**.
-- **Luân hồi khi chết:** chết rồi hồi sinh thì báo *"[Chu kỳ #n] Thân xác tái tạo. Ký ức mờ dần."*.
-- **Ouroboros:** nhìn chằm chằm vào mob ở gần thì nó mang tên người chơi một lúc, kèm *"Cậu nhận ra ánh mắt ấy..."*.
-- **Thấu Kính ở đe:** soi sinh vật thì báo nó là *"chính bạn ở kiếp sống thứ #n"*, hoặc thân xác bạn bỏ lại, dân làng là bạn...
-- **Bục đọc sách:** viết câu hỏi kiểu *"tôi là ai"* vào sách đặt trên bục thì sách tự trả lời: *"Cậu đang hỏi kẻ cầm bút... hay đang hỏi kẻ đang nhìn vào trang giấy này? Mọi câu hỏi đều là độc thoại."*
-- **Dân làng bị nhốt:** *"Cậu cũng từng bỏ mặc tôi trong chiếc hộp này..."*.
-- **Giấc ngủ xuất hồn:** cảm giác có người đứng trong góc phòng nhìn mình ngủ; tỉnh dậy có đóa hoa héo bên gối.
-- **Phế tích khổng lồ / cự thạch** ở Overworld và The Womb.
-- **Thuyền Tiền Kiếp** trong The Womb tan biến, để lại *"Chiếc Rương Tiền Kiếp"* và *"La Bàn Tiền Kiếp"* chỉ về một nhịp tim ở xa.
+**Mới dựng (15/11/2026, nhóm A "ngờ ngợ"):**
+- **Dấu vết người chơi trước** quanh chỗ xuất hiện, không biển, không chữ: một **lán đất 2x2** có lỗ cửa, trong có bàn chế tạo, lò nung, một ngọn đuốc; cạnh lán là **đường hầm bậc thang** đào thẳng xuống, cứ vài bậc một ngọn đuốc; vài **cây hướng dương** trồng trước lán; một **gốc cây bị chặt** còn trơ với tán lá lơ lửng không rụng; một **cây mất hai khúc gốc** treo lơ lửng; một **cột đất 1x1** cao 9 khối giữa đồng. Đó là "đêm đầu tiên" của Nam trong chính save này (tầng 4 Tầng Dưới trả lời cho cái lán). Dựng một lần mỗi thế giới.
+- **Hoa quay theo người:** hướng dương ngoài tự nhiên (kể cả mấy bông trước lán) luôn nhìn về hướng đông. Thỉnh thoảng một bông nằm ngoài tầm mắt lặng lẽ quay về phía người chơi; liếc tới thì thấy nó đang nhìn mình; quay đi chừng hai giây thì nó đã về hướng đông. Stage 0 hiếm (tối đa 1 bông), Stage 1 tối đa 2, từ Stage 2 tối đa 3 và thường hơn.
+- **Con vật nhìn:** vài phút một lần, cả đàn bò / cừu / lợn / gà quanh người chơi (ít nhất 2 con) cùng ngừng lại, từ từ ngoái đầu nhìn người chơi chừng 2–3 giây, rồi ăn tiếp như không có gì.
+
+**Còn lại (đã chỉnh cho kín đáo):**
+- **Quái ngập ngừng** (từ Stage 1): thỉnh thoảng một con quái đang đuổi bạn khựng lại chừng nửa giây, đứng nhìn thẳng vào bạn, rồi lao vào tiếp. Không tiếng, không chữ.
+- **Bước chân dội lại:** đang đi bộ thì đôi khi nghe ba tiếng bước chân của chính mình, trễ nửa nhịp, đúng âm của khối đang giẫm, vang từ 6–8 khối sau lưng. Dừng lại thì nó vẫn bước thêm một hai bước. Rất hiếm (ít nhất 3 phút một lần).
+- **Bóng tàn dư:** dưới lòng đất, hoặc khi chặt cây một mình ban đêm, hiếm khi thấy một bóng người đứng đúng chỗ, đúng dáng bạn một phút trước, rồi tan.
+- **Giấc ngủ xuất hồn:** ngủ ở thế giới chính, đôi khi có một bóng đứng ở góc phòng; tỉnh dậy có đóa hoa héo bên gối. Không có dòng chữ nào, người chơi tự để ý.
+- **Bục đọc sách:** viết câu hỏi kiểu *"tôi là ai"* vào sách đặt lên bục thì sách thành *"Lời Đáp Của Gương"*: *"Cậu đang hỏi kẻ cầm bút... hay đang hỏi kẻ đang nhìn vào trang giấy này? Mọi câu hỏi đều là độc thoại."* Chỉ một tiếng lật trang trầm, không báo gì thêm (trứng phục sinh cho người tò mò).
+- **Tín hiệu Morse "I AM YOU"** ở độ sâu Y ≤ -30 trong bóng tối hoàn toàn.
+- Số lần chết vẫn được đếm lặng lẽ (không còn dòng *"[Chu kỳ #n] Thân xác tái tạo"*), để dành cho câu đố hoặc bảng F3.
+- **Thuyền Tiền Kiếp** trong The Womb tan biến, để lại *"Chiếc Rương Tiền Kiếp"* và *"La Bàn Tiền Kiếp"* chỉ về một nhịp tim ở xa. Phế tích cự thần trong The Womb vẫn giữ.
+
+**Đã bỏ:** Chiếc Nôi và khối trứng kiểu cũ; phế tích cự thần và khối nêm sinh ngẫu nhiên ở Overworld; Ouroboros (mob mang tên bạn); Thấu Kính ở đe; dân làng bị nhốt; nghiệp chướng khi giết sinh vật; quái tụ thành vòng tròn trong The Womb. Muốn đưa lại thứ nào thì phải hỏi người dùng.
 
 ---
 

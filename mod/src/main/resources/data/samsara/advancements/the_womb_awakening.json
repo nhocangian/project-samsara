@@ -2,7 +2,7 @@
   "parent": "samsara:the_wanderer",
   "display": {
     "icon": {
-      "item": "samsara:primordial_egg"
+      "item": "minecraft:dragon_egg"
     },
     "title": {
       "translate": "advancements.samsara.the_womb_awakening.title"

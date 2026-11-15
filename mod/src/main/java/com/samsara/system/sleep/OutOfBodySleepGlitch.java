@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 
 /**
  * Tính năng 1: Cơ chế Giấc Mơ Tách Hồn (The Sleep Out-of-Body Glitch) - Giai đoạn 1.
- * Khi ngủ, người chơi có 25% xác suất cảm thấy linh hồn phân ly khỏi thể xác:
+ * Khi ngủ ở Overworld, 25% xác suất (không có dòng chữ nào, người chơi tự để ý):
  * - Một bóng ma (EchoDummyEntity) xuất hiện ở góc phòng lặng lẽ nhìn chiếc giường.
  * - Khi tỉnh dậy, bên cạnh gối rơi ra một đóa hoa hồng khô héo mà người chơi chưa từng đặt.
  */
@@ -29,6 +29,8 @@ public class OutOfBodySleepGlitch {
         EntitySleepEvents.START_SLEEPING.register((entity, sleepingPos) -> {
             if (!(entity instanceof ServerPlayerEntity player)) return;
             ServerWorld world = player.getServerWorld();
+            // Chỉ giấc ngủ thật ở thế giới chính; giường ở các chiều riêng (Tầng Dưới tầng 4...) có cảnh của riêng nó
+            if (world.getRegistryKey() != net.minecraft.world.World.OVERWORLD) return;
 
             // 25% xác suất kích hoạt hiện tượng tách hồn trong Giai đoạn 1
             if (world.random.nextFloat() < 0.25f) {
@@ -55,8 +57,7 @@ public class OutOfBodySleepGlitch {
                     world.spawnEntity(ghost);
                 }
 
-                // Thông điệp rợn ngợp
-                player.sendMessage(Text.translatable("samsara.out_of_body_sleep_glitch.ban_cam_giac_co"), true);
+                // Không chữ: chỉ tiếng thì thầm (người dùng bỏ các dòng giải thích)
                 world.playSound(null, sleepingPos, SamsaraSounds.SLATE_WHISPER, SoundCategory.PLAYERS, 0.7f, 0.5f);
 
                 // Kích hoạt hiệu ứng Temporal Desync & Spectral Ghosting trên shader
@@ -102,7 +103,6 @@ public class OutOfBodySleepGlitch {
                 itemEntity.setToDefaultPickupDelay();
                 world.spawnEntity(itemEntity);
 
-                player.sendMessage(Text.translatable("samsara.out_of_body_sleep_glitch.ben_canh_goi_co"), false);
             }
         });
     }
