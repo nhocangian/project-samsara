@@ -27,7 +27,9 @@ import net.minecraft.world.PersistentState;
  *   <li>vài cây hướng dương trồng cạnh lán (chúng thỉnh thoảng quay về phía người chơi, xem
  *       {@link OverworldSunflowerGaze}).</li>
  * </ul>
- * Dựng một lần cho mỗi thế giới, lúc người chơi vào game lần đầu (cùng lúc với Bia Mộ).
+ * Dựng một lần cho mỗi thế giới, lúc người chơi vào game lần đầu (cùng lúc với Bia Mộ). Nằm ở rìa tây / bắc khu nhà
+ * của Nam ({@link NamBase}, nền từ 14 khối phía nam spawn): lán đất ở spawn + (-34, 16), nơi Nam trú đêm đầu tiên
+ * trước khi xây nhà thật.
  */
 public final class NamTraces extends PersistentState {
     private static final String KEY = "samsara_nam_traces";
@@ -51,19 +53,19 @@ public final class NamTraces extends PersistentState {
 
     /** Dựng toàn bộ dấu vết quanh {@code center} (lệnh test dựng quanh người chơi). */
     public static void build(ServerWorld world, BlockPos center) {
-        BlockPos hut = spot(world, center, 15, -11, 4, 2);
+        BlockPos hut = spot(world, center, -34, 16, 4, 2);
         // Đồi núi không có chỗ phẳng: lấy chỗ đất khô gần nhất rồi tự san nền (như người chơi san đất trước khi dựng)
-        if (hut == null) hut = level(world, center, 15, -11, 4, 1);
+        if (hut == null) hut = level(world, center, -34, 16, 4, 1);
         if (hut != null) {
             hut(world, hut);
             stairMine(world, hut.add(4, 0, 1), Direction.EAST);
             sunflowers(world, hut.add(0, 0, 5), hut.getY());
         }
-        BlockPos stump = spot(world, center, -8, 13, 1, 2);
+        BlockPos stump = spot(world, center, -12, -12, 1, 2);
         if (stump != null) choppedStump(world, stump);
-        BlockPos floating = spot(world, center, 11, 16, 1, 2);
+        BlockPos floating = spot(world, center, 13, -15, 1, 2);
         if (floating != null) floatingTrunk(world, floating);
-        BlockPos pillar = spot(world, center, -13, -7, 1, 2);
+        BlockPos pillar = spot(world, center, -26, -6, 1, 2);
         if (pillar != null) dirtPillar(world, pillar);
         LAST[0] = hut;
         LAST[1] = stump;

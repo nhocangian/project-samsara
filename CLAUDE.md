@@ -9,6 +9,7 @@
 - `shader/Samsara-Cosmic-Shaders/` — the project's Iris shaderpack (VHS camcorder look).
 - `scripts/master_production_document_project_samsara_revision.md` — the story doc: core lore and mechanics with the stage table (top section, e.g. stage 4 on the 7th sleep), detailed scene-by-scene script for Videos 1–9 with the verbatim `<System>` dialogue, Channy outro and the Chu Kỳ #2 epilogue. Treat it as the source of truth for story and progression. It is ~4000 lines: search by heading (`# VIDEO n`, `# PHẦN`) and read only what you need. The original doc it replaced is in `_trash/scripts_old/`.
 - `scripts/hien_trang_trong_mod.md` — what the mod has built, written as story. Update it whenever player-facing content changes. `scripts/yeu_cau_cho_mod.md` — approved script changes waiting to be built in the mod.
+- `HUONG_DAN_QUAY.md` — the user's filming cheat sheet (launch with a character name, `/samsara quay videoN` before OBS, director keys). Update it when filming tools change.
 - `HANDOFF.md` — current implementation status, code map, test commands and decisions that override the design doc (7th sleep goes to Nam's sunflower memory first; Elysian Highlands and the mirror ritual were removed). Read it before working on gameplay.
 - `start_samsara.bat` — one-click build + dev client launcher (log: `mod/run/samsara_client.log`).
 

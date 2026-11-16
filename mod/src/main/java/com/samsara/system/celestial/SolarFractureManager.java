@@ -135,19 +135,8 @@ public class SolarFractureManager {
                 broadcastStage(server);
             }
 
-            // Hiệu ứng âm thanh huyền bí khi thức giấc
-            world.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.AMBIENT, 1.2f, 0.8f);
-            world.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.AMBIENT, 0.8f, 0.6f);
-
-            Text message = newStage > oldStage
-                    ? Text.translatable("samsara.solar_fracture_manager.stage_up", newStage)
-                    : Text.translatable("samsara.solar_fracture_manager.sleep", state.getSleeps());
-            boolean overlay = newStage <= oldStage;
-            for (ServerPlayerEntity p : server.getPlayerManager().getPlayerList()) {
-                p.sendMessage(message, overlay);
-            }
+            // Thức dậy như thường: không chữ, không âm lạ (người dùng: chữ kiểu người dẫn truyện không hợp Overworld;
+            // kịch bản Video 4 cảnh 7 chỉ có âm thức dậy bình thường). Thành tựu giả khi lên stage vẫn giữ.
             if (newStage > oldStage) {
                 String[] titles = {"", "samsara.solar_fracture_manager.vet_nut_dau_tien", "samsara.solar_fracture_manager.con_mat_hu_khong", "samsara.solar_fracture_manager.trong_luc_be_cong", "samsara.solar_fracture_manager.giac_ngu_thu_bay"};
                 for (ServerPlayerEntity p : server.getPlayerManager().getPlayerList()) {

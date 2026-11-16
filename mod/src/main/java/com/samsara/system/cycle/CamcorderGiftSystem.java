@@ -25,7 +25,7 @@ public class CamcorderGiftSystem {
             ServerPlayerEntity player = handler.getPlayer();
             // Tầng 4 "Đêm đầu tiên" cố ý cất máy quay đi: không tặng lại ở đó
             if (com.samsara.system.demdautien.DemDauTienClock.isFloor(player.getWorld())) return;
-            if (EggCycleState.get(server).getStage() >= 2) {
+            if (EggCycleState.get(server).getStage() >= 2 && !com.samsara.system.overworld.FilmingState.suppressCamcorderGift(server)) {
                 tryGift(player, "samsara.camcorder_gift_system.system_cau_quay_lai");
             }
         }));
@@ -47,7 +47,6 @@ public class CamcorderGiftSystem {
         give(player);
         player.sendMessage(Text.translatable(systemLine), false);
         com.samsara.system.ui.UiHorrorSystem.advancement(player, "camcorder", "samsara.advancement.mat_thu_ba", SamsaraItems.CAMCORDER);
-        player.sendMessage(Text.translatable("samsara.camcorder_gift_system.o_so_3_tren"), true);
         player.getServerWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
                 SamsaraSounds.SYSTEM_STATIC, SoundCategory.PLAYERS, 0.9f, 0.6f);
         return true;

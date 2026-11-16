@@ -110,7 +110,6 @@ public class PalimpsestJournalItem extends Item {
             ItemStack writtenBook = createDecodedBook();
             user.setStackInHand(hand, writtenBook);
             world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.PLAYERS, 1.0f, 0.8f);
-            user.sendMessage(Text.translatable("samsara.palimpsest_journal_item.nhung_ky_tu_co"), true);
         }
         return TypedActionResult.success(stack, world.isClient());
     }

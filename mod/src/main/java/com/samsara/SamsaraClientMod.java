@@ -48,6 +48,9 @@ public class SamsaraClientMod implements ClientModInitializer {
 
         // Register client-side cosmic dust reverse drift towards Gargantua black hole in Origin Cradle
         com.samsara.client.WombCradleDriftSystem.register();
+        // Overworld: khối lỗi phiên bản (texture Alpha chập chờn trên một khối thật)
+        com.samsara.client.overworld.VersionGlitchRenderer.register();
+        com.samsara.client.overworld.DirectorKeys.register();
 
         // Register client-side water wake system for swimming entities in The Womb
         com.samsara.client.WombClientWaterWakeSystem.register();

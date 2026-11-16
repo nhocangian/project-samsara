@@ -22,17 +22,15 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 /**
  * Biển do chính mình đặt (Overworld, từ Stage 1): thỉnh thoảng giữa đồng có một tấm biển gỗ trơ trọi, quay mặt về
- * phía người chơi. Dòng đầu là tên người chơi; dòng dưới hoặc là {@code "đã tới đây"}, hoặc là ngày giờ thật của lần
- * chơi trước (lúc người chơi thoát game lần gần nhất). Biển được cắm sau lưng người chơi, ngoài tầm nhìn, nên chỉ
- * bắt gặp khi quay lại. Biển ở lại đó luôn.
+ * phía người chơi. Dòng đầu là tên người chơi, dòng dưới {@code "đã tới đây"} (người dùng bỏ dòng ngày giờ thật: video
+ * là bản ghi năm 2018 của Nam, giờ máy thật sẽ lệch truyện). Biển được cắm sau lưng người chơi, ngoài tầm nhìn, nên
+ * chỉ bắt gặp khi quay lại. Biển ở lại đó luôn.
  *
  * <p>Đi tiếp ý "dấu vết người cũ" ({@link NamTraces}): từ "có ai đó từng ở đây" sang "người đó là mình".
  * Mỗi người chơi chừng 20-40 phút chơi một tấm, lần đầu sau 10 phút; cả thế giới tối đa {@link #MAX_SIGNS} tấm.
@@ -44,29 +42,12 @@ public final class SelfSign extends PersistentState {
     private static final int MIN_GAP = 24000;
     private static final int EXTRA_GAP = 24000;
 
-    /** Lúc thoát game gần nhất của mỗi người chơi (giờ thật, ms). */
-    private final Map<UUID, Long> lastLogout = new HashMap<>();
-    /** Lúc thoát game của lần trước nữa: giờ "lần chơi trước" khi đang chơi lần này. */
-    private final Map<UUID, Long> previousSession = new HashMap<>();
     private int placed;
 
     private static final Map<UUID, Long> NEXT = new HashMap<>();
 
     public static void register() {
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            SelfSign s = get(server);
-            Long last = s.lastLogout.get(handler.player.getUuid());
-            if (last != null) {
-                s.previousSession.put(handler.player.getUuid(), last);
-                s.markDirty();
-            }
-        });
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-            SelfSign s = get(server);
-            s.lastLogout.put(handler.player.getUuid(), System.currentTimeMillis());
-            s.markDirty();
-            NEXT.remove(handler.player.getUuid());
-        });
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> NEXT.remove(handler.player.getUuid()));
         ServerTickEvents.END_SERVER_TICK.register(SelfSign::tick);
     }
 
@@ -75,7 +56,7 @@ public final class SelfSign extends PersistentState {
     }
 
     private static void tick(MinecraftServer server) {
-        if (server.getTicks() % 100 != 0) return;
+        if (server.getTicks() % 100 != 0 || FilmingState.scripted(server)) return;
         if (EggCycleState.get(server).getStage() < 1) return;
         SelfSign state = get(server);
         if (state.placed >= MAX_SIGNS) return;
@@ -129,17 +110,19 @@ public final class SelfSign extends PersistentState {
         world.setBlockState(at, Blocks.OAK_SIGN.getDefaultState().with(SignBlock.ROTATION, rotation), 3);
         if (world.getBlockEntity(at) instanceof SignBlockEntity sign) {
             Text name = Text.literal(player.getGameProfile().getName());
-            Long prev = state.previousSession.get(player.getUuid());
-            boolean showDate = prev != null && world.random.nextBoolean();
-            Text second = showDate ? Text.literal(new SimpleDateFormat("dd/MM  HH:mm").format(new Date(prev)))
-                    : Text.translatable("samsara.self_sign.da_toi_day");
-            SignText text = sign.getFrontText().withMessage(0, name).withMessage(1, second);
+            SignText text = sign.getFrontText().withMessage(0, name).withMessage(1, Text.translatable("samsara.self_sign.da_toi_day"));
             sign.setText(text, true);
             sign.setWaxed(true);
             sign.markDirty();
         }
         state.placed++;
         state.markDirty();
+    }
+
+    /** Phím đạo diễn: cắm ngay một tấm biển sau lưng người chơi (bỏ qua stage, giới hạn và thời gian chờ). */
+    public static boolean cue(ServerPlayerEntity player) {
+        if (player.getWorld().getRegistryKey() != World.OVERWORLD) return false;
+        return placeBehind(player.getServerWorld(), player, get(player.getServer()));
     }
 
     /** Lệnh test: cắm ngay một tấm biển 6 khối trước mặt người chơi (bỏ qua stage, giới hạn và thời gian chờ). */
@@ -155,22 +138,12 @@ public final class SelfSign extends PersistentState {
     private static SelfSign fromNbt(NbtCompound nbt) {
         SelfSign s = new SelfSign();
         s.placed = nbt.getInt("Placed");
-        NbtCompound last = nbt.getCompound("LastLogout");
-        for (String k : last.getKeys()) s.lastLogout.put(UUID.fromString(k), last.getLong(k));
-        NbtCompound prev = nbt.getCompound("PreviousSession");
-        for (String k : prev.getKeys()) s.previousSession.put(UUID.fromString(k), prev.getLong(k));
         return s;
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         nbt.putInt("Placed", placed);
-        NbtCompound last = new NbtCompound();
-        lastLogout.forEach((k, v) -> last.putLong(k.toString(), v));
-        nbt.put("LastLogout", last);
-        NbtCompound prev = new NbtCompound();
-        previousSession.forEach((k, v) -> prev.putLong(k.toString(), v));
-        nbt.put("PreviousSession", prev);
         return nbt;
     }
 }

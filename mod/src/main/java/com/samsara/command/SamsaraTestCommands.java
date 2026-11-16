@@ -188,10 +188,19 @@ public class SamsaraTestCommands {
                             return 1;
                         }))
                         // Test: dựng dấu vết người cũ quanh bạn / hoa hướng dương quanh bạn quay về phía bạn / cả đàn con vật nhìn bạn
+                        // Test: dựng khu nhà của Nam coi chỗ bạn đứng là spawn (nhà ~16 khối phía nam), kèm dấu vết người cũ
+                        .then(CommandManager.literal("nam_base").executes(ctx -> {
+                            if (ctx.getSource().getPlayer() == null) return 0;
+                            BlockPos here = ctx.getSource().getPlayer().getBlockPos();
+                            com.samsara.system.overworld.NamBase.build(ctx.getSource().getWorld(), here);
+                            com.samsara.system.overworld.NamTraces.build(ctx.getSource().getWorld(), here);
+                            ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng khu nhà của Nam: nền từ 14 khối phía nam bạn, lán đất ở phía tây."), false);
+                            return 1;
+                        }))
                         .then(CommandManager.literal("nam_traces").executes(ctx -> {
                             if (ctx.getSource().getPlayer() == null) return 0;
                             com.samsara.system.overworld.NamTraces.build(ctx.getSource().getWorld(), ctx.getSource().getPlayer().getBlockPos());
-                            ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng dấu vết người cũ quanh bạn (lán đất ~15 khối phía đông bắc). Dùng nam_traces xem <0-3> để tới xem."), false);
+                            ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §aĐã dựng dấu vết người cũ quanh bạn (lán đất ~34 khối phía tây). Dùng nam_traces xem <0-3> để tới xem."), false);
                             return 1;
                         })
                                 .then(CommandManager.literal("xem")
@@ -206,6 +215,13 @@ public class SamsaraTestCommands {
                             int n = com.samsara.system.overworld.OverworldSunflowerGaze.testNow(ctx.getSource().getPlayer());
                             ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §a" + n + " bông hướng dương quay về phía bạn (quay đi 2 giây thì về lại)."), false);
                             return 1;
+                        }))
+                        // Test: khối bạn đang nhìn (hoặc một khối gần hướng nhìn) hiện bản Alpha 3 giây
+                        .then(CommandManager.literal("version_glitch").executes(ctx -> {
+                            if (ctx.getSource().getPlayer() == null) return 0;
+                            boolean ok = com.samsara.system.overworld.VersionGlitch.testNow(ctx.getSource().getPlayer());
+                            if (!ok) ctx.getSource().sendFeedback(() -> Text.literal("§e[TEST] §cKhông thấy khối nào có bản Alpha trong tầm nhìn (cỏ, lá sồi, đá, đá cuội, đất, sỏi, cát, gỗ sồi, ván, quặng than / sắt)."), false);
+                            return ok ? 1 : 0;
                         }))
                         // Test: cắm ngay tấm biển mang tên bạn 6 khối trước mặt
                         .then(CommandManager.literal("self_sign").executes(ctx -> {

@@ -56,7 +56,7 @@ public final class HostileHesitationSystem {
             mob.getLookControl().lookAt(player, 180.0f, 180.0f);
         }
 
-        if (now % 10 != 0) return;
+        if (now % 10 != 0 || com.samsara.system.overworld.FilmingState.scripted(server)) return;
         if (EggCycleState.get(server).getStage() < 1) return;
         ServerWorld world = server.getWorld(World.OVERWORLD);
         if (world == null) return;

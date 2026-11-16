@@ -100,6 +100,7 @@ public class UiHorrorSystem {
         }
         if (now % 1200 != 0) return;                       // kiểm tra mỗi phút
         if (EggCycleState.get(server).getStage() < 2 || !server.getOverworld().isNight()) return;
+        if (com.samsara.system.overworld.FilmingState.scripted(server)) return;   // đang quay: Nam_1998 chỉ vào khi bấm phím đạo diễn
         if (random.nextFloat() < 1.0f / 8.0f) ghostJoin(server, 600 + random.nextInt(1200));
     }
 

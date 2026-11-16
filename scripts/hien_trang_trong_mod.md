@@ -57,7 +57,7 @@ Mỗi lần ngủ qua đêm tăng số giấc ngủ của cả thế giới.
 | 3 | 5–6 | Cát và sỏi bay ngược lên trời. La bàn quay loạn. Khi đứng yên, thỉnh thoảng **một âm quen thuộc phát ngược** ngay sau lưng (mở rương, cửa gỗ, bước chân trên cỏ, nhặt đồ), mọi âm khác vẫn bình thường. |
 | 4 | 7+ | Mọi block tự nhiên trên mặt đất bị hút lên trời. |
 
-- Mỗi lần ngủ, chat báo: *"[Chu kỳ ngủ #n] Bầu trời dường như bị bẻ cong..."*. Khi lên stage, chat báo *"[CHU KỲ LUÂN HỒI] ... Mặt Trời đang dần sụp đổ thành Hố Đen!"*.
+- Ngủ dậy không có dòng chữ hay âm lạ nào (đã bỏ dòng *"[Chu kỳ ngủ #n]..."* và *"[CHU KỲ LUÂN HỒI]..."* ngày 16/11/2026); lên stage thì chỉ có thành tựu giả.
 - **Mắt thường luôn thấy mặt trời vanilla.** Hố đen chỉ hiện khi ngắm qua máy quay, hoặc **trong ảnh chụp màn hình (F2)** từ Stage 1: thứ ghi hình thấy sự thật. Lúc bấm F2, màn hình vẫn hiện mặt trời thường.
 
 ### Bẫy Phantom
@@ -71,7 +71,6 @@ Mỗi lần ngủ qua đêm tăng số giấc ngủ của cả thế giới.
   - *"Cậu không chịu ngủ. Vậy thì hãy nhìn đi."*
   - *"Cậu đã ngủ đủ lâu để bắt đầu nhìn thấy."*
   - *"Cậu quay lại rồi. Lần này hãy nhìn cho kỹ."*
-- Kèm dòng: *"Ô số 3 trên thanh công cụ nặng trĩu. Bạn không nhớ đã nhặt nó lúc nào."*
 - Cách dùng:
   - Chuột phải: đưa máy lên mắt, chuyển sang hình VHS.
   - Phím V: nhìn đêm hồng ngoại, tốn pin.
@@ -194,11 +193,34 @@ Kích hoạt khi bước vào trong 6 block quanh Quả Trứng.
 
 Người dùng duyệt dọn các tính năng cũ để Overworld chỉ còn cảm giác **ngờ ngợ**: không chữ giải thích, không công trình khổng lồ.
 
+**Khu nhà của Nam (16/11/2026, bối cảnh quay Video 1):** world đầu tiên tự có một khu nhà kiểu cậu bé chơi năm 2011–2013, nền san phẳng bắt đầu 14 khối phía nam chỗ xuất hiện (vừa vào game là thấy nhà ngay trước mặt, Bia Mộ ở giữa):
+- **Nhà gỗ** hộp ván sồi khung gỗ tròn, sàn đá cuội, cửa sổ kính, mái ván phẳng viền bậc, cửa gỗ quay về phía spawn. Trong nhà: **giường đỏ**, bàn chế tạo, hai lò nung, hai rương đôi (một rương đồ ăn và đồ quái rơi, một rương đá cuội, than, sắt, 3 kim cương, đuốc, xô, yên ngựa, kiếm đá sắp gãy), hai chậu hoa trên bậu cửa sổ, đuốc trên tường.
+- **Ruộng lúa** 9x9 có rãnh nước giữa, viền gỗ tròn, lúa lớn không đều.
+- **Chuồng** rào gỗ có cổng: 2 bò, 3 cừu, 2 lợn, 3 gà, máng nước, khối cỏ khô.
+- **Hầm mỏ:** khung đá cuội che lối xuống, **cầu thang xoắn** quanh một cột đá cuội đi thẳng xuống **Y -50** (vùng đá deepslate có kim cương), đuốc trên vách; đáy là phòng mỏ 8x8 (rương đồ đào được, lò nung, bàn chế tạo) với ba hành lang đào nhánh tỏa ra có đuốc. Hầm cắt ngang hang tự nhiên thì vách được bịt kín, nước và dung nham không tràn vào.
+- **Góc phù phép:** nền đá cuội, bàn phù phép, 14 kệ sách (chưa đủ 15), một cái đe.
+- **Cổng địa ngục** đã thắp, vài khối đá địa ngục rơi vãi quanh chân.
+- Đường sỏi nối các khu, đuốc cắm trên cọc rào. Lán đất "đêm đầu tiên" nằm ở rìa phía tây khu nhà.
+Chỉ ở Chu Kỳ #1 (world chu kỳ mới có nhà Ký Ức riêng).
+
 **Mới dựng (15/11/2026, nhóm A "ngờ ngợ"):**
-- **Dấu vết người chơi trước** quanh chỗ xuất hiện, không biển, không chữ: một **lán đất 2x2** có lỗ cửa, trong có bàn chế tạo, lò nung, một ngọn đuốc; cạnh lán là **đường hầm bậc thang** đào thẳng xuống, cứ vài bậc một ngọn đuốc; vài **cây hướng dương** trồng trước lán; một **gốc cây bị chặt** còn trơ với tán lá lơ lửng không rụng; một **cây mất hai khúc gốc** treo lơ lửng; một **cột đất 1x1** cao 9 khối giữa đồng. Đó là "đêm đầu tiên" của Nam trong chính save này (tầng 4 Tầng Dưới trả lời cho cái lán). Dựng một lần mỗi thế giới.
+- **Dấu vết người chơi trước** ở rìa tây / bắc khu nhà, không biển, không chữ: một **lán đất 2x2** có lỗ cửa, trong có bàn chế tạo, lò nung, một ngọn đuốc; cạnh lán là **đường hầm bậc thang** đào thẳng xuống, cứ vài bậc một ngọn đuốc; vài **cây hướng dương** trồng trước lán; một **gốc cây bị chặt** còn trơ với tán lá lơ lửng không rụng; một **cây mất hai khúc gốc** treo lơ lửng; một **cột đất 1x1** cao 9 khối giữa đồng. Đó là "đêm đầu tiên" của Nam trong chính save này (tầng 4 Tầng Dưới trả lời cho cái lán). Dựng một lần mỗi thế giới.
 - **Hoa quay theo người:** hướng dương ngoài tự nhiên (kể cả mấy bông trước lán) luôn nhìn về hướng đông. Thỉnh thoảng một bông nằm ngoài tầm mắt lặng lẽ quay về phía người chơi; liếc tới thì thấy nó đang nhìn mình; quay đi chừng hai giây thì nó đã về hướng đông. Stage 0 hiếm (tối đa 1 bông), Stage 1 tối đa 2, từ Stage 2 tối đa 3 và thường hơn.
-- **Biển do chính mình đặt** (từ Stage 1): thỉnh thoảng giữa đồng, sau lưng người chơi, có một tấm biển gỗ trơ trọi quay mặt về phía họ. Dòng đầu là **tên người chơi**, dòng dưới hoặc *"đã tới đây"*, hoặc **ngày giờ thật của lần chơi trước** (lúc thoát game lần gần nhất, dạng `14/11  21:07`). Biển ở lại đó luôn. Chừng 20–40 phút một tấm, cả thế giới tối đa 6 tấm.
+- **Biển do chính mình đặt** (từ Stage 1): thỉnh thoảng giữa đồng, sau lưng người chơi, có một tấm biển gỗ trơ trọi quay mặt về phía họ. Dòng đầu là **tên người chơi**, dòng dưới *"đã tới đây"* (người dùng bỏ dòng ngày giờ thật vì video là bản ghi năm 2018). Biển ở lại đó luôn. Chừng 20–40 phút một tấm, cả thế giới tối đa 6 tấm.
+- **Khối lỗi phiên bản:** thỉnh thoảng một khối tự nhiên trong tầm nhìn, cách 10–28 khối (mặt cỏ, khúc gỗ sồi, tán lá, đá, đá cuội, đất, sỏi, cát, quặng...), hiện **texture Alpha** chừng 1–2 giây: chập chờn lúc hiện và lúc tắt, rung giật nhẹ, lâu lâu tách thành bóng đỏ và bóng xanh lệch hai bên như băng từ đọc lệch. Đi lại gần (dưới 6 khối) thì thôi ngay. Mắt thường thấy từ Stage 2, vài phút một lần; **đang ngắm máy quay** thì từ Stage 1, chừng nửa phút một lần. Không đổi khối thật. Gieo trước cho tầng 4, nơi cả hòn đảo là bản Alpha.
+- **Dưới hang động** (chủ đề: có người đã đào trước bạn, và vẫn đang đào):
+  - **Tiếng cuốc đáp lại:** đào đá dưới lòng đất rồi dừng tay, vài giây sau trong vách đá cách 5–8 khối vang lên tiếng cuốc gõ đá **đúng nhịp mình vừa đào** (cùng số khối, cùng loại đá). Đào tiếp thì nó im ngay.
+  - **Đuốc ở phía trước:** ở đoạn hang còn tối om, ngoài tầm mắt, đã có sẵn một ngọn đuốc cắm trên vách, như có ai vừa đi trước một bước. Đuốc thật, ở lại luôn.
+  - **Đường hầm nhánh lạ:** hiếm khi, trong vách hang mở ra một đường hầm 1x2 thẳng tắp kiểu đào tìm kim cương, cứ 8 khối một ngọn đuốc, cuối là ngõ cụt với một cái cuốc đá gần gãy bỏ lại.
 - **Con vật nhìn:** vài phút một lần, cả đàn bò / cừu / lợn / gà quanh người chơi (ít nhất 2 con) cùng ngừng lại, từ từ ngoái đầu nhìn người chơi chừng 2–3 giây, rồi ăn tiếp như không có gì.
+
+**Công cụ quay video (16/11/2026):** trước khi bật OBS, gõ `/samsara quay video1` (… `video4`): thế giới về đúng trạng thái kịch bản của video đó, túi đồ dọn sạch, người chơi đứng đúng chỗ bắt đầu, khung chat được xoá.
+- **video1–3** (người em): Stage 4, máy quay nằm sẵn ở ô số 3. video1 dựng lại Bia Mộ với rương còn nguyên nhật ký và đứng ở spawn nhìn về căn nhà; video2 cầm sẵn nhật ký, đứng trong nhà; video3 cầm nhật ký, đứng ở spawn.
+- **video4** (Nam): Stage 2, chưa có máy quay, chưa thức đêm nào, đứng trước cửa nhà lúc chiều muộn. Máy quay tự tới sau đêm thức trắng thứ ba.
+- Trong lúc quay, các hiện tượng ngẫu nhiên đứng yên, chỉ xảy ra khi bấm phím đạo diễn; hiệu ứng của stage (block bay, nước xám, Phantom) vẫn chạy. `/samsara quay tat` để trở lại bình thường.
+- Tên nhân vật: chạy game bằng `start_samsara.bat Nam_1998` (hoặc tên người em).
+
+**Gọi cảnh khi quay video (phím đạo diễn):** mỗi hiện tượng ở trên có một phím riêng (mặc định numpad 1–9, 0 và dấu chấm, nhóm "Samsara: đạo diễn" trong Điều khiển): bước chân dội lại, quái khựng, hướng dương quay, con vật nhìn, khối lỗi phiên bản, biển mang tên mình, tiếng cuốc đáp lại, đuốc phía trước, đường hầm nhánh, **Nam_1998 vào game** (gõ *"em đang ở đâu"*, cho Video 3), **<System> cài máy quay** vào ô số 3 (cho Video 4). Bấm là xảy ra ngay, không có chữ nào hiện lên màn hình; các hiện tượng vẫn tự xảy ra ngẫu nhiên như thường.
 
 **Còn lại (đã chỉnh cho kín đáo):**
 - **Quái ngập ngừng** (từ Stage 1): thỉnh thoảng một con quái đang đuổi bạn khựng lại chừng nửa giây, đứng nhìn thẳng vào bạn, rồi lao vào tiếp. Không tiếng, không chữ.
@@ -206,11 +228,10 @@ Người dùng duyệt dọn các tính năng cũ để Overworld chỉ còn c�
 - **Bóng tàn dư:** dưới lòng đất, hoặc khi chặt cây một mình ban đêm, hiếm khi thấy một bóng người đứng đúng chỗ, đúng dáng bạn một phút trước, rồi tan.
 - **Giấc ngủ xuất hồn:** ngủ ở thế giới chính, đôi khi có một bóng đứng ở góc phòng; tỉnh dậy có đóa hoa héo bên gối. Không có dòng chữ nào, người chơi tự để ý.
 - **Bục đọc sách:** viết câu hỏi kiểu *"tôi là ai"* vào sách đặt lên bục thì sách thành *"Lời Đáp Của Gương"*: *"Cậu đang hỏi kẻ cầm bút... hay đang hỏi kẻ đang nhìn vào trang giấy này? Mọi câu hỏi đều là độc thoại."* Chỉ một tiếng lật trang trầm, không báo gì thêm (trứng phục sinh cho người tò mò).
-- **Tín hiệu Morse "I AM YOU"** ở độ sâu Y ≤ -30 trong bóng tối hoàn toàn.
 - Số lần chết vẫn được đếm lặng lẽ (không còn dòng *"[Chu kỳ #n] Thân xác tái tạo"*), để dành cho câu đố hoặc bảng F3.
 - **Thuyền Tiền Kiếp** trong The Womb tan biến, để lại *"Chiếc Rương Tiền Kiếp"* và *"La Bàn Tiền Kiếp"* chỉ về một nhịp tim ở xa. Phế tích cự thần trong The Womb vẫn giữ.
 
-**Đã bỏ:** Chiếc Nôi và khối trứng kiểu cũ; phế tích cự thần và khối nêm sinh ngẫu nhiên ở Overworld; Ouroboros (mob mang tên bạn); Thấu Kính ở đe; dân làng bị nhốt; nghiệp chướng khi giết sinh vật; quái tụ thành vòng tròn trong The Womb. Muốn đưa lại thứ nào thì phải hỏi người dùng.
+**Đã bỏ:** Chiếc Nôi và khối trứng kiểu cũ; phế tích cự thần và khối nêm sinh ngẫu nhiên ở Overworld; Ouroboros (mob mang tên bạn); Thấu Kính ở đe; dân làng bị nhốt; nghiệp chướng khi giết sinh vật; quái tụ thành vòng tròn trong The Womb; tín hiệu Morse "I AM YOU" dưới lòng đất (16/11/2026: khó nhận ra, không giải được; hang động sẽ có cơ chế khác). Muốn đưa lại thứ nào thì phải hỏi người dùng.
 
 ---
 

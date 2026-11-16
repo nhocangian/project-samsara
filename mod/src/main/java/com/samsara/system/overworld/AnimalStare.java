@@ -68,7 +68,7 @@ public final class AnimalStare {
             face(mob, s.player);
         }
 
-        if (now % 20 != 0) return;
+        if (now % 20 != 0 || FilmingState.scripted(server)) return;
         for (ServerPlayerEntity player : world.getPlayers()) {
             if (player.isSpectator()) continue;
             long next = NEXT.computeIfAbsent(player.getUuid(), id -> now + FIRST_DELAY);

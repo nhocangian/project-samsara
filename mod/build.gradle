@@ -33,6 +33,11 @@ loom {
             // Môi trường dev của Loom dùng LWJGL 3.3.2-snapshot; Sodium 0.5.x (trong run/mods) đòi đúng 3.3.1
             // và từ chối khởi động. Chỉ tắt bước kiểm tra này cho runClient (không ảnh hưởng bản phát hành).
             vmArg "-Dsodium.checks.issue2561=false"
+            // Tên nhân vật khi quay video: gradle runClient -Pten=Nam_1998 (start_samsara.bat <tên>).
+            // Không truyền thì Loom tự đặt tên ngẫu nhiên kiểu Player123. Mỗi tên có túi đồ / tiến trình riêng trong world.
+            if (project.hasProperty('ten')) {
+                programArgs "--username", project.property('ten').toString()
+            }
         }
     }
 }

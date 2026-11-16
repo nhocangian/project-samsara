@@ -51,7 +51,7 @@ public final class PhantomAudioEchoSystem {
                 if (t >= (long) (STEPS - 1) * STEP_GAP) PLAYING.remove(id);
                 continue;
             }
-            if (now % 20 != 0 || player.getWorld().getRegistryKey() != World.OVERWORLD) continue;
+            if (now % 20 != 0 || player.getWorld().getRegistryKey() != World.OVERWORLD || com.samsara.system.overworld.FilmingState.scripted(server)) continue;
             if (player.isSpectator() || player.isSneaking() || !player.isOnGround()) continue;
             if (player.getVelocity().horizontalLengthSquared() < 0.002) continue;
             if (now < NEXT_ALLOWED.getOrDefault(id, (long) COOLDOWN)) continue;

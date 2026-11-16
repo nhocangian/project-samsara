@@ -47,6 +47,7 @@ public class EchoResidueManager {
         ServerWorld world = player.getServerWorld();
         // Chỉ ở thế giới chính: các chiều riêng (Tầng Dưới, The Womb...) có cảnh của riêng chúng
         if (world.getRegistryKey() != net.minecraft.world.World.OVERWORLD) return;
+        if (com.samsara.system.overworld.FilmingState.scripted(world.getServer())) return;
 
         // 1% chance per minute
         if (world.random.nextFloat() > 0.01f) {

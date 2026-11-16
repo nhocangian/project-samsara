@@ -90,7 +90,7 @@ public final class OverworldSunflowerGaze {
             }
         }
 
-        if (now % 20 != 0) return;
+        if (now % 20 != 0 || FilmingState.scripted(server)) return;
         int stage = EggCycleState.get(server).getStage();
         int maxTurned = stage >= 2 ? 3 : stage >= 1 ? 2 : 1;
         float chance = stage >= 2 ? 0.05f : 0.015f;
@@ -156,6 +156,17 @@ public final class OverworldSunflowerGaze {
         if (world.getBlockState(lower.up()).isOf(SamsaraBlocks.MEMORY_SUNFLOWER)) {
             world.setBlockState(lower.up(), s.with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER), 2 | 16);
         }
+    }
+
+    /** Phím đạo diễn: mọi bông hướng dương quanh người chơi đang nằm ngoài tầm mắt quay về phía người chơi. */
+    public static int cue(ServerPlayerEntity player) {
+        ServerWorld world = player.getServerWorld();
+        if (world.getRegistryKey() != World.OVERWORLD) return 0;
+        int n = 0;
+        for (BlockPos p : findSunflowers(world, player)) {
+            if (!inView(player, p) && turn(world, p, player, world.getTime())) n++;
+        }
+        return n;
     }
 
     /** Lệnh test: mọi bông hướng dương vanilla quanh người chơi quay về phía người chơi ngay (kể cả bông đang nhìn). */

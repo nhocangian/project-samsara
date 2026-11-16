@@ -52,13 +52,21 @@ public class SamsaraMod implements ModInitializer {
         com.samsara.system.sleep.OutOfBodySleepGlitch.register();
         com.samsara.system.cycle.HostileHesitationSystem.register();
         // Overworld "ngờ ngợ": dấu vết người cũ quanh spawn, hoa quay theo người, con vật nhìn
+        com.samsara.system.overworld.NamBase.register();
         com.samsara.system.overworld.NamTraces.register();
         com.samsara.system.overworld.OverworldSunflowerGaze.register();
         com.samsara.system.overworld.AnimalStare.register();
         com.samsara.system.overworld.SelfSign.register();
+        com.samsara.system.overworld.VersionGlitch.register();
+        // Hang động: tiếng cuốc đáp lại, đuốc ở phía trước, đường hầm nhánh của người khác
+        com.samsara.system.overworld.CavePickEcho.register();
+        com.samsara.system.overworld.CaveTorchAhead.register();
+        com.samsara.system.overworld.CaveBranchTunnel.register();
+        // Phím đạo diễn: gọi các hiện tượng trên đúng lúc quay video, không để lại dấu vết trên khung hình
+        com.samsara.system.overworld.DirectorCues.register();
+        com.samsara.system.overworld.FilmingSetup.register();
 
         // ARG Ciphers & Metaphysical Enigmas
-        com.samsara.system.arg.MorseAudioSignalSystem.register();
         com.samsara.system.arg.SelfRealizationLecternSystem.register();
 
         // Emergent Psychological Subsystems

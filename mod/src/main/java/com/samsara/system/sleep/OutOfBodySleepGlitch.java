@@ -31,6 +31,7 @@ public class OutOfBodySleepGlitch {
             ServerWorld world = player.getServerWorld();
             // Chỉ giấc ngủ thật ở thế giới chính; giường ở các chiều riêng (Tầng Dưới tầng 4...) có cảnh của riêng nó
             if (world.getRegistryKey() != net.minecraft.world.World.OVERWORLD) return;
+            if (com.samsara.system.overworld.FilmingState.scripted(world.getServer())) return;
 
             // 25% xác suất kích hoạt hiện tượng tách hồn trong Giai đoạn 1
             if (world.random.nextFloat() < 0.25f) {

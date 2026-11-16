@@ -8,6 +8,8 @@ rem  - Tự build lại mod nếu code thay đổi rồi mở game.
 rem  - Shader đọc trực tiếp từ shader\Samsara-Cosmic-Shaders (junction), nên sửa
 rem    shader xong chỉ cần tải lại shader trong game, không cần chạy lại file này.
 rem  - Log ghi vào mod\run\samsara_client.log
+rem  - Ten nhan vat khi quay video: start_samsara.bat Nam_1998
+rem    Khong ghi ten thi game tu dat ten ngau nhien kieu Player123.
 rem ==========================================================================
 
 set "JAVA_HOME=C:\Program Files\Zulu\zulu-21"
@@ -37,7 +39,12 @@ if %errorlevel%==0 (
 cd /d "%~dp0mod"
 echo Dang build va mo Minecraft (khoang 30-60 giay)...
 echo Log: %~dp0mod\run\samsara_client.log
-call "%GRADLE%" runClient --console=plain > "%~dp0mod\run\samsara_client.log" 2>&1
+set "TEN_ARG="
+if not "%~1"=="" (
+    set "TEN_ARG=-Pten=%~1"
+    echo Ten nhan vat: %~1
+)
+call "%GRADLE%" runClient %TEN_ARG% --console=plain > "%~dp0mod\run\samsara_client.log" 2>&1
 if errorlevel 1 (
     echo [LOI] Game dong voi loi. Xem log: mod\run\samsara_client.log
     pause
